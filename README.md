@@ -11,4 +11,4 @@ Fiddle uses localStorage to store your data between browser refreshes. At presen
 
 ### Offline-capable
 
-Thanks to the PHP-based appcache manifest file, you can modify the contents of your Fiddle even when you have no internet connection. Because the Fiddle is stored in localStorage, an internet connection isn't required to save either.
+Thanks to the appcache manifest file, you can modify the contents of your Fiddle even when you have no internet connection. Because the Fiddle is stored in localStorage, an internet connection isn't required to save either.

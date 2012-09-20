@@ -1,0 +1,14 @@
+CACHE MANIFEST
+
+#	2012-09-20 10.47
+
+CACHE:
+	http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
+	/index.html
+	/appcache.php
+	/fiddle.tgz
+	/assets/js/result.js
+	/assets/js/main.js
+	/assets/css/normalize.css
+	/assets/css/screen.css
+	/result.html
