@@ -13,3 +13,6 @@ github_username:  liamnewmarch
 markdown: kramdown
 exclude:
 - CNAME
+sass:
+  sass_dir: assets/css
+  style: compressed
