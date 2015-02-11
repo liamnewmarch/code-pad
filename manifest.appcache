@@ -7,6 +7,5 @@ CACHE:
 	/index.html
 	/assets/js/result.js
 	/assets/js/main.js
-	/assets/css/normalize.css
-	/assets/css/screen.css
+	/assets/css/styles.css
 	/result.html
