@@ -19,42 +19,49 @@ header {
     height: 50px;
 }
 
-nav ul {
-    margin: 0;
-    padding: 0;
+nav {
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        display: block;
+        float: left;
+        line-height: 50px;
+        width: 25%;
+        cursor: pointer;
+        text-align: center;
+        background: rgb(240, 240, 240);
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+
+        &:hover,
+        &.active {
+            color: #fff;
+            background: #ff8c00;
+        }
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
 }
 
-nav li {
-    display: block;
-    float: left;
-    line-height: 50px;
-    width: 25%;
-    cursor: pointer;
-    text-align: center;
-    background: rgb(240, 240, 240);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-}
-
-nav li:hover,
-nav li.active {
-    color: #fff;
-    background: #ff8c00;
-}
-
-#view-container {
+.view-container {
     position: relative;
     width: 100%;
     height: 270px;
-}
 
-.view {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    .view {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 iframe {
@@ -76,15 +83,15 @@ textarea {
     -moz-tab-size: 4;
     -o-tab-size: 4;
     tab-size: 4;
-}
 
-textarea::before {
-    content: attr(data-which);
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: rgba(255, 255, 255, .8);
-    padding: 5px;
-    border: 1px solid #c0c0c0;
-    border-bottom-left-radius: 5px;
+    &::before {
+        content: attr(data-which);
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: rgba(255, 255, 255, .8);
+        padding: 5px;
+        border: 1px solid #c0c0c0;
+        border-bottom-left-radius: 5px;
+    }
 }
