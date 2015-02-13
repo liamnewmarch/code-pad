@@ -1,52 +1,53 @@
-if (!localStorage) alert('LocalStorage is not supported :(');
+(function() {
+    'use strict';
 
-$(function() {
-	function resize() {
-		$('#view-container').height($(window).height() - 50);
-	}
+    var app = angular.module('app', [
+        'ngRoute',
+        'ui.codemirror'
+    ]);
 
-	$('nav li').click(function() {
-		var id;
-		$('nav li').removeClass('active');
-		id = $(this).attr('class');
-		$(this).addClass('active');
-		$('.view').hide();
-		$('#view-' + id).show();
 
-		if (id === 'result') {
-			$('#view-result').html('<iframe src="result.html"></iframe>');
-		} else {
-			$('iframe').remove();
-		}
-	});
+    app.directive('iframe', function() {
+        return {
+            restrict: 'E',
+            link: function(scope, element, attrs) {
+                element = element[0];
+                scope.$on('refresh', function() {
+                    element.contentWindow.location.reload();
+                });
+            }
+        };
+    });
 
-	$('.view textarea').keydown(function(e) {
-		if (e.keyCode == 9) {
-			var myValue = "\t";
-			var startPos = this.selectionStart;
-			var endPos = this.selectionEnd;
-			var scrollTop = this.scrollTop;
-			this.value = this.value.substring(0, startPos) + myValue + this.value.substring(endPos,this.value.length);
-			this.focus();
-			this.selectionStart = startPos + myValue.length;
-			this.selectionEnd = startPos + myValue.length;
-			this.scrollTop = scrollTop;
-			return false;
-		}
-	});
+    app.controller('EditorController', [ '$scope', function($scope) {
+        var vm = this;
 
-	$('.view textarea').keyup(function(e) {
-		var name = $(this).parent().attr('id').replace('view-', '');
-		localStorage['fiddle-' + name] = $(this).val();
-	});
+        vm.panes = [];
+        vm.active = 'html';
 
-	resize();
-	$(window).bind('resize', resize);
+        addPane('html', 'HTML');
+        addPane('css', 'CSS');
+        addPane('js', 'JS');
+        addPane('result', 'Result');
 
-	$('nav li:first').trigger('click');
+        function addPane(key, label) {
+            vm.panes.push({
+                key: key,
+                label: label,
+                model: key in localStorage ? localStorage[key] : '',
+                config: {
+                    // theme: 'monokai',
+                    mode: key === 'html' ? 'htmlmixed' : key
+                }
+            });
+        }
 
-	$('#view-html textarea').val(localStorage['fiddle-html']); 
-	$('#view-css textarea').val(localStorage['fiddle-css']);
-	$('#view-javascript textarea').val(localStorage['fiddle-javascript']);
+        $scope.$watch('vm.panes', function() {
+            vm.panes.forEach(function(pane) {
+                localStorage[pane.key] = pane.model;
+            });
+            $scope.$broadcast('refresh');
+        }, true);
+    }]);
 
-});
+})();

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app" ng-controller="ResultController as vm">
     <head>
-        <meta charset="utf-8" />
-        <link href="assets/css/normalize.css" rel="stylesheet" />
+        <meta charset="utf-8">
+        <style ng-bind-html="vm.css"></style>
     </head>
-    <body>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <body >
+        <main ng-bind-html="vm.html"></main>
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
         <script src="assets/js/result.js"></script>
     </body>
 </html>

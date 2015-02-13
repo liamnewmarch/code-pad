@@ -1,35 +1,38 @@
 <!DOCTYPE html>
-<html manifest="manifest.appcache">
+<html lang="en" dir="ltr" ng-app="app"><!-- manifest="manifest.appcache"-->
     <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1" />
-        <title>Fiddle | liamnewmarch.co.uk</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1">
+        <title> Fiddle | liamnewmarch.co.uk </title>
         <link href="assets/css/styles.css" rel="stylesheet">
+        <link href="bower_components/codemirror/lib/codemirror.css" rel="stylesheet">
+        <link href="bower_components/codemirror/theme/monokai.css" rel="stylesheet">
     </head>
-    <body>
+    <body ng-controller="EditorController as vm">
         <header>
             <nav>
-                <ul>
-                    <li class="html">HTML</li>
-                    <li class="css">CSS</li>
-                    <li class="javascript">JS</li>
-                    <li class="result">Result</li>
+                <ul ng-repeat="pane in vm.panes">
+                    <li ng-click="vm.active = pane.key" ng-class="{ 'active': vm.active == pane.key }">
+                        <a href="">{{ pane.label }}</a>
+                    </li>
                 </ul>
             </nav>
         </header>
-        <div id="view-container">
-            <div id="view-html" class="view">
-                <textarea type="text" data-which="HTML" spellcheck="off" autocapitalize="off"></textarea>
+        <div class="view-container">
+            <div ng-repeat="pane in vm.panes" id="view-{{ pane.key }}" class="view" ng-show="vm.active == pane.key">
+                <textarea ui-codemirror ui-codemirror-opts="pane.config" ng-if="pane.key != 'result'" ng-model="pane.model"></textarea>
+                <div ng-if="pane.key == 'result'" id="view-result" class="view">
+                    <iframe src="result.html"></iframe>
+                </div>
             </div>
-            <div id="view-css" class="view">
-                <textarea type="text" data-which="CSS" spellcheck="off" autocapitalize="off"></textarea>
-            </div>
-            <div id="view-javascript" class="view">
-                <textarea type="text "data-which="Javascript" spellcheck="off" autocapitalize="off"></textarea>
-            </div>
-            <div id="view-result" class="view"></div>
         </div>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="bower_components/codemirror/lib/codemirror.js"></script>
+        <script src="bower_components/codemirror/mode/css/css.js"></script>
+        <script src="bower_components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+        <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="bower_components/angular-route/angular-route.min.js"></script>
+        <script src="bower_components/angular-ui-codemirror/ui-codemirror.min.js"></script>
         <script src="assets/js/main.js"></script>
     </body>
 </html>
