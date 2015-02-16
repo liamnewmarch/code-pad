@@ -9,11 +9,7 @@
         var vm = this;
         vm.html = $sce.trustAs('html', localStorage.html) || '';
         vm.css = $sce.trustAs('css', localStorage.css) || '';
-        vm.js = $sce.trustAs('js', localStorage.js) || '';
-
-        console.time();
-        eval(vm.js);
-        console.timeEnd();
+        eval(localStorage.javascript || '');
     }]);
 
 })();

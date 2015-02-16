@@ -42,11 +42,16 @@
             });
         }
 
+        $scope.$watch('vm.active', function() {
+            if (vm.active === 'result') {
+                $scope.$broadcast('refresh');
+            }
+        });
+
         $scope.$watch('vm.panes', function() {
             vm.panes.forEach(function(pane) {
                 localStorage[pane.key] = pane.model;
             });
-            $scope.$broadcast('refresh');
         }, true);
     }]);
 
