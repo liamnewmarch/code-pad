@@ -27,7 +27,7 @@
 
         addPane('html', 'HTML');
         addPane('css', 'CSS');
-        addPane('js', 'JS');
+        addPane('javascript', 'JS');
         addPane('result', 'Result');
 
         function addPane(key, label) {
@@ -36,7 +36,7 @@
                 label: label,
                 model: key in localStorage ? localStorage[key] : '',
                 config: {
-                    // theme: 'monokai',
+                    theme: 'monokai',
                     mode: key === 'html' ? 'htmlmixed' : key
                 }
             });
