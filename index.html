@@ -21,15 +21,14 @@
         <div class="view-container">
             <div ng-repeat="pane in vm.panes" id="view-{{ pane.key }}" class="view" ng-show="vm.active == pane.key">
                 <textarea ui-codemirror ui-codemirror-opts="pane.config" ng-if="pane.key != 'result'" ng-model="pane.model"></textarea>
-                <div ng-if="pane.key == 'result'" id="view-result" class="view">
-                    <iframe src="result.html"></iframe>
-                </div>
+                <iframe src="result.html" ng-if="pane.key == 'result'" id="view-result" class="view"></iframe>
             </div>
         </div>
         <script src="bower_components/codemirror/lib/codemirror.js"></script>
+        <script src="bower_components/codemirror/mode/xml/xml.js"></script>
         <script src="bower_components/codemirror/mode/css/css.js"></script>
-        <script src="bower_components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
         <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+        <script src="bower_components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="bower_components/angular-route/angular-route.min.js"></script>
         <script src="bower_components/angular-ui-codemirror/ui-codemirror.min.js"></script>
