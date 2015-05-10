@@ -9,7 +9,8 @@
         var vm = this;
         vm.html = $sce.trustAs('html', localStorage.html) || '';
         vm.css = $sce.trustAs('css', localStorage.css) || '';
-        eval(localStorage.javascript || '');
+        // setTimeout will execute the js string
+        setTimeout(localStorage.javascript || '');
     }]);
 
 })();
