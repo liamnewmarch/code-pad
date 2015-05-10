@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-#   2015-02-16 13:40
+#   2015-05-10 21:25
 
 CACHE:
     /assets/js/result.js
@@ -19,3 +19,4 @@ CACHE:
     /bower_components/angular-ui-codemirror/ui-codemirror.min.js
     /index.html
     /result.html
+    /manifest.json
