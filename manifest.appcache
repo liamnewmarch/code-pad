@@ -17,6 +17,10 @@ CACHE:
     /bower_components/angular-route/angular-route.min.js
     /bower_components/angular-sanitize/angular-sanitize.min.js
     /bower_components/angular-ui-codemirror/ui-codemirror.min.js
+    /bower_components/react/react.min.js
+    /bower_components/react/react-dom.min.js
+    /bower_components/vue/dist/vue.min.js
+
     /index.html
     /result.html
     /manifest.json
