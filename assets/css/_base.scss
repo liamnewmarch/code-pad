@@ -6,7 +6,7 @@
 
 html {
     font-family: 'Helvetica Neue', Helvetica, sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     color: #000;
     background: #fff;
     text-rendering: optimizeLegibility;
@@ -40,14 +40,15 @@ nav {
         width: 25%;
         cursor: pointer;
         text-align: center;
-        background: #fff3e0;
+        background: #474844;
+        color: #fff;
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
 
         &:hover,
         &.active {
-            background: #ff9800;
+            background: #272822;
         }
     }
 
@@ -66,6 +67,8 @@ nav {
 
         .CodeMirror {
             height: 100%;
+            line-height: 1.2;
+            padding: 16px;
         }
     }
 }
