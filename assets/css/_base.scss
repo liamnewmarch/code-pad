@@ -1,81 +1,70 @@
 @charset 'utf-8';
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-    font-family: 'Helvetica Neue', Helvetica, sans-serif;
-    font-size: 16px;
-    color: #000;
-    background: #fff;
-    text-rendering: optimizeLegibility;
+  background: #272822;
+  color: #fff;
+  font: 16px / normal 'Helvetica Neue', Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
 }
 
 html,
 body {
-    margin: 0;
-    height: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 header {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 50px;
-    z-index: 2;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
 }
 
 nav {
-    ul {
-        margin: 0;
-        padding: 0;
-    }
+  ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-    li {
-        display: block;
-        float: left;
-        line-height: 50px;
-        width: 25%;
-        cursor: pointer;
-        text-align: center;
-        background: #474844;
-        color: #fff;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
+  li {
+    background: #474844;
+    flex: 1 1 100%;
+    line-height: 50px;
+    text-align: center;
+    user-select: none;
 
-        &:hover,
-        &.active {
-            background: #272822;
-        }
+    &:hover,
+    &.active {
+      background: #272822;
     }
-
-    a {
-        color: inherit;
-        text-decoration: none;
-    }
+  }
 }
 
 .view-container {
+  height: 100%;
+  padding-top: 50px;
+
+  .view {
     height: 100%;
-    padding-top: 50px;
 
-    .view {
-        height: 100%;
-
-        .CodeMirror {
-            height: 100%;
-            line-height: 1.2;
-            padding: 16px;
-        }
+    .CodeMirror {
+      height: 100%;
+      line-height: 1.2;
+      padding: 16px;
     }
+  }
 }
 
 iframe {
     width: 100%;
     height: 100%;
     border: 0;
-    background: #fff;
+    background: #272822;
 }

@@ -1,38 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" ng-app="app">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-        <meta name="theme-color" content="#272822">
-        <title> Fiddle | liamnewmarch.co.uk </title>
-        <link href="assets/css/styles.css" rel="stylesheet">
-        <link href="bower_components/codemirror/lib/codemirror.css" rel="stylesheet">
-        <link href="bower_components/codemirror/theme/monokai.css" rel="stylesheet">
-        <link href="manifest.json" rel="manifest">
-    </head>
-    <body ng-controller="EditorController as vm">
-        <header>
-            <nav>
-                <ul ng-repeat="pane in vm.panes">
-                    <li ng-click="vm.active = pane.key" ng-class="{ 'active': vm.active == pane.key }">
-                        <a href="">{{ pane.label }}</a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
-        <div class="view-container">
-            <div ng-repeat="pane in vm.panes" id="view-{{ pane.key }}" class="view" ng-show="vm.active == pane.key">
-                <textarea ui-codemirror ui-codemirror-opts="pane.config" ng-if="pane.key != 'result'" ng-model="pane.model"></textarea>
-                <iframe src="result.html" ng-if="pane.key == 'result'" id="view-result" class="view"></iframe>
-            </div>
-        </div>
-        <script src="bower_components/codemirror/lib/codemirror.js"></script>
-        <script src="bower_components/codemirror/mode/xml/xml.js"></script>
-        <script src="bower_components/codemirror/mode/css/css.js"></script>
-        <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
-        <script src="bower_components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
-        <script src="bower_components/angular/angular.min.js"></script>
-        <script src="bower_components/angular-ui-codemirror/ui-codemirror.min.js"></script>
-        <script src="assets/js/main.js"></script>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="theme-color" content="#272822">
+    <title> Fiddle | liamnewmarch.co.uk </title>
+    <link href="assets/css/styles.css" rel="stylesheet">
+    <link href="bower_components/codemirror/lib/codemirror.css" rel="stylesheet">
+    <link href="bower_components/codemirror/theme/monokai.css" rel="stylesheet">
+    <link href="manifest.json" rel="manifest">
+  </head>
+  <body ng-controller="EditorController as vm">
+    <header>
+      <nav>
+        <ul>
+          <li
+            ng-repeat="pane in vm.panes"
+            ng-click="vm.active = pane.key"
+            ng-class="{ 'active': vm.active == pane.key }">
+            {{ pane.label }}
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="view-container">
+      <div
+        class="view"
+        ng-repeat="pane in vm.panes"
+        ng-show="vm.active == pane.key">
+        <textarea
+          ui-codemirror
+          ui-codemirror-opts="pane.config"
+          ng-if="pane.key != 'result'"
+          ng-model="pane.model">
+        </textarea>
+        <iframe
+          src="result.html"
+          class="view"
+          ng-if="pane.key == 'result'">
+        </iframe>
+      </div>
+    </div>
+    <script src="bower_components/codemirror/lib/codemirror.js"></script>
+    <script src="bower_components/codemirror/mode/xml/xml.js"></script>
+    <script src="bower_components/codemirror/mode/css/css.js"></script>
+    <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+    <script src="bower_components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-ui-codemirror/ui-codemirror.min.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
 </html>
