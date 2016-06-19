@@ -1,6 +1,10 @@
 (function() {
     'use strict';
 
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+    }
+
     var app = angular.module('app', [
         'ui.codemirror'
     ]);
