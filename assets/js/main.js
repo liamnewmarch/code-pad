@@ -30,7 +30,7 @@
 
         addPane('html', 'HTML');
         addPane('css', 'CSS');
-        addPane('javascript', 'JS');
+        addPane('js', 'JS');
         addPane('result', 'Result');
 
         function addPane(key, label) {
