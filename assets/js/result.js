@@ -2,7 +2,7 @@
     'use strict';
 
     // HTML
-    var main = document.querySelector('main');
+    var main = document.querySelector('body');
     main.innerHTML = localStorage.html || '';
 
     // CSS
