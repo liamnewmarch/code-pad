@@ -1,16 +1,16 @@
 (function() {
-    'use strict';
+  'use strict';
 
-    // HTML
-    var main = document.querySelector('body');
-    main.innerHTML = localStorage.html || '';
+  // HTML
+  var main = document.querySelector('body');
+  main.innerHTML = localStorage.html || '';
 
     // CSS
-    var style = document.createElement('style');
-    style.innerHTML = localStorage.css || '';
-    document.head.appendChild(style);
+  var style = document.createElement('style');
+  style.innerHTML = localStorage.css || '';
+  document.head.appendChild(style);
 
-    // JS
-    eval(localStorage.javascript || '');
+  // JS
+  eval(localStorage.javascript || '');
 
 })();

@@ -20,6 +20,11 @@
             ng-class="{ 'active': vm.active == pane.key }">
             {{ pane.label }}
           </li>
+          <li
+            class="clear"
+            ng-click="vm.clear()">
+            ⨉
+          </li>
         </ul>
       </nav>
     </header>
