@@ -3,6 +3,9 @@ const cacheVersion = '1.0.0';
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(cacheVersion).then(cache => {
     return cache.addAll([
+      '.',
+      'index.html',
+      'result.html',
       'assets/js/result.js',
       'assets/js/main.js',
       'assets/css/styles.css',
@@ -16,8 +19,6 @@ self.addEventListener('install', event => {
       'bower_components/angular/angular.min.js',
       'bower_components/angular-sanitize/angular-sanitize.min.js',
       'bower_components/angular-ui-codemirror/ui-codemirror.min.js',
-      'index.html',
-      'result.html',
     ]);
   }));
 });
