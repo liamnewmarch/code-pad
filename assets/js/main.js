@@ -62,7 +62,7 @@
 
     $scope.$watch('vm.panes', function() {
       vm.panes.forEach(function(pane) {
-        localStorage[pane.key] = pane.model;
+        localStorage[pane.key] = pane.model);
       });
     }, true);
   }]);
