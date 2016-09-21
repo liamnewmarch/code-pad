@@ -3,6 +3,11 @@
   "start_url": "index.html",
   "display": "standalone",
   "orientation": "portrait",
+  "icons": [{
+    "src": "assets/img/icon-192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }],
   "background_color": "#272822",
   "theme_color": "#272822"
 }
