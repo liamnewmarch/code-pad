@@ -1,9 +1,11 @@
 (function() {
   'use strict';
 
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
   }
+
 
   const app = angular.module('app', [
     'ui.codemirror'
@@ -15,56 +17,111 @@
       restrict: 'E',
       link: function(scope, element, attrs) {
         element = element[0];
-        scope.$on('refresh', function() {
+        scope.$on('refresh', function(event, fiddle) {
+          localStorage.fiddle = JSON.stringify(fiddle);
           element.contentWindow.location.reload();
         });
       }
     };
   });
 
-  app.controller('EditorController', [ '$scope', function($scope) {
+
+  app.factory('Fiddle', function() {
+    var defaults = {
+      name: 'Untitled',
+      html: '',
+      css: '',
+      javascript: ''
+    };
+    return function(data) {
+      return angular.extend({
+        key: Math.floor(new Date() / 1000).toString(36)
+      }, defaults, data);
+    };
+  });
+
+
+  app.controller('ViewController', [ '$scope', 'Fiddle', function($scope, Fiddle) {
     var vm = this;
 
-    vm.panes = [];
-    vm.active = 'html';
-    vm.clear = clear;
+    vm.view = 'start';
+    vm.views = ['start', 'fiddle', 'menu'];
 
-    addPane('html', 'HTML');
-    addPane('css', 'CSS');
-    addPane('javascript', 'JS');
-    addPane('result', 'Result');
+    vm.pane = false;
+    vm.panes = ['html', 'css', 'javascript'];
 
-    function addPane(key, label) {
-      vm.panes.push({
-        key: key,
-        label: label,
-        model: key in localStorage ? localStorage[key] : '',
-        config: {
-          theme: 'monokai',
-          mode: key === 'html' ? 'htmlmixed' : key
+    vm.fiddle = false;
+    vm.fiddles = [];
+
+    if ('fiddles' in localStorage) {
+      JSON.parse(localStorage.fiddles).map(function(key) {
+        if (key in localStorage) {
+          var data = JSON.parse(localStorage[key]);
+          var fiddle = new Fiddle(data);
+          vm.fiddles.push(fiddle);
         }
       });
     }
 
-    function clear() {
-      if (confirm('Clear?')) {
-        vm.panes.forEach(function(pane) {
-          pane.model = '';
+    $scope.$watch('vm.fiddle', function() {
+      if (vm.fiddle) {
+        localStorage[vm.fiddle.key] = JSON.stringify(vm.fiddle);
+      }
+    }, true);
+
+    vm.add = function() {
+      var fiddle = new Fiddle();
+      vm.fiddles.push(fiddle);
+      localStorage[fiddle.key] = JSON.stringify(fiddle);
+      localStorage.fiddles = JSON.stringify(vm.fiddles.map(function(fiddle) {
+        return fiddle.key;
+      }));
+      vm.showFiddle(fiddle);
+    };
+
+    vm.delete = function() {
+      if (confirm('Are you sure?')) {
+        var key = vm.fiddle.key;
+        if (key in localStorage) {
+          delete localStorage[key];
+        }
+        vm.fiddles = vm.fiddles.filter(function(fiddle) {
+          return fiddle.key !== key;
         });
+        localStorage.fiddles = JSON.stringify(vm.fiddles.map(function(fiddle) {
+          return fiddle.key;
+        }));
+        vm.fiddle = false;
+        vm.view = 'start';
       }
     }
 
-    $scope.$watch('vm.active', function () {
-      if (vm.active === 'result') {
-        $scope.$broadcast('refresh');
+    vm.menuToggle = function() {
+      if (vm.view === 'fiddle') {
+        vm.view = 'menu';
+      } else {
+        vm.view = 'fiddle';
       }
-    });
+    }
 
-    $scope.$watch('vm.panes', function() {
-      vm.panes.forEach(function(pane) {
-        localStorage[pane.key] = pane.model;
-      });
-    }, true);
+    vm.showFiddle = function(fiddle) {
+      vm.view = 'fiddle';
+      vm.fiddle = fiddle;
+      vm.showPane('html');
+    };
+
+    vm.showPane = function(pane) {
+      vm.pane = pane;
+      if (vm.pane === 'result') {
+        $scope.$broadcast('refresh', vm.fiddle);
+      } else {
+        vm.codemirrorOpts = {
+          theme: 'monokai',
+          mode: pane === 'html' ? 'htmlmixed' : pane
+        };
+      }
+    };
+
   }]);
 
 })();

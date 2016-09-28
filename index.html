@@ -11,42 +11,47 @@
     <link href="manifest.json" rel="manifest">
     <link href="assets/img/icon-192.png" rel="shortcut icon" sizes="192x192">
   </head>
-  <body ng-controller="EditorController as vm">
-    <header>
-      <nav>
-        <ul>
-          <li
-            ng-repeat="pane in vm.panes"
-            ng-click="vm.active = pane.key"
-            ng-class="{ 'active': vm.active == pane.key }">
-            {{ pane.label }}
-          </li>
-          <li
-            class="clear"
-            ng-click="vm.clear()">
-            ⨉
-          </li>
-        </ul>
+  <body ng-controller="ViewController as vm">
+    <section class="view start" ng-if="vm.view === 'start'">
+      <nav class="top-nav">
+        <div class="top-nav__item"> Fiddle </div>
       </nav>
-    </header>
-    <div class="view-container">
-      <div
-        class="view"
-        ng-repeat="pane in vm.panes"
-        ng-show="vm.active == pane.key">
-        <textarea
-          ui-codemirror
-          ui-codemirror-opts="pane.config"
-          ng-if="pane.key != 'result'"
-          ng-model="pane.model">
-        </textarea>
-        <iframe
-          class="view"
-          ng-src="result.html"
-          ng-if="pane.key == 'result'">
-        </iframe>
+      <div class="start__items">
+        <button class="start__item" ng-repeat="fiddle in vm.fiddles track by $index" ng-click="vm.showFiddle(fiddle)"> {{ fiddle.name }} </button>
+        <button class="start__item start__item--add" ng-click="vm.add()"> Add </button>
       </div>
-    </div>
+    </section>
+    <section class="view fiddle" ng-if="vm.view === 'fiddle'">
+      <nav class="top-nav">
+        <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'html'}" ng-click="vm.showPane('html')"> HTML </button>
+        <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'css'}" ng-click="vm.showPane('css')"> CSS </button>
+        <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'javascript'}" ng-click="vm.showPane('javascript')"> JS </button>
+        <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'result'}" ng-click="vm.showPane('result')"> Result </button>
+        <button class="top-nav__item top-nav__item--menu" ng-click="vm.menuToggle()"> ⋮ </li>
+      </nav>
+      <div class="fiddle__pane" ng-if="vm.panes.includes(vm.pane)">
+        <textarea class="fiddle__editor" ng-model="vm.fiddle[vm.pane]" ui-codemirror ui-codemirror-opts="vm.codemirrorOpts"></textarea>
+      </div>
+      <div class="fiddle__pane" ng-show="vm.pane === 'result'">
+        <iframe class="fiddle__result" ng-src="result.html"></iframe>
+      </div>
+    </section>
+    <section class="view menu" ng-if="vm.view === 'menu'">
+      <nav class="top-nav">
+        <div class="top-nav__item"> Settings </div>
+        <button class="top-nav__item top-nav__item--active top-nav__item--menu" ng-click="vm.menuToggle()"> ⋮ </button>
+      </nav>
+      <div class="menu__items">
+        <div class="menu__item">
+          <label class="menu__label"> Fiddle name </label>
+          <input class="menu__input" ng-model="vm.fiddle.name">
+        </div>
+        <div class="menu__item">
+          <button class="menu__button" ng-click="vm.view = 'start'"> Back to home screen </button>
+          <button class="menu__button menu__button--delete" ng-click="vm.delete()"> Delete </button>
+        </div>
+      </div>
+    </section>
     <script src="bower_components/codemirror/lib/codemirror.js"></script>
     <script src="bower_components/codemirror/mode/xml/xml.js"></script>
     <script src="bower_components/codemirror/mode/css/css.js"></script>

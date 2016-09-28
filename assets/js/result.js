@@ -1,16 +1,18 @@
 (function() {
   'use strict';
 
+  var fiddle = JSON.parse(localStorage.fiddle || '{}');
+
   // HTML
   var main = document.querySelector('body');
-  main.innerHTML = localStorage.html || '';
+  main.innerHTML = fiddle.html || '';
 
     // CSS
   var style = document.createElement('style');
-  style.innerHTML = localStorage.css || '';
+  style.innerHTML = fiddle.css || '';
   document.head.appendChild(style);
 
   // JS
-  eval(localStorage.javascript || '');
+  eval(fiddle.javascript || '');
 
 })();
