@@ -33,7 +33,7 @@
         <textarea class="fiddle__editor" ng-model="vm.fiddle[vm.pane]" ui-codemirror ui-codemirror-opts="vm.codemirrorOpts"></textarea>
       </div>
       <div class="fiddle__pane" ng-show="vm.pane === 'result'">
-        <iframe class="fiddle__result" ng-src="result.html"></iframe>
+        <iframe class="fiddle__result"></iframe>
       </div>
     </section>
     <section class="view menu" ng-if="vm.view === 'menu'">

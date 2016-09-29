@@ -2,24 +2,37 @@
   'use strict';
 
 
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator)
     navigator.serviceWorker.register('service-worker.js');
-  }
 
 
-  const app = angular.module('app', [
-    'ui.codemirror'
-  ]);
+  const app = angular.module('app', [ 'ui.codemirror' ]);
 
 
   app.directive('iframe', function() {
     return {
       restrict: 'E',
       link: function(scope, element, attrs) {
-        element = element[0];
-        scope.$on('refresh', function(event, fiddle) {
-          localStorage.fiddle = JSON.stringify(fiddle);
-          element.contentWindow.location.reload();
+        var fiddle = false;
+
+        element.on('load', function(event) {
+          if (!fiddle)
+            return;
+
+          const iframe = element[0].contentWindow;
+
+          iframe.document.body.innerHTML = fiddle.html;
+
+          const style = iframe.document.createElement('style');
+          style.innerHTML = fiddle.css || '';
+          iframe.document.head.appendChild(style);
+
+          iframe.eval(fiddle.javascript || '');
+        });
+
+        scope.$on('refresh', function(event, data) {
+          fiddle = data;
+          element[0].contentWindow.location.reload();
         });
       }
     };
@@ -27,12 +40,13 @@
 
 
   app.factory('Fiddle', function() {
-    var defaults = {
+    const defaults = {
       name: 'Untitled',
-      html: '',
-      css: '',
-      javascript: ''
+      html: '<p> Hello, world! </p>\n',
+      css: 'html {\n  background: #272822;\n  color: #fff;\n}\n',
+      javascript: 'window.onerror = alert;\n\n'
     };
+
     return function(data) {
       return angular.extend({
         key: Math.floor(new Date() / 1000).toString(36)
@@ -42,7 +56,7 @@
 
 
   app.controller('ViewController', [ '$scope', 'Fiddle', function($scope, Fiddle) {
-    var vm = this;
+    const vm = this;
 
     vm.view = 'start';
     vm.views = ['start', 'fiddle', 'menu'];
@@ -56,52 +70,43 @@
     if ('fiddles' in localStorage) {
       JSON.parse(localStorage.fiddles).map(function(key) {
         if (key in localStorage) {
-          var data = JSON.parse(localStorage[key]);
-          var fiddle = new Fiddle(data);
+          const data = JSON.parse(localStorage[key]);
+          const fiddle = new Fiddle(data);
           vm.fiddles.push(fiddle);
         }
       });
     }
 
     $scope.$watch('vm.fiddle', function() {
-      if (vm.fiddle) {
+      if (vm.fiddle)
         localStorage[vm.fiddle.key] = JSON.stringify(vm.fiddle);
-      }
     }, true);
 
     vm.add = function() {
-      var fiddle = new Fiddle();
+      const fiddle = new Fiddle();
       vm.fiddles.push(fiddle);
       localStorage[fiddle.key] = JSON.stringify(fiddle);
-      localStorage.fiddles = JSON.stringify(vm.fiddles.map(function(fiddle) {
-        return fiddle.key;
-      }));
+      const ids = vm.fiddles.map(fiddle => fiddle.key);
+      localStorage.fiddles = JSON.stringify(ids);
       vm.showFiddle(fiddle);
     };
 
     vm.delete = function() {
-      if (confirm('Are you sure?')) {
-        var key = vm.fiddle.key;
-        if (key in localStorage) {
-          delete localStorage[key];
-        }
-        vm.fiddles = vm.fiddles.filter(function(fiddle) {
-          return fiddle.key !== key;
-        });
-        localStorage.fiddles = JSON.stringify(vm.fiddles.map(function(fiddle) {
-          return fiddle.key;
-        }));
-        vm.fiddle = false;
-        vm.view = 'start';
-      }
+      if (!confirm('Are you sure?'))
+        return;
+
+      const key = vm.fiddle.key;
+      if (key in localStorage)
+        delete localStorage[key];
+      vm.fiddles = vm.fiddles.filter(fiddle => fiddle.key !== key);
+      const ids = vm.fiddles.map(fiddle => fiddle.key);
+      localStorage.fiddles = JSON.stringify(ids);
+      vm.fiddle = false;
+      vm.view = 'start';
     }
 
     vm.menuToggle = function() {
-      if (vm.view === 'fiddle') {
-        vm.view = 'menu';
-      } else {
-        vm.view = 'fiddle';
-      }
+      vm.view = (vm.view === 'fiddle') ? 'menu' : 'fiddle';
     }
 
     vm.showFiddle = function(fiddle) {

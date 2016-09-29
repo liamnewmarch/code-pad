@@ -5,8 +5,6 @@ self.addEventListener('install', event => {
     return cache.addAll([
       '.',
       'index.html',
-      'result.html',
-      'assets/js/result.js',
       'assets/js/main.js',
       'assets/css/styles.css',
       'bower_components/codemirror/lib/codemirror.css',
