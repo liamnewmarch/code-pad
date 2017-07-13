@@ -33,6 +33,7 @@ input {
 .top-nav {
   background: linear-gradient(to right, purple, cyan);
   display: flex;
+  flex-shrink: 0;
   list-style: none;
   padding: 0 .2rem;
 
