@@ -27,7 +27,11 @@
           style.innerHTML = fiddle.css || '';
           iframe.document.head.appendChild(style);
 
-          iframe.eval(fiddle.javascript || '');
+          try {
+            iframe.eval(fiddle.javascript || '');
+          } catch (error) {
+            alert(error);
+          }
         });
 
         scope.$on('refresh', function(event, data) {
