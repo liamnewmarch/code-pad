@@ -1,23 +1,25 @@
-* {
-  box-sizing: border-box;
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
 }
 
 html {
-  background: #272822;
+  background-color: #272822;
+  box-sizing: border-box;
   color: #fff;
-  font: 16px / normal 'Helvetica Neue', Helvetica, sans-serif;
+  font: 16px / 1.2 'Helvetica Neue', sans-serif;
   text-rendering: optimizeLegibility;
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   margin: 0;
 }
 
 button,
 input {
-  background: inherit;
-  border: inherit;
-  color: inherit;
-  outline: inherit;
-  padding: inherit;
+  all: unset;
 }

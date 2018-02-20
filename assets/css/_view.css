@@ -1,5 +1,5 @@
 .view {
   display: flex;
-  flex-flow: column nowrap;
-  height: 100vh;
+  flex-direction: column;
+  flex-grow: 1;
 }

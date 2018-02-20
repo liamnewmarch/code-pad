@@ -4,18 +4,28 @@
   flex-grow: 1;
 }
 
-.CodeMirror,
+.fiddle__pane .CodeMirror,
 .fiddle__result {
-  background: #272822;
+  background-color: #272822;
   border: 0;
   color: #fff;
   height: 100vh;
   flex-basis: 100%;
   flex-grow: 1;
+  position: relative;
   width: 100%;
 }
 
-.fiddle__result .CodeMirror {
-  line-height: 1.2;
+.fiddle__pane .CodeMirror {
+  line-height: inherit;
+}
+
+.fiddle__pane .CodeMirror-scroll {
+  box-sizing: inherit;
+  height: 100%;
+  left: 0;
   padding: 1rem;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
