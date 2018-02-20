@@ -47,8 +47,8 @@
     const defaults = {
       name: 'Untitled',
       html: '<p> Hello, world! </p>\n',
-      css: 'html {\n  background: #272822;\n  color: #fff;\n}\n',
-      javascript: 'window.onerror = alert;\n\n'
+      css: 'html {\n  background-color: #272822;\n  color: #fff;\n}\n',
+      javascript: 'const p = document.querySelector(\'p\');\n'
     };
 
     return function(data) {
