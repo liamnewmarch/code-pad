@@ -1,4 +1,4 @@
-const cacheVersion = '1.0.0';
+const cacheVersion = '1.1.0';
 
 const files = [
   '.',
@@ -22,6 +22,16 @@ const files = [
   'bower_components/angular-sanitize/angular-sanitize.min.js',
   'bower_components/angular-ui-codemirror/ui-codemirror.min.js',
 ];
+
+self.addEventListener('activate', event => {
+  event.waitUntil(caches.keys().then(cacheNames => {
+    return Promise.all(cacheNames.filter(name => {
+      return name !== cacheVersion;
+    }).forEach(cacheName => {
+      return caches.delete(cacheName);
+    }));
+  }));
+});
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(cacheVersion).then(cache => {
