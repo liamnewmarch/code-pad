@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #272822;
+  color: #fff;
+  font: 16px / normal 'Helvetica Neue', Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input {
+  background: inherit;
+  border: inherit;
+  color: inherit;
+  outline: inherit;
+  padding: inherit;
+}

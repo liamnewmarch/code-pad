@@ -1,0 +1,21 @@
+.fiddle__pane {
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+}
+
+.CodeMirror,
+.fiddle__result {
+  background: #272822;
+  border: 0;
+  color: #fff;
+  height: 100vh;
+  flex-basis: 100%;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.fiddle__result .CodeMirror {
+  line-height: 1.2;
+  padding: 1rem;
+}
