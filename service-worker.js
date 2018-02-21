@@ -1,6 +1,6 @@
-const cacheVersion = '1.1.0';
+const CACHE_VERSION = '1.1.0';
 
-const files = [
+const CACHE_FILES = [
   '.',
   'index.html',
   'assets/js/main.js',
@@ -23,24 +23,36 @@ const files = [
   'bower_components/angular-ui-codemirror/ui-codemirror.min.js',
 ];
 
-self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(cacheNames => {
-    return Promise.all(cacheNames.filter(name => {
-      return name !== cacheVersion;
-    }).forEach(cacheName => {
-      return caches.delete(cacheName);
-    }));
-  }));
-});
+const STRATEGY = {
+  async addFiles() {
+    const cache = await caches.open(CACHE_VERSION);
+    return cache.addAll(CACHE_FILES);
+  },
 
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(cacheVersion).then(cache => {
-    return cache.addAll(files);
-  }));
-});
+  async deleteStale() {
+    const staleCaches = (key) => key !== CACHE_VERSION;
+    const deleteCaches = (key) => caches.delete(key);
+    const keys = await caches.keys();
+    return Promise.all(keys.filter(staleCaches).map(deleteCaches));
+  },
 
-self.addEventListener('fetch', event => {
-  event.respondWith(caches.match(event.request).then(response => {
+  async respondFromCache(event) {
+    const response = await caches.match(event.request);
     return response || fetch(event.request);
-  }));
+  },
+};
+
+self.addEventListener('activate', (event) => {
+  const deleted = STRATEGY.deleteStale();
+  event.waitUntil(deleted);
+});
+
+self.addEventListener('install', (event) => {
+  const added = STRATEGY.addFiles();
+  event.waitUntil(added);
+});
+
+self.addEventListener('fetch', (event) => {
+  const response = STRATEGY.respondFromCache(event);
+  event.respondWith(response);
 });
