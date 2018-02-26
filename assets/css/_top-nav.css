@@ -3,6 +3,7 @@
   display: flex;
   flex-shrink: 0;
   list-style: none;
+  overflow: scroll;
   padding: 0 .2rem;
 }
 
@@ -18,14 +19,11 @@
   user-select: none;
 }
 
-.top-nav__item--title {
-  flex-grow: 1;
-}
-
 .top-nav__item--active {
   background-color: #272822;
 }
 
-.top-nav__item--menu {
-  margin-left: auto;
+.top-nav__item--tab,
+.top-nav__item--title {
+  flex-grow: 1;
 }

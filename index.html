@@ -25,10 +25,10 @@
     <!-- Fiddle view -->
     <section class="view fiddle" ng-if="vm.view === 'fiddle'">
       <nav class="top-nav">
-        <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'html'}" ng-click="vm.showPane('html')"> HTML </button>
-        <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'css'}" ng-click="vm.showPane('css')"> CSS </button>
-        <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'javascript'}" ng-click="vm.showPane('javascript')"> JS </button>
-        <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'result'}" ng-click="vm.showPane('result')"> Result </button>
+        <button class="top-nav__item top-nav__item--tab" ng-class="{'top-nav__item--active': vm.pane === 'html'}" ng-click="vm.showPane('html')"> HTML </button>
+        <button class="top-nav__item top-nav__item--tab" ng-class="{'top-nav__item--active': vm.pane === 'css'}" ng-click="vm.showPane('css')"> CSS </button>
+        <button class="top-nav__item top-nav__item--tab" ng-class="{'top-nav__item--active': vm.pane === 'javascript'}" ng-click="vm.showPane('javascript')"> JS </button>
+        <button class="top-nav__item top-nav__item--tab" ng-class="{'top-nav__item--active': vm.pane === 'result'}" ng-click="vm.showPane('result')"> Result </button>
         <button class="top-nav__item top-nav__item--menu" ng-click="vm.menuToggle()"> ⋮ </li>
       </nav>
       <div class="fiddle__pane" ng-if="vm.panes.includes(vm.pane)">
