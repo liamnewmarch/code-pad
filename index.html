@@ -12,15 +12,17 @@
     <link href="assets/img/icon-192.png" rel="shortcut icon" sizes="192x192">
   </head>
   <body ng-controller="ViewController as vm">
+    <!-- Start view -->
     <section class="view start" ng-if="vm.view === 'start'">
       <nav class="top-nav">
-        <div class="top-nav__item"> Fiddle </div>
+        <div class="top-nav__item top-nav__item--title"> Fiddle </div>
       </nav>
       <div class="start__items">
         <button class="start__item" ng-repeat="fiddle in vm.fiddles track by $index" ng-click="vm.showFiddle(fiddle)"> {{ fiddle.name }} </button>
         <button class="start__item start__item--add" ng-click="vm.add()"> Add </button>
       </div>
     </section>
+    <!-- Fiddle view -->
     <section class="view fiddle" ng-if="vm.view === 'fiddle'">
       <nav class="top-nav">
         <button class="top-nav__item" ng-class="{'top-nav__item--active': vm.pane === 'html'}" ng-click="vm.showPane('html')"> HTML </button>
@@ -36,9 +38,11 @@
         <iframe class="fiddle__result"></iframe>
       </div>
     </section>
+    <!-- Menu view -->
     <section class="view menu" ng-if="vm.view === 'menu'">
       <nav class="top-nav">
-        <div class="top-nav__item"> Settings </div>
+        <button class="top-nav__item top-nav__item--back" ng-click="vm.view = 'start'"> ← </button>
+        <div class="top-nav__item top-nav__item--title"> Settings </div>
         <button class="top-nav__item top-nav__item--active top-nav__item--menu" ng-click="vm.menuToggle()"> ⋮ </button>
       </nav>
       <div class="menu__items">

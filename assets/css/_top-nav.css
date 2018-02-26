@@ -10,11 +10,16 @@
   background-color: rgba(71, 72, 68, .9);
   border: 0;
   border-radius: .2rem .2rem 0 0;
-  flex-grow: 1;
+  flex: 0 0 2rem;
   line-height: 3rem;
   margin: .4rem .2rem 0;
+  padding: 0 1rem;
   text-align: center;
   user-select: none;
+}
+
+.top-nav__item--title {
+  flex-grow: 1;
 }
 
 .top-nav__item--active {
@@ -22,6 +27,5 @@
 }
 
 .top-nav__item--menu {
-  flex: 0 0 3rem;
-  padding: 0 1rem;
+  margin-left: auto;
 }

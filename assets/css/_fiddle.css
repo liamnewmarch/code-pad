@@ -29,3 +29,7 @@
   top: 0;
   width: 100%;
 }
+
+.fiddle__pane .CodeMirror-sizer {
+  border: 0;
+}
