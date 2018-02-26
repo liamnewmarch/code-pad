@@ -95,6 +95,15 @@
       vm.showFiddle(fiddle);
     };
 
+    vm.copy = function() {
+      const textarea = document.createElement('textarea');
+      textarea.value = JSON.stringify(vm.fiddle);
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    };
+
     vm.delete = function() {
       if (!confirm('Are you sure?'))
         return;
