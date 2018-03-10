@@ -31,5 +31,5 @@
 }
 
 .fiddle__pane .CodeMirror-sizer {
-  border: 0;
+  border-right-width: 1rem;
 }

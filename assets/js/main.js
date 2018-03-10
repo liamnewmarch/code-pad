@@ -134,6 +134,7 @@
         $scope.$broadcast('refresh', vm.fiddle);
       } else {
         vm.codemirrorOpts = {
+          inputStyle: 'textarea',
           theme: 'monokai',
           mode: pane === 'html' ? 'htmlmixed' : pane
         };
