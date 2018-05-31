@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" ng-app="app">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
@@ -11,7 +11,7 @@
     <link href="manifest.json" rel="manifest">
     <link href="assets/img/icon-192.png" rel="shortcut icon" sizes="192x192">
   </head>
-  <body ng-controller="ViewController as vm">
+  <body ng-controller="ViewController as vm" ng-cloak>
     <!-- Start view -->
     <section class="view start" ng-if="vm.view === 'start'">
       <nav class="top-nav">
@@ -63,7 +63,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/htmlmixed/htmlmixed.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.0/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-codemirror/0.3.0/ui-codemirror.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js" type="module"></script>
     <script async src="https://liamnewmarch.github.io/js/analytics.js"></script>
   </body>
 </html>

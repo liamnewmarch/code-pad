@@ -1,9 +1,8 @@
 const CACHE_VERSION = '1.3.0';
 
 const CACHE_FILES = [
+  // local resources
   '.',
-  'index.html',
-  'assets/js/main.js',
   'assets/css/styles.css',
   'assets/css/_base.css',
   'assets/css/_fiddle.css',
@@ -11,6 +10,13 @@ const CACHE_FILES = [
   'assets/css/_start.css',
   'assets/css/_top-nav.css',
   'assets/css/_view.css',
+  'assets/js/main.js',
+  'assets/js/config.js',
+  'assets/js/iframe.js',
+  'assets/js/fiddle.js',
+  'assets/js/view-controller.js',
+  'index.html',
+  // foreign resources
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/codemirror.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/codemirror.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/theme/monokai.min.css',
