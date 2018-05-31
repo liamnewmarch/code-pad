@@ -4,7 +4,7 @@ _A HTML / CSS / JS sandbox that works offline and between page refreshes._
 
 This project gives you the ability to write HTML, CSS and Javascript to quickly test your ideas.
 
-Try it for yourself here [liamnewmarch.github.io/fiddle](https://liamnewmarch.github.io/fiddle)
+Try it for yourself here [liamnewmarch-fiddle.firebaseapp.com](https://liamnewmarch-fiddle.firebaseapp.com)
 
 ## Persistent
 
