@@ -1,5 +1,7 @@
-export function run() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js');
-  }
+const url = 'service-worker.js';
+
+export async function run() {
+  if (!navigator.serviceWorker) return;
+  const registration = await navigator.serviceWorker.register(url);
+  registration.update();
 }

@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.4.0';
+const CACHE_VERSION = '3.0.5';
 
 const CACHE_FILES = [
   // local resources
@@ -55,6 +55,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('install', (event) => {
   const added = STRATEGY.addFiles();
   event.waitUntil(added);
+  self.skipWaiting();
 });
 
 self.addEventListener('fetch', (event) => {
