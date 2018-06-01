@@ -38,9 +38,9 @@
       <div class="fiddle__pane" ng-if="vm.panes.includes(vm.pane)">
         <textarea class="fiddle__editor" ng-model="vm.fiddle[vm.pane]" ui-codemirror ui-codemirror-opts="vm.codemirrorOpts"></textarea>
       </div>
-      <div class="fiddle__pane" ng-show="vm.pane === 'result'">
+      <fiddle-result class="fiddle__pane" fiddle="{{ vm.fiddle.key }}" ng-if="vm.pane === 'result'">
         <iframe class="fiddle__result"></iframe>
-      </div>
+      </fiddle-result>
     </section>
     <!-- Menu view -->
     <section class="view menu" ng-if="vm.view === 'menu'">

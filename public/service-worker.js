@@ -3,17 +3,20 @@ const CACHE_VERSION = '3.0.5';
 const CACHE_FILES = [
   // local resources
   '.',
-  'assets/css/styles.css',
   'assets/css/_base.css',
   'assets/css/_fiddle.css',
   'assets/css/_menu.css',
   'assets/css/_start.css',
   'assets/css/_top-nav.css',
   'assets/css/_view.css',
-  'assets/js/main.js',
+  'assets/css/styles.css',
+  'assets/img/icon-192.png',
   'assets/js/config.js',
-  'assets/js/iframe.js',
+  'assets/js/fiddle-result.js',
   'assets/js/fiddle.js',
+  'assets/js/main.js',
+  'assets/js/run.js',
+  'assets/js/store.js',
   'assets/js/view-controller.js',
   'index.html',
   // foreign resources

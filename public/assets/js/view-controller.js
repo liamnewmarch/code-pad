@@ -1,6 +1,9 @@
-ViewController.$inject = ['$scope', 'Fiddle'];
+import { Fiddle } from './fiddle.js';
+import { getItem } from './store.js';
 
-export function ViewController($scope, Fiddle) {
+ViewController.$inject = ['$scope'];
+
+export function ViewController($scope) {
   const vm = this;
 
   vm.view = 'start';
@@ -12,53 +15,34 @@ export function ViewController($scope, Fiddle) {
   vm.fiddle = false;
   vm.fiddles = [];
 
-  if ('fiddles' in localStorage) {
-    JSON.parse(localStorage.fiddles).map(function(key) {
-      if (key in localStorage) {
-        const data = JSON.parse(localStorage[key]);
-        const fiddle = new Fiddle(data);
-        vm.fiddles.push(fiddle);
-      }
-    });
-  }
+  getItem('fiddles', []).map(key => {
+    const fiddle = Fiddle.load(key);
+    if (fiddle) vm.fiddles.push(fiddle);
+  });
 
-  $scope.$watch('vm.fiddle', function() {
-    if (vm.fiddle)
-      localStorage[vm.fiddle.key] = JSON.stringify(vm.fiddle);
+  $scope.$watch('vm.fiddle', () => {
+    if (vm.fiddle) vm.fiddle.save();
   }, true);
 
-  vm.add = function(data) {
-    const fiddle = new Fiddle(data);
-    vm.fiddles.push(fiddle);
-    localStorage[fiddle.key] = JSON.stringify(fiddle);
-    const ids = vm.fiddles.map(fiddle => fiddle.key);
-    localStorage.fiddles = JSON.stringify(ids);
+  vm.add = (data) => {
+    const fiddle = Fiddle.create(data);
+    if (fiddle) vm.fiddles.push(fiddle);
   };
 
-  vm.copy = function() {
-    const textarea = document.createElement('textarea');
-    textarea.value = JSON.stringify(vm.fiddle);
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
+  vm.copy = () => {
+    vm.fiddle.copy();
   };
 
-  vm.delete = function() {
-    if (!confirm('Are you sure?'))
-      return;
-
+  vm.delete = () => {
+    if (!confirm('Are you sure?')) return;
     const key = vm.fiddle.key;
-    if (key in localStorage)
-      delete localStorage[key];
+    vm.fiddle.delete();
     vm.fiddles = vm.fiddles.filter(fiddle => fiddle.key !== key);
-    const ids = vm.fiddles.map(fiddle => fiddle.key);
-    localStorage.fiddles = JSON.stringify(ids);
     vm.fiddle = false;
     vm.view = 'start';
-  }
+  };
 
-  vm.import = function() {
+  vm.import = () => {
     try {
       const data = JSON.parse(vm.importJSON);
       delete data.key;
@@ -69,21 +53,19 @@ export function ViewController($scope, Fiddle) {
     }
   };
 
-  vm.menuToggle = function() {
+  vm.menuToggle = () => {
     vm.view = (vm.view === 'fiddle') ? 'menu' : 'fiddle';
-  }
+  };
 
-  vm.showFiddle = function(fiddle) {
+  vm.showFiddle = (fiddle) => {
     vm.view = 'fiddle';
     vm.fiddle = fiddle;
     vm.showPane('html');
   };
 
-  vm.showPane = function(pane) {
+  vm.showPane = (pane) => {
     vm.pane = pane;
-    if (vm.pane === 'result') {
-      $scope.$broadcast('refresh', vm.fiddle);
-    } else {
+    if (vm.panes.includes(vm.pane)) {
       vm.codemirrorOpts = {
         inputStyle: 'textarea',
         theme: 'monokai',
