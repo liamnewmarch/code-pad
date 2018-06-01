@@ -2,6 +2,7 @@
 .start__import {
   display: flex;
   flex-flow: row wrap;
+  flex-shrink: 0;
   padding: 1rem 0 0 1rem;
 }
 
