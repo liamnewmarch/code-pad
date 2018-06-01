@@ -17,7 +17,7 @@ export function ViewController($scope) {
 
   getItem('fiddles', []).map(key => {
     const fiddle = Fiddle.load(key);
-    if (fiddle) vm.fiddles.push(fiddle);
+    vm.fiddles.push(fiddle);
   });
 
   $scope.$watch('vm.fiddle', () => {
@@ -26,7 +26,7 @@ export function ViewController($scope) {
 
   vm.add = (data) => {
     const fiddle = Fiddle.create(data);
-    if (fiddle) vm.fiddles.push(fiddle);
+    vm.fiddles.push(fiddle);
   };
 
   vm.copy = () => {
@@ -45,7 +45,6 @@ export function ViewController($scope) {
   vm.import = () => {
     try {
       const data = JSON.parse(vm.importJSON);
-      delete data.key;
       vm.add(data);
       delete vm.importJSON;
     } catch (error) {

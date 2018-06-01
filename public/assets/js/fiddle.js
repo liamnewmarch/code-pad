@@ -9,8 +9,9 @@ export const defaults = {
 
 export class Fiddle {
 
-  static create() {
-    const fiddle = new Fiddle();
+  static create(data = {}) {
+    delete data.key;
+    const fiddle = new Fiddle(data);
     const fiddles = getItem('fiddles', []);
     if (!fiddles.includes(fiddle.key)) {
       setItem('fiddles', [...fiddles, fiddle.key]);
@@ -20,7 +21,6 @@ export class Fiddle {
 
   static load(key) {
     const data = getItem(key, {});
-    if (!data) return;
     return new Fiddle(data);
   }
 
