@@ -27,13 +27,12 @@ export function ViewController($scope, Fiddle) {
       localStorage[vm.fiddle.key] = JSON.stringify(vm.fiddle);
   }, true);
 
-  vm.add = function() {
-    const fiddle = new Fiddle();
+  vm.add = function(data) {
+    const fiddle = new Fiddle(data);
     vm.fiddles.push(fiddle);
     localStorage[fiddle.key] = JSON.stringify(fiddle);
     const ids = vm.fiddles.map(fiddle => fiddle.key);
     localStorage.fiddles = JSON.stringify(ids);
-    vm.showFiddle(fiddle);
   };
 
   vm.copy = function() {
@@ -58,6 +57,17 @@ export function ViewController($scope, Fiddle) {
     vm.fiddle = false;
     vm.view = 'start';
   }
+
+  vm.import = function() {
+    try {
+      const data = JSON.parse(vm.importJSON);
+      delete data.key;
+      vm.add(data);
+      delete vm.importJSON;
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   vm.menuToggle = function() {
     vm.view = (vm.view === 'fiddle') ? 'menu' : 'fiddle';

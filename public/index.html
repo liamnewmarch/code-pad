@@ -21,6 +21,10 @@
         <button class="start__item" ng-repeat="fiddle in vm.fiddles track by $index" ng-click="vm.showFiddle(fiddle)"> {{ fiddle.name }} </button>
         <button class="start__item start__item--add" ng-click="vm.add()"> Add </button>
       </div>
+      <div class="start__import">
+        <input class="start__import-input" type="text" ng-model="vm.importJSON" placeholder="Import from JSON">
+        <button class="start__import-button" ng-click="vm.import()"> Import </button>
+      </div>
     </section>
     <!-- Fiddle view -->
     <section class="view fiddle" ng-if="vm.view === 'fiddle'">
