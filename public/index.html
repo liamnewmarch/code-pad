@@ -2,72 +2,16 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="initial-scale=1, user-scalable=no">
     <meta name="theme-color" content="#272822">
     <title> Fiddle | liamnewmarch.co.uk </title>
-    <link href="assets/css/styles.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/codemirror.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/theme/monokai.min.css" rel="stylesheet">
-    <link href="manifest.json" rel="manifest">
-    <link href="assets/img/icon-192.png" rel="shortcut icon" sizes="192x192">
+    <link href="/bundle.css" rel="stylesheet">
+    <link href="/manifest.json" rel="manifest">
+    <link href="/icon-192.png" rel="shortcut icon" sizes="192x192">
   </head>
-  <body ng-controller="ViewController as vm" ng-cloak>
-    <!-- Start view -->
-    <section class="view start" ng-if="vm.view === 'start'">
-      <nav class="top-nav">
-        <div class="top-nav__item top-nav__item--title"> Fiddle </div>
-      </nav>
-      <div class="start__items">
-        <button class="start__item" ng-repeat="fiddle in vm.fiddles track by $index" ng-click="vm.showFiddle(fiddle)"> {{ fiddle.name }} </button>
-        <button class="start__item start__item--add" ng-click="vm.add()"> Add </button>
-      </div>
-      <div class="start__import">
-        <input class="start__import-input" type="text" ng-model="vm.importJSON" placeholder="Import from JSON">
-        <button class="start__import-button" ng-click="vm.import()"> Import </button>
-      </div>
-    </section>
-    <!-- Fiddle view -->
-    <section class="view fiddle" ng-if="vm.view === 'fiddle'">
-      <nav class="top-nav">
-        <button class="top-nav__item top-nav__item--tab" ng-class="{'top-nav__item--active': vm.pane === 'html'}" ng-click="vm.showPane('html')"> HTML </button>
-        <button class="top-nav__item top-nav__item--tab" ng-class="{'top-nav__item--active': vm.pane === 'css'}" ng-click="vm.showPane('css')"> CSS </button>
-        <button class="top-nav__item top-nav__item--tab" ng-class="{'top-nav__item--active': vm.pane === 'javascript'}" ng-click="vm.showPane('javascript')"> JS </button>
-        <button class="top-nav__item top-nav__item--tab" ng-class="{'top-nav__item--active': vm.pane === 'result'}" ng-click="vm.showPane('result')"> Result </button>
-        <button class="top-nav__item top-nav__item--menu" ng-click="vm.menuToggle()"> ⋮ </li>
-      </nav>
-      <div class="fiddle__pane" ng-if="vm.panes.includes(vm.pane)">
-        <textarea class="fiddle__editor" ng-model="vm.fiddle[vm.pane]" ui-codemirror ui-codemirror-opts="vm.codemirrorOpts"></textarea>
-      </div>
-      <fiddle-result class="fiddle__pane" fiddle="{{ vm.fiddle.key }}" ng-if="vm.pane === 'result'">
-        <iframe class="fiddle__result"></iframe>
-      </fiddle-result>
-    </section>
-    <!-- Menu view -->
-    <section class="view menu" ng-if="vm.view === 'menu'">
-      <nav class="top-nav">
-        <button class="top-nav__item top-nav__item--back" ng-click="vm.view = 'start'"> ← </button>
-        <div class="top-nav__item top-nav__item--title"> Settings </div>
-        <button class="top-nav__item top-nav__item--active top-nav__item--menu" ng-click="vm.menuToggle()"> ⋮ </button>
-      </nav>
-      <div class="menu__items">
-        <div class="menu__item">
-          <label class="menu__label"> Fiddle name </label>
-          <input class="menu__input" ng-model="vm.fiddle.name">
-        </div>
-        <div class="menu__item">
-          <button class="menu__button" ng-click="vm.copy()"> Copy to clipboard </button>
-          <button class="menu__button menu__button--delete" ng-click="vm.delete()"> Delete </button>
-        </div>
-      </div>
-    </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/xml/xml.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/css/css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/htmlmixed/htmlmixed.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.0/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-codemirror/0.3.0/ui-codemirror.js"></script>
-    <script src="assets/js/main.js" type="module"></script>
+  <body>
+    <FiddleApp></FiddleApp>
+    <script async src="/bundle.js"></script>
     <script async src="https://liamnewmarch.github.io/js/analytics.js"></script>
   </body>
 </html>

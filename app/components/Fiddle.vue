@@ -1,3 +1,20 @@
+<script>
+import Vuex from 'vuex';
+import store from '../config/store';
+
+export default {
+  beforeRouteEnter(to, from, next) {
+    if (to.params.key in store.state.fiddles) {
+      next();
+    } else {
+      next({ name: 'list' });
+    }
+  },
+}
+</script>
+
+
+<style>
 .fiddle__pane {
   display: flex;
   flex-flow: column nowrap;
@@ -33,3 +50,8 @@
 .fiddle__pane .CodeMirror-sizer {
   border-right-width: 1rem;
 }
+</style>
+
+<template>
+  <router-view />
+</template>

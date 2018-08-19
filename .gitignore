@@ -1,1 +1,5 @@
-firebase-debug.log
+/.firebase
+/.vsconfig
+/firebase-debug.log
+/node_modules
+/public/bundle.*

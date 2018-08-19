@@ -6,7 +6,13 @@
   "hosting": {
     "public": "public",
     "ignore": [
+      "app/**",
+      "firebase-debug.log",
       "firebase.json",
+      "package-lock.json",
+      "package.json",
+      "README.md",
+      "rollup.config.js",
       "**/.*",
       "**/node_modules/**"
     ],

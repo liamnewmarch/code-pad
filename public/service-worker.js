@@ -1,34 +1,11 @@
-const CACHE_VERSION = '3.0.5';
+const CACHE_VERSION = '3.1.0';
 
 const CACHE_FILES = [
-  // local resources
-  '.',
-  'assets/css/_base.css',
-  'assets/css/_fiddle.css',
-  'assets/css/_menu.css',
-  'assets/css/_start.css',
-  'assets/css/_top-nav.css',
-  'assets/css/_view.css',
-  'assets/css/styles.css',
-  'assets/img/icon-192.png',
-  'assets/js/config.js',
-  'assets/js/fiddle-result.js',
-  'assets/js/fiddle.js',
-  'assets/js/main.js',
-  'assets/js/run.js',
-  'assets/js/store.js',
-  'assets/js/view-controller.js',
+  '',
+  'css/bundle.css',
+  'img/icon-192.png',
+  'js/bundle.js',
   'index.html',
-  // foreign resources
-  'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/codemirror.min.css',
-  'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/codemirror.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/theme/monokai.min.css',
-  'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/css/css.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/htmlmixed/htmlmixed.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/javascript/javascript.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.38.0/mode/xml/xml.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.0/angular.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-codemirror/0.3.0/ui-codemirror.js',
 ];
 
 const STRATEGY = {
