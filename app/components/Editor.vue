@@ -10,11 +10,9 @@ import 'codemirror/mode/htmlmixed/htmlmixed.js';
 import 'codemirror/mode/javascript/javascript.js';
 
 export default {
-  data() {
-    const { key } = this.$route.params;
-    return {
-      fiddle: this.$store.state.fiddles[key],
-    };
+  beforeRouteUpdate(to, from, next) {
+    this.updateEditor(to.params.type);
+    next();
   },
   computed: {
     type() {
@@ -42,10 +40,7 @@ export default {
       });
     });
   },
-  beforeRouteUpdate(to, from, next) {
-    this.updateEditor(to.params.type);
-    next();
-  },
+  props: ['fiddle'],
 };
 </script>
 

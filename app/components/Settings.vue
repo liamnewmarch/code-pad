@@ -1,10 +1,5 @@
 <script>
 export default {
-  data() {
-    const { key } = this.$route.params;
-    const fiddle = this.$store.state.fiddles[key]
-    return { fiddle, key };
-  },
   methods: {
     clone() {
       this.$store.dispatch('addFiddle', this.fiddle);
@@ -18,9 +13,10 @@ export default {
       document.body.removeChild(textarea);
     },
     deleteFiddle() {
-      this.$store.dispatch('deleteFiddle', { key: this.key });
+      this.$store.dispatch('deleteFiddle', { key: this.fiddle.key });
     },
   },
+  props: ['fiddle'],
 };
 </script>
 

@@ -10,6 +10,10 @@ export default {
       next({ name: 'list' });
     }
   },
+  data() {
+    const fiddle = this.$store.state.fiddles[this.$route.params.key];
+    return { fiddle };
+  },
 }
 </script>
 
@@ -53,5 +57,5 @@ export default {
 </style>
 
 <template>
-  <router-view />
+  <router-view :fiddle="fiddle" />
 </template>

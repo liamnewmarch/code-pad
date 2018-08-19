@@ -2,7 +2,6 @@
 export default {
   computed: {
     fiddle() {
-      const { key } = this.$route.params;
       return this.$store.state.fiddles[this.$route.params.key];
     },
     isListRoute() {

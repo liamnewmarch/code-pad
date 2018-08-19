@@ -1,11 +1,5 @@
 <script>
 export default {
-  data() {
-    const { key } = this.$route.params;
-    return {
-      fiddle: this.$store.state.fiddles[key],
-    };
-  },
   mounted() {
     const { contentWindow, contentDocument } = this.$refs.result;
     // HTML
@@ -21,6 +15,7 @@ export default {
       alert(error);
     }
   },
+  props: ['fiddle'],
 };
 </script>
 
