@@ -15,8 +15,8 @@ const routes = [{
   path: '/',
 }, {
   component: Fiddle,
-  name: 'fiddle',
-  path: '/fiddle/:key',
+  name: 'project',
+  path: '/project/:key',
   children: [{
     component: Editor,
     name: 'editor',

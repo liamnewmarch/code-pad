@@ -15,38 +15,38 @@ const defaults = {
 };
 
 const state = loadState({
-  fiddles: {},
+  projects: {},
   user: {},
 });
 
 const mutations = {
-  addFiddle(state, data) {
-    Vue.set(state.fiddles, data.key, data);
+  addProject(state, data) {
+    Vue.set(state.projects, data.key, data);
     saveState(state);
   },
-  deleteFiddle(state, data) {
-    Vue.delete(state.fiddles, data.key);
+  deleteProject(state, data) {
+    Vue.delete(state.projects, data.key);
     saveState(state);
   },
-  setFiddle(state, { key, name, value }) {
-    Vue.set(state.fiddles[key], name, value);
+  setProject(state, { key, name, value }) {
+    Vue.set(state.projects[key], name, value);
     saveState(state);
   },
 };
 
 const actions = {
-  addFiddle({ commit }, data = {}) {
-    commit('addFiddle', {
+  addProject({ commit }, data = {}) {
+    commit('addProject', {
       ...defaults,
       ...data,
       key: createKey(),
     });
   },
-  deleteFiddle({ commit }, { key }) {
-    commit('deleteFiddle', { key });
+  deleteProject({ commit }, { key }) {
+    commit('deleteProject', { key });
   },
-  updateFiddle({ commit }, { key, name, value }) {
-    commit('setFiddle', { key, name, value });
+  updateProject({ commit }, { key, name, value }) {
+    commit('setProject', { key, name, value });
   },
 };
 

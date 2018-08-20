@@ -23,7 +23,7 @@ export default {
     updateEditor(type) {
       this.editor.setOption('mode', type === 'html' ? 'htmlmixed' : type);
       Vue.nextTick(() => {
-        this.editor.setValue(this.fiddle[type]);
+        this.editor.setValue(this.project[type]);
       });
     },
   },
@@ -33,21 +33,27 @@ export default {
     });
     this.updateEditor(this.type);
     this.editor.on('change', () => {
-      this.$store.dispatch('updateFiddle', {
+      this.$store.dispatch('updateProject', {
         key: this.$route.params.key,
         name: this.type,
         value: this.editor.getValue(),
       });
     });
   },
-  props: ['fiddle'],
+  props: ['project'],
 };
 </script>
 
+<style>
+.cm-s-one-dark {
+  font-size: inherit;
+}
+</style>
+
 <template>
-  <div class="fiddle__pane">
+  <div class="project__pane">
     <textarea
-      class="fiddle__editor"
+      class="project__editor"
       ref="editor"
     ></textarea>
   </div>

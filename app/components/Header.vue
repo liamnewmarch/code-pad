@@ -1,9 +1,6 @@
 <script>
 export default {
   computed: {
-    fiddle() {
-      return this.$store.state.fiddles[this.$route.params.key];
-    },
     isListRoute() {
       return this.$route.name === 'list';
     },
@@ -50,7 +47,7 @@ export default {
 <template>
   <div>
     <nav v-if="isListRoute" class="top-nav">
-      <div class="top-nav__item top-nav__item--title"> Fiddle </div>
+      <div class="top-nav__item top-nav__item--title"> &lt;/&gt; </div>
     </nav>
     <nav v-else-if="isSettingsRoute" class="top-nav">
       <router-link
@@ -62,7 +59,7 @@ export default {
       <router-link
         class="top-nav__item top-nav__item--settings"
         tag="button"
-        :to="{ name: 'editor', params: { key: fiddle.key, type: 'html' }}"
+        :to="{ name: 'editor', params: { type: 'html' }}"
       > ⋮ </router-link>
     </nav>
     <nav v-else class="top-nav">
@@ -71,34 +68,34 @@ export default {
         class="top-nav__item top-nav__item--tab"
         tag="button"
         replace
-        :to="{ name: 'editor', params: { key: fiddle.key, type: 'html' }}"
+        :to="{ name: 'editor', params: { type: 'html' }}"
       > HTML </router-link>
       <router-link
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"
         tag="button"
         replace
-        :to="{ name: 'editor', params: { key: fiddle.key, type: 'css' }}"
+        :to="{ name: 'editor', params: { type: 'css' }}"
       > CSS </router-link>
       <router-link
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"
         tag="button"
         replace
-        :to="{ name: 'editor', params: { key: fiddle.key, type: 'javascript' }}"
+        :to="{ name: 'editor', params: { type: 'javascript' }}"
       > JS </router-link>
       <router-link
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"
         tag="button"
         replace
-        :to="{ name: 'result', params: { key: fiddle.key }}"
+        :to="{ name: 'result' }"
       > Result </router-link>
       <router-link
         class="top-nav__item top-nav__item--settings"
         tag="button"
         replace
-        :to="{ name: 'settings', params: { key: fiddle.key }}"
+        :to="{ name: 'settings' }"
       > ⋮ </router-link>
     </nav>
   </div>

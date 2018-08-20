@@ -1,7 +1,7 @@
 import getLegacy from './migrate';
 
 const SERVICE_WORKER_URL = '/service-worker.js';
-const STORAGE_KEY = 'fiddle-store';
+const STORAGE_KEY = 'project-store';
 
 export function loadState(defaults) {
   try {

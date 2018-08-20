@@ -2,21 +2,21 @@
 export default {
   methods: {
     clone() {
-      this.$store.dispatch('addFiddle', this.fiddle);
+      this.$store.dispatch('addProject', this.project);
     },
     copyToClipboard() {
       const textarea = document.createElement('textarea');
-      textarea.value = JSON.stringify({ ...this.fiddle });
+      textarea.value = JSON.stringify({ ...this.project });
       document.body.appendChild(textarea);
       textarea.select();
       document.execCommand('copy');
       document.body.removeChild(textarea);
     },
-    deleteFiddle() {
-      this.$store.dispatch('deleteFiddle', { key: this.fiddle.key });
+    deleteProject() {
+      this.$store.dispatch('deleteProject', { key: this.project.key });
     },
   },
-  props: ['fiddle'],
+  props: ['project'],
 };
 </script>
 
@@ -64,8 +64,8 @@ export default {
   <section class="view settings" ng-if="vm.view === 'settings'">
     <div class="settings__items">
       <div class="settings__item">
-        <label class="settings__label"> Fiddle name </label>
-        <input class="settings__input" v-model="fiddle.name">
+        <label class="settings__label"> Project name </label>
+        <input class="settings__input" v-model="project.name">
       </div>
       <div class="settings__item">
         <button
@@ -74,7 +74,7 @@ export default {
         > Copy to clipboard </button>
         <button
           class="settings__button settings__button--delete"
-          @click.prevent="deleteFiddle"
+          @click.prevent="deleteProject"
         > Delete </button>
       </div>
     </div>

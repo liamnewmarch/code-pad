@@ -1,26 +1,27 @@
 <script>
 export default {
   mounted() {
+    const { css = '', html = '', javascript = '' } = this.project;
     const { contentWindow, contentDocument } = this.$refs.result;
     // HTML
-    contentDocument.body.innerHTML = this.fiddle.html;
+    contentDocument.body.innerHTML = html;
     // CSS
     const style = contentDocument.createElement('style');
-    style.innerHTML = this.fiddle.css || '';
+    style.textContent = css;
     contentDocument.head.appendChild(style);
     // JavaScript
     try {
-      contentWindow.eval(this.fiddle.javascript || '');
+      contentWindow.eval(javascript);
     } catch (error) {
       alert(error);
     }
   },
-  props: ['fiddle'],
+  props: ['project'],
 };
 </script>
 
 <template>
-  <div class="fiddle__pane">
-    <iframe class="fiddle__result" ref="result"></iframe>
+  <div class="project__pane">
+    <iframe class="project__result" ref="result"></iframe>
   </div>
 </template>

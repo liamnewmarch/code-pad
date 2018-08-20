@@ -19,7 +19,7 @@ html {
   background-color: #272822;
   box-sizing: border-box;
   color: #fff;
-  font: 16px / 1.2 'Helvetica Neue', sans-serif;
+  font: 16px / 1.2 Roboto Mono, monospace;
   text-rendering: optimizeLegibility;
 }
 

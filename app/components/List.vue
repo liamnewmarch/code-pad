@@ -1,8 +1,8 @@
 <script>
 export default {
   computed: {
-    fiddles() {
-      return this.$store.state.fiddles;
+    projects() {
+      return this.$store.state.projects;
     },
   },
   data() {
@@ -10,12 +10,12 @@ export default {
   },
   methods: {
     add() {
-      this.$store.dispatch('addFiddle');
+      this.$store.dispatch('addProject');
     },
     importJSON() {
       try {
-        const fiddle = JSON.parse(this.json);
-        this.$store.dispatch('addFiddle', fiddle);
+        const project = JSON.parse(this.json);
+        this.$store.dispatch('addProject', project);
         this.json = '';
       } catch (error) {
         alert(error);
@@ -64,10 +64,10 @@ export default {
       <router-link
         class="start__item button"
         tag="button"
-        v-for="(fiddle, index) in fiddles"
+        v-for="(project, index) in projects"
         :key="index"
-        :to="{ name: 'editor', params: { key: fiddle.key, type: 'html' }}"
-      >{{ fiddle.name }}</router-link>
+        :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"
+      >{{ project.name }}</router-link>
       <button
         class="start__item start__item--add"
         @click="add"> Add </button>
