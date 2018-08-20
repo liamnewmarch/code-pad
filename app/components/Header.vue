@@ -16,7 +16,7 @@ export default {
 
 <style>
 .top-nav {
-  background: linear-gradient(to right, purple, cyan);
+  background: linear-gradient(to right, #c678dd, #56b6c2);
   display: flex;
   flex-shrink: 0;
   list-style: none;
@@ -25,7 +25,8 @@ export default {
 }
 
 .top-nav__item {
-  background-color: rgba(71, 72, 68, .9);
+  background-color: #272822;
+  background-color: #27282288;
   border: 0;
   border-radius: .2rem .2rem 0 0;
   flex: 0 0 2rem;
