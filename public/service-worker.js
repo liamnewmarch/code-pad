@@ -22,8 +22,12 @@ const STRATEGY = {
   },
 
   async respondFromCache(event) {
-    const response = await caches.match(event.request);
-    return response || fetch(event.request);
+    try {
+      const response = await caches.match(event.request);
+      return response || await fetch(event.request);
+    } catch (error) {
+      return caches.match('/');
+    }
   },
 };
 
