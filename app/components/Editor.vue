@@ -29,6 +29,7 @@ export default {
   },
   mounted() {
     this.editor = CodeMirror.fromTextArea(this.$refs.editor, {
+      inputStyle: 'textarea',
       theme: 'one-dark',
     });
     this.updateEditor(this.type);
