@@ -3,7 +3,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import css from 'rollup-plugin-css-only'
 import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
-import uglify from 'rollup-plugin-uglify';
+import { uglify } from 'rollup-plugin-uglify';
 import vue from 'rollup-plugin-vue';
 
 const plugins = [
