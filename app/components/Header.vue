@@ -13,7 +13,7 @@ export default {
 
 <style>
 .top-nav {
-  background: linear-gradient(to right, #c678dd, #56b6c2);
+  background: linear-gradient(to right, #e06c75, #56b6c2);
   display: flex;
   flex-shrink: 0;
   list-style: none;
