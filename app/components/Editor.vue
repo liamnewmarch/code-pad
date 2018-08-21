@@ -1,17 +1,9 @@
 <script>
-import Vue from 'vue';
-import CodeMirror from 'codemirror';
-
-import 'codemirror/lib/codemirror.css';
-import 'codemirror-one-dark-theme';
-
-import 'codemirror/mode/css/css.js';
-import 'codemirror/mode/htmlmixed/htmlmixed.js';
-import 'codemirror/mode/javascript/javascript.js';
+import createEditor from '../config/editor';
 
 export default {
   beforeRouteUpdate(to, from, next) {
-    this.updateEditor(to.params.type);
+    this.onTypeChange(to.params.type);
     next();
   },
   computed: {
@@ -20,25 +12,22 @@ export default {
     },
   },
   methods: {
-    updateEditor(type) {
-      this.editor.setOption('mode', type === 'html' ? 'htmlmixed' : type);
-      Vue.nextTick(() => {
-        this.editor.setValue(this.project[type]);
-      });
-    },
-  },
-  mounted() {
-    this.editor = CodeMirror.fromTextArea(this.$refs.editor, {
-      inputStyle: 'textarea',
-      theme: 'one-dark',
-    });
-    this.updateEditor(this.type);
-    this.editor.on('change', () => {
+    onChange(value) {
       this.$store.dispatch('updateProject', {
         key: this.$route.params.key,
         name: this.type,
         value: this.editor.getValue(),
       });
+    },
+    onTypeChange(type=this.type) {
+      this.editor.setOption('mode', type === 'html' ? 'htmlmixed' : type);
+      this.editor.setValue(this.project[type]);
+    },
+  },
+  mounted() {
+    this.editor = createEditor(this.$refs.editor, {
+      onChange: this.onChange,
+      onTypeChange: this.onTypeChange,
     });
   },
   props: ['project'],
@@ -46,15 +35,31 @@ export default {
 </script>
 
 <style>
-.cm-s-one-dark {
+.editor .CodeMirror {
+  background-color: inherit;
   font-size: inherit;
+  line-height: inherit;
+}
+
+.editor .CodeMirror-scroll {
+  box-sizing: inherit;
+  height: 100%;
+  left: 0;
+  padding: 1rem;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.editor .CodeMirror-sizer {
+  border-right-width: 1rem;
 }
 </style>
 
 <template>
   <div class="project__pane">
     <textarea
-      class="project__editor"
+      class="editor"
       ref="editor"
     ></textarea>
   </div>

@@ -26,7 +26,7 @@ export default {
   flex-grow: 1;
 }
 
-.project__pane .CodeMirror,
+.project__pane,
 .project__result {
   background-color: #272822;
   border: 0;
@@ -36,24 +36,6 @@ export default {
   flex-grow: 1;
   position: relative;
   width: 100%;
-}
-
-.project__pane .CodeMirror {
-  line-height: inherit;
-}
-
-.project__pane .CodeMirror-scroll {
-  box-sizing: inherit;
-  height: 100%;
-  left: 0;
-  padding: 1rem;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-.project__pane .CodeMirror-sizer {
-  border-right-width: 1rem;
 }
 </style>
 
