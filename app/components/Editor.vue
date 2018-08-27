@@ -37,6 +37,7 @@ export default {
 <style>
 .editor .CodeMirror {
   background-color: inherit;
+  flex-grow: 1;
   font-size: inherit;
   line-height: inherit;
 }

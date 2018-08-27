@@ -26,8 +26,8 @@ html {
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   margin: 0;
+  min-height: 100vh;
 }
 
 button,

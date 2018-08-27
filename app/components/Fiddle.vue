@@ -31,7 +31,6 @@ export default {
   background-color: #272822;
   border: 0;
   color: #fff;
-  height: 100vh;
   flex-basis: 100%;
   flex-grow: 1;
   position: relative;
