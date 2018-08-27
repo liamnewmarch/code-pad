@@ -2,7 +2,7 @@ function migrateProject(key) {
   try {
     const json = localStorage.getItem(key);
     const project = JSON.parse(json);
-    // localStorage.removeItem(key); // TODO enable this
+    localStorage.removeItem(key);
     return project;
   } catch (error) {
     console.warn('Migration failed: ', error);
@@ -20,7 +20,7 @@ export default function() {
         projects[project.key] = project;
         return projects;
       }, {});
-    // localStorage.removeItem('fiddles'); // TODO enable this
+    localStorage.removeItem('fiddles');
     return { projects };
   } catch (error) {
     console.warn('Migration failed: ', error);
