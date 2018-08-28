@@ -14,6 +14,7 @@ export default {
     },
     deleteProject() {
       this.$store.dispatch('deleteProject', { key: this.project.key });
+      this.$router.push({ name: 'list' });
     },
   },
   props: ['project'],
