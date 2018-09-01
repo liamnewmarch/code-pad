@@ -32,7 +32,7 @@ export default {
     type(thing) {
       const toString = Object.prototype.toString.call(thing);
       return toString.replace(/\[\w+ (\w+)\]/, '$1');
-    }
+    },
   },
   props: ['logging', 'project'],
 };
@@ -42,22 +42,33 @@ export default {
   .console {
     bottom: 0;
     left: 0;
-    max-height: 6rem;
     position: fixed;
     right: 0;
   }
 
   .console__button {
-    bottom: .5rem;
-    padding: .5rem;
+    bottom: 0;
+    margin: 1rem;
+    padding: 1rem;
     position: fixed;
-    right: .5rem;
+    right: 0;
+  }
+
+  .console__line {
+    margin: 1rem 0;
+  }
+
+  .console__line::before {
+    content: '» ';
+    opacity: .5;
   }
 
   .console__output {
     background-color: #272822;
     border-top: 1px solid #fff;
-    padding: .5rem 3rem .5rem .5rem;
+    height: 8rem;
+    overflow: auto;
+    padding: 1rem 3rem 1rem 1rem;
   }
 
   .console__output--enter-active,
@@ -75,22 +86,12 @@ export default {
   .console__output--leave {
     transition: translateY(0);
   }
-
-  .console__line {
-    margin: .5rem 0;
-  }
-
-  .console__line::before {
-    content: '» ';
-    opacity: .5;
-  }
 </style>
 
 <template>
   <div class="console">
-    
     <transition name="console__output-">
-      <div class="console__output" v-if="active">
+      <div class="console__output" v-if="active" ref="output">
         <div class="console__line" v-for="(line, index) of logging" :key="index">
           {{ format(line) }}
         </div>
