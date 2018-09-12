@@ -2,9 +2,9 @@ const CACHE_VERSION = '3.1.0';
 
 const CACHE_FILES = [
   '.',
-  'css/bundle.css',
-  'img/icon-192.png',
-  'js/bundle.js',
+  'bundle.css',
+  'icon-192.png',
+  'bundle.js',
   'index.html',
 ];
 
