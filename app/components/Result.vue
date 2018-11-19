@@ -24,7 +24,7 @@ export default {
     try {
       contentWindow.eval(javascript);
     } catch (error) {
-      this.logging.push(error);
+      this.logging.push('message' in error ? error.message : error);
     }
   },
   props: ['project'],
