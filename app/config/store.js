@@ -36,11 +36,9 @@ const mutations = {
 
 const actions = {
   addProject({ commit }, data = {}) {
-    commit('addProject', {
-      ...defaults,
-      ...data,
-      key: createKey(),
-    });
+    const key = createKey();
+    commit('addProject', { ...defaults, ...data, key, });
+    return key;
   },
   deleteProject({ commit }, { key }) {
     commit('deleteProject', { key });

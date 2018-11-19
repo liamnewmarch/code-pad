@@ -9,14 +9,15 @@ export default {
     return { json: '' };
   },
   methods: {
-    add() {
-      this.$store.dispatch('addProject');
+    async add() {
+      const key = await this.$store.dispatch('addProject');
+      this.$router.push({ name: 'editor', params: { key, type: 'html' }});
     },
-    importJSON() {
+    async importJSON() {
       try {
         const project = JSON.parse(this.json);
-        this.$store.dispatch('addProject', project);
-        this.json = '';
+        const key = await this.$store.dispatch('addProject', project);
+        this.$router.push({ name: 'editor', params: { key, type: 'html' }});
       } catch (error) {
         alert(error);
       }
