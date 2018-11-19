@@ -13,6 +13,7 @@ export default {
       document.body.removeChild(textarea);
     },
     deleteProject() {
+      if (!confirm('Are you sure you want to delete this project?')) return;
       this.$store.dispatch('deleteProject', { key: this.project.key });
       this.$router.push({ name: 'list' });
     },
