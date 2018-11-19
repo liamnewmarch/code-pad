@@ -5,6 +5,13 @@ export default {
       active: false,
     };
   },
+  computed: {
+    toggleLabel() {
+      if (this.active) return '×';
+      if (!this.logging.length) return '✔';
+      return '»' + this.logging.length;
+    },
+  },
   methods: {
     format(...data) {
       return data.map(item => {
@@ -95,9 +102,8 @@ export default {
         <div class="console__line" v-for="(line, index) of logging" :key="index">
           {{ format(line) }}
         </div>
-        <div class="console__line" v-if="!logging.length"> All good, buddy! </div>
       </div>
     </transition>
-    <div class="console__button" @click="toggle">{{ active ? '×' : '$_' }}</div>
+    <button class="console__button" @click="toggle">{{ toggleLabel }}</button>
   </div>
 </template>
