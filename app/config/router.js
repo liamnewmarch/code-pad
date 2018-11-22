@@ -1,11 +1,11 @@
-import Vue from 'Vue';
+import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Editor from '../components/Editor';
-import Fiddle from '../components/Fiddle';
-import List from '../components/List';
-import Result from '../components/Result';
-import Settings from '../components/Settings';
+import Editor from '../components/Editor.vue';
+import Fiddle from '../components/Fiddle.vue';
+import List from '../components/List.vue';
+import Result from '../components/Result.vue';
+import Settings from '../components/Settings.vue';
 
 Vue.use(VueRouter);
 

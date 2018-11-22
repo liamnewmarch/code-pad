@@ -39,12 +39,13 @@
     "babel-core": "^6.26.3",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "codemirror": "^5.41.0",
-    "codemirror-one-dark-theme": "^1.1.1",
     "concurrently": "^4.1.0",
     "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-html": "^5.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-vue": "^5.0.0-beta.4",
     "firebase": "^5.5.8",
     "firebase-tools": "^6.1.0",
     "rollup": "^0.67.3",
@@ -55,9 +56,14 @@
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-uglify": "^6.0.0",
     "rollup-plugin-vue": "^4.3.2",
+    "vue-template-compiler": "^2.5.17"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "codemirror": "^5.42.0",
+    "codemirror-one-dark-theme": "^1.1.1",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
-    "vue-template-compiler": "^2.5.17",
     "vuex": "^3.0.1"
   }
 }

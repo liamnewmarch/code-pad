@@ -1,5 +1,4 @@
 <script>
-import Vuex from 'vuex';
 import store from '../config/store';
 
 export default {
@@ -15,7 +14,7 @@ export default {
       return this.$store.state.projects[this.$route.params.key];
     },
   },
-}
+};
 </script>
 
 

@@ -3,6 +3,12 @@ import getLegacy from './migrate';
 const SERVICE_WORKER_URL = '/service-worker.js';
 const STORAGE_KEY = 'project-store';
 
+export function saveState(state) {
+  const json = JSON.stringify(state);
+  localStorage.setItem(STORAGE_KEY, json);
+  return state;
+}
+
 export function loadState(defaults) {
   try {
     const json = localStorage.getItem(STORAGE_KEY);
@@ -13,16 +19,9 @@ export function loadState(defaults) {
   }
 }
 
-export function saveState(state) {
-  const json = JSON.stringify(state);
-  localStorage.setItem(STORAGE_KEY, json);
-  return state;
-}
-
-export function registerServiceWorker() {
+export async function registerServiceWorker() {
   if ('serviceWorker' in navigator && navigator.onLine) {
-    navigator.serviceWorker.register(SERVICE_WORKER_URL).then(registration => {
-      registration.update();
-    });
+    const registration = await navigator.serviceWorker.register(SERVICE_WORKER_URL);
+    registration.update();
   }
 }

@@ -1,5 +1,11 @@
 <script>
 export default {
+  props: {
+    project: {
+      default: null,
+      type: Object,
+    },
+  },
   methods: {
     clone() {
       this.$store.dispatch('addProject', this.project);
@@ -13,12 +19,12 @@ export default {
       document.body.removeChild(textarea);
     },
     deleteProject() {
+      /* eslint-disable-next-line no-restricted-globals, no-alert */
       if (!confirm('Are you sure you want to delete this project?')) return;
       this.$store.dispatch('deleteProject', { key: this.project.key });
       this.$router.push({ name: 'list' });
     },
   },
-  props: ['project'],
 };
 </script>
 
@@ -62,12 +68,17 @@ export default {
 </style>
 
 <template>
-  <!-- TODO rename `settings` to settings -->
-  <section class="view settings" ng-if="vm.view === 'settings'">
+  <section
+    class="view settings"
+    ng-if="vm.view === 'settings'"
+  >
     <div class="settings__items">
       <div class="settings__item">
         <label class="settings__label"> Project name </label>
-        <input class="settings__input" v-model="project.name">
+        <input
+          v-model="project.name"
+          class="settings__input"
+        >
       </div>
       <div class="settings__item">
         <button

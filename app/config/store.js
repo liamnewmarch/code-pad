@@ -1,5 +1,6 @@
-import Vue from 'Vue';
-import Vuex from 'Vuex';
+/* eslint no-shadow: ["error", { "allow": ["state"] }] */
+import Vue from 'vue';
+import Vuex from 'vuex';
 
 import { loadState, saveState } from './persistance';
 
@@ -37,7 +38,7 @@ const mutations = {
 const actions = {
   addProject({ commit }, data = {}) {
     const key = createKey();
-    commit('addProject', { ...defaults, ...data, key, });
+    commit('addProject', { ...defaults, ...data, key });
     return key;
   },
   deleteProject({ commit }, { key }) {

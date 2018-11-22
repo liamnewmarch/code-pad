@@ -1,20 +1,28 @@
 <script>
 export default {
+  props: {
+    logging: {
+      default: () => [],
+      type: Array,
+    },
+    project: {
+      default: () => null,
+      type: Object,
+    },
+  },
   data() {
-    return {
-      active: false,
-    };
+    return { active: false };
   },
   computed: {
     toggleLabel() {
       if (this.active) return '×';
       if (!this.logging.length) return '✔';
-      return '»' + this.logging.length;
+      return `»${this.logging.length}`;
     },
   },
   methods: {
     format(...data) {
-      return data.map(item => {
+      return data.map((item) => {
         const type = this.type(item);
         switch (type) {
           case 'Array':
@@ -27,7 +35,7 @@ export default {
           case 'Function':
             return item.toString();
           case 'Undefined':
-            return 'undefined'
+            return 'undefined';
           default:
             return `${type} {}`;
         }
@@ -41,7 +49,6 @@ export default {
       return toString.replace(/\[\w+ (\w+)\]/, '$1');
     },
   },
-  props: ['logging', 'project'],
 };
 </script>
 
@@ -86,7 +93,7 @@ export default {
   .console__output--enter,
   .console__output--leave-to {
     transform: translateY(100%);
-    
+
   }
 
   .console__output--enter-to,
@@ -98,12 +105,23 @@ export default {
 <template>
   <div class="console">
     <transition name="console__output-">
-      <div class="console__output" v-if="active" ref="output">
-        <div class="console__line" v-for="(line, index) of logging" :key="index">
+      <div
+        v-if="active"
+        ref="output"
+        class="console__output"
+      >
+        <div
+          v-for="(line, index) of logging"
+          :key="index"
+          class="console__line"
+        >
           {{ format(line) }}
         </div>
       </div>
     </transition>
-    <button class="console__button" @click="toggle">{{ toggleLabel }}</button>
+    <button
+      class="console__button"
+      @click="toggle"
+    >{{ toggleLabel }}</button>
   </div>
 </template>

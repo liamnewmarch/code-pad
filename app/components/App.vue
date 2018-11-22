@@ -1,5 +1,5 @@
 <script>
-import Header from './Header';
+import Header from './Header.vue';
 
 export default {
   components: {
@@ -43,7 +43,10 @@ input {
 </style>
 
 <template>
-  <div class="view" :class="`view--${$route.name} ${$route.name}`">
+  <div
+    class="view"
+    :class="`view--${$route.name} ${$route.name}`"
+  >
     <Header />
     <router-view />
   </div>

@@ -6,22 +6,15 @@ export default {
     this.onTypeChange(to.params.type);
     next();
   },
+  props: {
+    project: {
+      default: null,
+      type: Object,
+    },
+  },
   computed: {
     type() {
       return this.$route.params.type;
-    },
-  },
-  methods: {
-    onChange(value) {
-      this.$store.dispatch('updateProject', {
-        key: this.$route.params.key,
-        name: this.type,
-        value: this.editor.getValue(),
-      });
-    },
-    onTypeChange(type=this.type) {
-      this.editor.setOption('mode', type === 'html' ? 'htmlmixed' : type);
-      this.editor.setValue(this.project[type]);
     },
   },
   mounted() {
@@ -30,7 +23,19 @@ export default {
       onTypeChange: this.onTypeChange,
     });
   },
-  props: ['project'],
+  methods: {
+    onChange() {
+      this.$store.dispatch('updateProject', {
+        key: this.$route.params.key,
+        name: this.type,
+        value: this.editor.getValue(),
+      });
+    },
+    onTypeChange(type = this.type) {
+      this.editor.setOption('mode', type === 'html' ? 'htmlmixed' : type);
+      this.editor.setValue(this.project[type]);
+    },
+  },
 };
 </script>
 
@@ -60,8 +65,8 @@ export default {
 <template>
   <div class="project__pane">
     <textarea
-      class="editor"
       ref="editor"
-    ></textarea>
+      class="editor"
+    />
   </div>
 </template>

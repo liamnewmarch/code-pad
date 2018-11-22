@@ -1,9 +1,15 @@
 <script>
-import Console from './Console';
+import Console from './Console.vue';
 
 export default {
   components: {
     Console,
+  },
+  props: {
+    project: {
+      default: null,
+      type: Object,
+    },
   },
   data() {
     return { logging: [] };
@@ -11,13 +17,17 @@ export default {
   mounted() {
     const { css = '', html = '', javascript = '' } = this.project;
     const { contentWindow, contentDocument } = this.$refs.result;
+
     // HTML
     contentDocument.body.innerHTML = html;
+
     // CSS
     const style = contentDocument.createElement('style');
     style.textContent = css;
     contentDocument.head.appendChild(style);
+
     // JavaScript
+    /* eslint-disable-next-line no-restricted-syntax, guard-for-in */
     for (const key in contentWindow.console) {
       contentWindow.console[key] = (...args) => this.logging.push(...args);
     }
@@ -27,13 +37,18 @@ export default {
       this.logging.push('message' in error ? error.message : error);
     }
   },
-  props: ['project'],
 };
 </script>
 
 <template>
   <div class="project__pane">
-    <iframe class="project__result" ref="result"></iframe>
-    <Console :logging="logging" :project="project" />
+    <iframe
+      ref="result"
+      class="project__result"
+    />
+    <Console
+      :logging="logging"
+      :project="project"
+    />
   </div>
 </template>

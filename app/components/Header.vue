@@ -46,10 +46,16 @@ export default {
 
 <template>
   <div>
-    <nav v-if="isListRoute" class="top-nav">
+    <nav
+      v-if="isListRoute"
+      class="top-nav"
+    >
       <div class="top-nav__item top-nav__item--title"> &lt;/&gt; </div>
     </nav>
-    <nav v-else-if="isSettingsRoute" class="top-nav">
+    <nav
+      v-else-if="isSettingsRoute"
+      class="top-nav"
+    >
       <router-link
         class="top-nav__item top-nav__item--back"
         tag="button"
@@ -62,7 +68,10 @@ export default {
         :to="{ name: 'editor', params: { type: 'html' }}"
       > ⋮ </router-link>
     </nav>
-    <nav v-else class="top-nav">
+    <nav
+      v-else
+      class="top-nav"
+    >
       <router-link
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"

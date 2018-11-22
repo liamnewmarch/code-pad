@@ -5,9 +5,9 @@ import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror-one-dark-theme';
 
-import 'codemirror/mode/css/css.js';
-import 'codemirror/mode/htmlmixed/htmlmixed.js';
-import 'codemirror/mode/javascript/javascript.js';
+import 'codemirror/mode/css/css';
+import 'codemirror/mode/htmlmixed/htmlmixed';
+import 'codemirror/mode/javascript/javascript';
 
 const defaults = {
   inputStyle: 'textarea',
@@ -25,4 +25,4 @@ export default function(textarea, methods) {
     setOption: (...args) => editor.setOption(...args),
     setValue: (...args) => Vue.nextTick(() => editor.setValue(...args)),
   };
-};
+}

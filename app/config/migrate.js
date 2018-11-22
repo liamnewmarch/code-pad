@@ -5,7 +5,7 @@ function migrateProject(key) {
     localStorage.removeItem(key);
     return project;
   } catch (error) {
-    console.warn('Migration failed: ', error);
+    console.log('Migration failed: ', error);
   }
 }
 
@@ -23,6 +23,6 @@ export default function() {
     localStorage.removeItem('fiddles');
     return { projects };
   } catch (error) {
-    console.warn('Migration failed: ', error);
+    console.log('Migration failed: ', error);
   }
-};
+}

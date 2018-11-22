@@ -1,29 +1,30 @@
 <script>
 export default {
+  data() {
+    return { json: '' };
+  },
   computed: {
     projects() {
       return this.$store.state.projects;
     },
   },
-  data() {
-    return { json: '' };
-  },
   methods: {
     async add() {
       const key = await this.$store.dispatch('addProject');
-      this.$router.push({ name: 'editor', params: { key, type: 'html' }});
+      this.$router.push({ name: 'editor', params: { key, type: 'html' } });
     },
     async importJSON() {
       try {
         const project = JSON.parse(this.json);
         const key = await this.$store.dispatch('addProject', project);
-        this.$router.push({ name: 'editor', params: { key, type: 'html' }});
+        this.$router.push({ name: 'editor', params: { key, type: 'html' } });
       } catch (error) {
+        /* eslint-disable-next-line no-restricted-globals, no-alert */
         alert(error);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
@@ -63,25 +64,28 @@ export default {
   <section class="view start">
     <div class="start__items">
       <router-link
-        class="start__item button"
-        tag="button"
         v-for="(project, index) in projects"
         :key="index"
+        class="start__item button"
+        tag="button"
         :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"
       >{{ project.name }}</router-link>
       <button
         class="start__item start__item--add"
-        @click="add"> Add </button>
+        @click="add"
+      > Add </button>
     </div>
     <div class="start__import">
       <input
+        v-model="json"
         class="start__import-input"
         placeholder="Import from JSON"
         type="text"
-        v-model="json">
+      >
       <button
         class="start__import-button"
-        @click="importJSON"> Import </button>
+        @click="importJSON"
+      > Import </button>
     </div>
   </section>
 </template>
