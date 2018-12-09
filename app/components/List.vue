@@ -23,6 +23,11 @@ export default {
         alert(error);
       }
     },
+    reverse(object) {
+      return Object.entries(object).reverse().reduce((obj, [key, value]) => {
+        return Object.assign(obj, { [key]: value })
+      }, {});
+    },
   },
 };
 </script>
@@ -62,29 +67,29 @@ export default {
 <template>
   <section class="view list">
     <div class="list__items">
+      <button
+        class="list__item list__item--add"
+        @click="add"
+      > New project </button>
       <router-link
-        v-for="(project, index) in projects"
+        v-for="(project, index) in reverse(projects)"
         :key="index"
         class="list__item button"
         tag="button"
         :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"
       >{{ project.name }}</router-link>
-      <button
-        class="list__item list__item--add"
-        @click="add"
-      > Add </button>
     </div>
     <div class="list__import">
       <input
         v-model="json"
         class="list__import-input"
-        placeholder="Import from JSON"
+        placeholder="Paste JSON"
         type="text"
       >
       <button
         class="list__import-button"
         @click="importJSON"
-      > Import </button>
+      > Import project </button>
     </div>
   </section>
 </template>
