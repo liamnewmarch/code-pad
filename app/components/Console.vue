@@ -52,6 +52,33 @@ export default {
 };
 </script>
 
+<template>
+  <div class="console">
+    <Transition name="console__output-">
+      <div
+        v-if="active"
+        ref="output"
+        class="console__output"
+      >
+        <div
+          v-for="(line, index) of logging"
+          :key="index"
+          class="console__line"
+        >
+          {{ format(line) }}
+        </div>
+      </div>
+    </Transition>
+    <button
+      class="console__button"
+      @click="toggle"
+    >
+      {{ toggleLabel }}
+    </button>
+  </div>
+</template>
+
+
 <style>
   .console {
     bottom: 0;
@@ -101,27 +128,3 @@ export default {
     transition: translateY(0);
   }
 </style>
-
-<template>
-  <div class="console">
-    <transition name="console__output-">
-      <div
-        v-if="active"
-        ref="output"
-        class="console__output"
-      >
-        <div
-          v-for="(line, index) of logging"
-          :key="index"
-          class="console__line"
-        >
-          {{ format(line) }}
-        </div>
-      </div>
-    </transition>
-    <button
-      class="console__button"
-      @click="toggle"
-    >{{ toggleLabel }}</button>
-  </div>
-</template>

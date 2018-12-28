@@ -17,6 +17,9 @@ export default {
 };
 </script>
 
+<template>
+  <RouterView :project="project" />
+</template>
 
 <style>
 .project__pane {
@@ -36,7 +39,3 @@ export default {
   width: 100%;
 }
 </style>
-
-<template>
-  <router-view :project="project" />
-</template>

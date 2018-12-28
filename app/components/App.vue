@@ -8,6 +8,16 @@ export default {
 };
 </script>
 
+<template>
+  <div
+    class="view"
+    :class="`view--${$route.name} ${$route.name}`"
+  >
+    <Header />
+    <RouterView />
+  </div>
+</template>
+
 <style>
 *,
 *::after,
@@ -41,13 +51,3 @@ input {
   flex-grow: 1;
 }
 </style>
-
-<template>
-  <div
-    class="view"
-    :class="`view--${$route.name} ${$route.name}`"
-  >
-    <Header />
-    <router-view />
-  </div>
-</template>

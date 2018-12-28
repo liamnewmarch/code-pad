@@ -14,7 +14,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'no-new': 'off',
+    'no-param-reassign': ["error", { "props": false }],
     'space-before-function-paren': ['error', 'never'],
   },
 };

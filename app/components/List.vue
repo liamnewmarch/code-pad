@@ -2,14 +2,14 @@
 import Modal from './Modal.vue';
 
 export default {
+  components: {
+    Modal,
+  },
   data() {
     return {
       importError: '',
       json: '',
     };
-  },
-  components: {
-    Modal,
   },
   methods: {
     async add() {
@@ -27,13 +27,53 @@ export default {
       }
     },
     reverse(object) {
-      return Object.entries(object).reverse().reduce((obj, [key, value]) => {
-        return Object.assign(obj, { [key]: value })
-      }, {});
+      const reduce = (obj, [key, value]) => Object.assign(obj, { [key]: value });
+      return Object.entries(object).reverse().reduce(reduce, {});
     },
   },
 };
 </script>
+
+<template>
+  <section class="view list">
+    <div class="list__items">
+      <button
+        class="list__item list__item--add"
+        @click="add"
+      >
+        New project
+      </button>
+      <RouterLink
+        v-for="(project, index) in reverse($store.state.projects)"
+        :key="index"
+        class="list__item button"
+        tag="button"
+        :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"
+      >
+        {{ project.name }}
+      </RouterLink>
+    </div>
+    <div class="list__import">
+      <input
+        v-model="json"
+        class="list__import-input"
+        placeholder="Paste JSON"
+        type="text"
+      >
+      <button
+        class="list__import-button"
+        @click="importJSON"
+      >
+        Import project
+      </button>
+    </div>
+    <Modal
+      ref="modal"
+      :buttons="[{ label: 'Dismiss', value: true }]"
+      :text="importError"
+    />
+  </section>
+</template>
 
 <style>
 .list__items,
@@ -66,34 +106,3 @@ export default {
   text-align: center;
 }
 </style>
-
-<template>
-  <section class="view list">
-    <div class="list__items">
-      <button
-        class="list__item list__item--add"
-        @click="add"
-      > New project </button>
-      <router-link
-        v-for="(project, index) in reverse($store.state.projects)"
-        :key="index"
-        class="list__item button"
-        tag="button"
-        :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"
-      >{{ project.name }}</router-link>
-    </div>
-    <div class="list__import">
-      <input
-        v-model="json"
-        class="list__import-input"
-        placeholder="Paste JSON"
-        type="text"
-      >
-      <button
-        class="list__import-button"
-        @click="importJSON"
-      > Import project </button>
-    </div>
-    <Modal :buttons="[{ label: 'Dismiss', value: true }]" ref="modal" :text="importError" />
-  </section>
-</template>

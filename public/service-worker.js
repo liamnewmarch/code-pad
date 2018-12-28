@@ -1,3 +1,4 @@
+/* eslint no-restricted-globals: 1 */
 const CACHE_VERSION = '3.1.2';
 
 const CACHE_FILES = [
@@ -15,8 +16,8 @@ const STRATEGY = {
   },
 
   async deleteStale() {
-    const staleCaches = (key) => key !== CACHE_VERSION;
-    const deleteCaches = (key) => caches.delete(key);
+    const staleCaches = key => key !== CACHE_VERSION;
+    const deleteCaches = key => caches.delete(key);
     const keys = await caches.keys();
     return Promise.all(keys.filter(staleCaches).map(deleteCaches));
   },

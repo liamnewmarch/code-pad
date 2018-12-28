@@ -5,6 +5,12 @@ export default {
   components: {
     Modal,
   },
+  props: {
+    project: {
+      default: null,
+      type: Object,
+    },
+  },
   data() {
     return {
       modalButtons: [{
@@ -14,14 +20,8 @@ export default {
         danger: true,
         label: 'Delete',
         value: true,
-      }]
+      }],
     };
-  },
-  props: {
-    project: {
-      default: null,
-      type: Object,
-    },
   },
   methods: {
     clone() {
@@ -44,6 +44,44 @@ export default {
   },
 };
 </script>
+
+<template>
+  <section
+    class="view settings"
+    ng-if="vm.view === 'settings'"
+  >
+    <div class="settings__items">
+      <div class="settings__item">
+        <label class="settings__label">
+          Project name
+        </label>
+        <input
+          v-model="project.name"
+          class="settings__input"
+        >
+      </div>
+      <div class="settings__item">
+        <button
+          class="settings__button"
+          @click.prevent="copyToClipboard"
+        >
+          Copy to clipboard
+        </button>
+        <button
+          class="settings__button settings__button--delete"
+          @click.prevent="deleteProject"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+    <Modal
+      ref="modal"
+      :buttons="modalButtons"
+      text="Are you sure you want to delete this project?"
+    />
+  </section>
+</template>
 
 
 <style>
@@ -83,31 +121,3 @@ export default {
   margin-left: 1rem;
 }
 </style>
-
-<template>
-  <section
-    class="view settings"
-    ng-if="vm.view === 'settings'"
-  >
-    <div class="settings__items">
-      <div class="settings__item">
-        <label class="settings__label"> Project name </label>
-        <input
-          v-model="project.name"
-          class="settings__input"
-        >
-      </div>
-      <div class="settings__item">
-        <button
-          class="settings__button"
-          @click.prevent="copyToClipboard"
-        > Copy to clipboard </button>
-        <button
-          class="settings__button settings__button--delete"
-          @click.prevent="deleteProject"
-        > Delete </button>
-      </div>
-    </div>
-    <Modal :buttons="modalButtons" ref="modal" text="Are you sure you want to delete this project?" />
-  </section>
-</template>

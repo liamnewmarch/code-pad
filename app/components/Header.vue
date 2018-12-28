@@ -11,6 +11,90 @@ export default {
 };
 </script>
 
+<template>
+  <div>
+    <nav
+      v-if="isListRoute"
+      class="top-nav"
+    >
+      <div class="top-nav__item top-nav__item--title">
+        &lt;/&gt;
+      </div>
+    </nav>
+    <nav
+      v-else-if="isSettingsRoute"
+      class="top-nav"
+    >
+      <RouterLink
+        class="top-nav__item top-nav__item--back"
+        tag="button"
+        :to="{ name: 'list' }"
+      >
+        ←
+      </RouterLink>
+      <div class="top-nav__item top-nav__item--title">
+        Settings
+      </div>
+      <RouterLink
+        class="top-nav__item top-nav__item--settings"
+        tag="button"
+        :to="{ name: 'editor', params: { type: 'html' }}"
+      >
+        ⋮
+      </RouterLink>
+    </nav>
+    <nav
+      v-else
+      class="top-nav"
+    >
+      <RouterLink
+        active-class="top-nav__item--active"
+        class="top-nav__item top-nav__item--tab"
+        tag="button"
+        replace
+        :to="{ name: 'editor', params: { type: 'html' }}"
+      >
+        HTML
+      </RouterLink>
+      <RouterLink
+        active-class="top-nav__item--active"
+        class="top-nav__item top-nav__item--tab"
+        tag="button"
+        replace
+        :to="{ name: 'editor', params: { type: 'css' }}"
+      >
+        CSS
+      </RouterLink>
+      <RouterLink
+        active-class="top-nav__item--active"
+        class="top-nav__item top-nav__item--tab"
+        tag="button"
+        replace
+        :to="{ name: 'editor', params: { type: 'javascript' }}"
+      >
+        JS
+      </RouterLink>
+      <RouterLink
+        active-class="top-nav__item--active"
+        class="top-nav__item top-nav__item--tab"
+        tag="button"
+        replace
+        :to="{ name: 'result' }"
+      >
+        Result
+      </RouterLink>
+      <RouterLink
+        class="top-nav__item top-nav__item--settings"
+        tag="button"
+        replace
+        :to="{ name: 'settings' }"
+      >
+        ⋮
+      </RouterLink>
+    </nav>
+  </div>
+</template>
+
 <style>
 .top-nav {
   background: linear-gradient(to right, #e06c75, #56b6c2);
@@ -43,69 +127,3 @@ export default {
   flex-grow: 1;
 }
 </style>
-
-<template>
-  <div>
-    <nav
-      v-if="isListRoute"
-      class="top-nav"
-    >
-      <div class="top-nav__item top-nav__item--title"> &lt;/&gt; </div>
-    </nav>
-    <nav
-      v-else-if="isSettingsRoute"
-      class="top-nav"
-    >
-      <router-link
-        class="top-nav__item top-nav__item--back"
-        tag="button"
-        :to="{ name: 'list' }"
-      > ← </router-link>
-      <div class="top-nav__item top-nav__item--title"> Settings </div>
-      <router-link
-        class="top-nav__item top-nav__item--settings"
-        tag="button"
-        :to="{ name: 'editor', params: { type: 'html' }}"
-      > ⋮ </router-link>
-    </nav>
-    <nav
-      v-else
-      class="top-nav"
-    >
-      <router-link
-        active-class="top-nav__item--active"
-        class="top-nav__item top-nav__item--tab"
-        tag="button"
-        replace
-        :to="{ name: 'editor', params: { type: 'html' }}"
-      > HTML </router-link>
-      <router-link
-        active-class="top-nav__item--active"
-        class="top-nav__item top-nav__item--tab"
-        tag="button"
-        replace
-        :to="{ name: 'editor', params: { type: 'css' }}"
-      > CSS </router-link>
-      <router-link
-        active-class="top-nav__item--active"
-        class="top-nav__item top-nav__item--tab"
-        tag="button"
-        replace
-        :to="{ name: 'editor', params: { type: 'javascript' }}"
-      > JS </router-link>
-      <router-link
-        active-class="top-nav__item--active"
-        class="top-nav__item top-nav__item--tab"
-        tag="button"
-        replace
-        :to="{ name: 'result' }"
-      > Result </router-link>
-      <router-link
-        class="top-nav__item top-nav__item--settings"
-        tag="button"
-        replace
-        :to="{ name: 'settings' }"
-      > ⋮ </router-link>
-    </nav>
-  </div>
-</template>

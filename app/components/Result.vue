@@ -17,6 +17,13 @@ export default {
       logging: [],
     };
   },
+  mounted() {
+    const { css, html, javascript } = this.project;
+    const { contentWindow, contentDocument } = this.$refs.result;
+    this.injectHTML(contentDocument, html);
+    this.injectCSS(contentDocument, css);
+    this.injectJS(contentWindow, javascript);
+  },
   methods: {
     injectCSS(targetDocument, css = '') {
       const style = targetDocument.createElement('style');
@@ -27,22 +34,15 @@ export default {
       targetDocument.body.innerHTML = html;
     },
     injectJS(targetWindow, javascript = '') {
-      for (const key of this.consoleMethods) {
+      this.$data.consoleMethods.forEach((key) => {
         targetWindow.console[key] = (...args) => this.logging.push(...args);
-      }
+      });
       try {
         targetWindow.eval(javascript);
       } catch (error) {
         this.logging.push('message' in error ? error.message : error);
       }
     },
-  },
-  mounted() {
-    const { css, html, javascript} = this.project;
-    const { contentWindow, contentDocument } = this.$refs.result;
-    this.injectHTML(contentDocument, html);
-    this.injectCSS(contentDocument, css);
-    this.injectJS(contentWindow, javascript);
   },
 };
 </script>

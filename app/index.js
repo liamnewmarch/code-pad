@@ -8,10 +8,9 @@ import store from './config/store';
 import App from './components/App.vue';
 
 new Vue({
-  el: 'FiddleApp',
   render: h => h(App),
   router,
   store,
-});
+}).$mount('FiddleApp');
 
 registerServiceWorker();

@@ -1,27 +1,60 @@
 <script lang="ts">
 export default {
+  props: {
+    buttons: {
+      default: () => [],
+      type: Array,
+    },
+    text: {
+      default: () => '',
+      type: String,
+    },
+  },
   data() {
     return {
       resolve: null,
       visible: false,
     };
   },
-  props: {
-    buttons: {},
-    text: String,
-  },
   methods: {
     respond(value) {
-      this.visible = false;
-      this.resolve(value);
+      this.$data.visible = false;
+      this.$data.resolve(value);
     },
     show() {
-      this.visible = true;
-      return new Promise(resolve => this.resolve = resolve);
+      this.$data.visible = true;
+      return new Promise((resolve) => {
+        this.$data.resolve = resolve;
+      });
     },
   },
 };
 </script>
+
+<template>
+  <div
+    v-if="visible"
+    ref="modal"
+    class="modal"
+  >
+    <div class="modal__popup modal__popup--centered">
+      <div class="modal__body">
+        <p>{{ text }}</p>
+      </div>
+      <div class="modal__buttons">
+        <button
+          v-for="(button, index) of buttons"
+          :key="index"
+          :class="{ 'modal__button--danger': button.danger }"
+          class="modal__button"
+          @click="respond(button.value)"
+        >
+          {{ button.label }}
+        </button>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style>
 .modal {
@@ -35,7 +68,6 @@ export default {
 
 .modal__popup {
   background-color: #272822;
-  /* border: .1rem solid #fff; */
   border-radius: .2rem;
   box-shadow: 0 .1rem 2rem #0008;
   color: #fff;
@@ -79,22 +111,3 @@ export default {
   background: #a22;
 }
 </style>
-
-<template>
-  <div v-if="visible" ref="modal" class="modal">
-    <div class="modal__popup modal__popup--centered">
-      <div class="modal__body">
-        <p>{{ text }}</p>
-      </div>
-      <div class="modal__buttons">
-        <button
-          v-for="(button, index) of buttons" :key="index"
-          @click="respond(button.value)"
-          class="modal__button"
-          :class="{ 'modal__button--danger': button.danger }">
-          {{ button.label }}
-        </button>
-      </div>
-    </div>
-  </div>
-</template>

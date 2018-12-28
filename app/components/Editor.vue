@@ -39,6 +39,15 @@ export default {
 };
 </script>
 
+<template>
+  <div class="project__pane">
+    <textarea
+      ref="editor"
+      class="editor"
+    />
+  </div>
+</template>
+
 <style>
 .editor .CodeMirror {
   background-color: inherit;
@@ -61,12 +70,3 @@ export default {
   border-right-width: 1rem;
 }
 </style>
-
-<template>
-  <div class="project__pane">
-    <textarea
-      ref="editor"
-      class="editor"
-    />
-  </div>
-</template>
