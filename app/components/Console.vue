@@ -16,8 +16,8 @@ export default {
   computed: {
     toggleLabel() {
       if (this.active) return '×';
-      if (!this.logging.length) return '✔';
-      return `»${this.logging.length}`;
+      if (!this.logging.length) return '$_';
+      return `$${this.logging.length}`;
     },
   },
   methods: {
