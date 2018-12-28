@@ -12,30 +12,37 @@ export default {
     },
   },
   data() {
-    return { logging: [] };
+    return {
+      consoleMethods: ['error', 'log', 'warn'],
+      logging: [],
+    };
+  },
+  methods: {
+    injectCSS(targetDocument, css = '') {
+      const style = targetDocument.createElement('style');
+      style.textContent = css;
+      targetDocument.head.appendChild(style);
+    },
+    injectHTML(targetDocument, html = '') {
+      targetDocument.body.innerHTML = html;
+    },
+    injectJS(targetWindow, javascript = '') {
+      for (const key of consoleMethods) {
+        targetWindow.console[key] = (...args) => this.logging.push(...args);
+      }
+      try {
+        targetWindow.eval(javascript);
+      } catch (error) {
+        this.logging.push('message' in error ? error.message : error);
+      }
+    },
   },
   mounted() {
-    const { css = '', html = '', javascript = '' } = this.project;
+    const { css, html, javascript} = this.project;
     const { contentWindow, contentDocument } = this.$refs.result;
-
-    // HTML
-    contentDocument.body.innerHTML = html;
-
-    // CSS
-    const style = contentDocument.createElement('style');
-    style.textContent = css;
-    contentDocument.head.appendChild(style);
-
-    // JavaScript
-    /* eslint-disable-next-line no-restricted-syntax, guard-for-in */
-    for (const key in contentWindow.console) {
-      contentWindow.console[key] = (...args) => this.logging.push(...args);
-    }
-    try {
-      contentWindow.eval(javascript);
-    } catch (error) {
-      this.logging.push('message' in error ? error.message : error);
-    }
+    this.injectHTML(contentDocument, html);
+    this.injectCSS(contentDocument, css);
+    this.injectJS(contentWindow, javascript);
   },
 };
 </script>
