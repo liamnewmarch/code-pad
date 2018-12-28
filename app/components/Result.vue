@@ -27,7 +27,7 @@ export default {
       targetDocument.body.innerHTML = html;
     },
     injectJS(targetWindow, javascript = '') {
-      for (const key of consoleMethods) {
+      for (const key of this.consoleMethods) {
         targetWindow.console[key] = (...args) => this.logging.push(...args);
       }
       try {
