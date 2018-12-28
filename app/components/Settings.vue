@@ -1,5 +1,22 @@
 <script>
+import Modal from './Modal.vue';
+
 export default {
+  components: {
+    Modal,
+  },
+  data() {
+    return {
+      modalButtons: [{
+        label: 'Cancel',
+        value: false,
+      }, {
+        danger: true,
+        label: 'Delete',
+        value: true,
+      }]
+    };
+  },
   props: {
     project: {
       default: null,
@@ -18,9 +35,9 @@ export default {
       document.execCommand('copy');
       document.body.removeChild(textarea);
     },
-    deleteProject() {
-      /* eslint-disable-next-line no-restricted-globals, no-alert */
-      if (!confirm('Are you sure you want to delete this project?')) return;
+    async deleteProject() {
+      const value = await this.$refs.modal.show();
+      if (!value) return;
       this.$store.dispatch('deleteProject', { key: this.project.key });
       this.$router.push({ name: 'list' });
     },
@@ -91,5 +108,6 @@ export default {
         > Delete </button>
       </div>
     </div>
+    <Modal :buttons="modalButtons" ref="modal" text="Are you sure you want to delete this project?" />
   </section>
 </template>

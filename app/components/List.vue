@@ -1,12 +1,15 @@
 <script>
+import Modal from './Modal.vue';
+
 export default {
   data() {
-    return { json: '' };
+    return {
+      importError: '',
+      json: '',
+    };
   },
-  computed: {
-    projects() {
-      return this.$store.state.projects;
-    },
+  components: {
+    Modal,
   },
   methods: {
     async add() {
@@ -19,8 +22,8 @@ export default {
         const key = await this.$store.dispatch('addProject', project);
         this.$router.push({ name: 'editor', params: { key, type: 'html' } });
       } catch (error) {
-        /* eslint-disable-next-line no-restricted-globals, no-alert */
-        alert(error);
+        this.importError = `There was an error importing the project: “${error.message}”`;
+        this.$refs.modal.show();
       }
     },
     reverse(object) {
@@ -72,7 +75,7 @@ export default {
         @click="add"
       > New project </button>
       <router-link
-        v-for="(project, index) in reverse(projects)"
+        v-for="(project, index) in reverse($store.state.projects)"
         :key="index"
         class="list__item button"
         tag="button"
@@ -91,5 +94,6 @@ export default {
         @click="importJSON"
       > Import project </button>
     </div>
+    <Modal :buttons="[{ label: 'Dismiss', value: true }]" ref="modal" :text="importError" />
   </section>
 </template>
