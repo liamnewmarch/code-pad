@@ -1,4 +1,6 @@
 <script>
+import Vue from 'vue';
+
 export default {
   props: {
     logging: {
@@ -41,8 +43,12 @@ export default {
         }
       }).join(', ');
     },
+    scrollToBottom() {
+      this.$refs.output.scrollTop = this.$refs.output.scrollHeight;
+    },
     toggle() {
       this.active = !this.active;
+      if (this.active) Vue.nextTick(this.scrollToBottom);
     },
     type(thing) {
       const toString = Object.prototype.toString.call(thing);
