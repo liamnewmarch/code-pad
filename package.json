@@ -1,6 +1,6 @@
 {
   "name": "fiddle",
-  "version": "3.1.3",
+  "version": "3.2.0",
   "description": "A HTML / CSS / JS sandbox that works offline and between page refreshes.",
   "private": true,
   "homepage": "https://github.com/liamnewmarch/fiddle#readme",
