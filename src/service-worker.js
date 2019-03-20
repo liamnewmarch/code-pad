@@ -1,5 +1,5 @@
 /* eslint no-restricted-globals: 1 */
-const CACHE_VERSION = '3.1.3';
+const CACHE_VERSION = 'VERSION';
 
 const CACHE_FILES = [
   '.',
