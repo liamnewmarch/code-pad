@@ -38,6 +38,7 @@ body {
   flex-direction: column;
   margin: 0;
   min-height: 100vh;
+  overscroll-behavior: none;
 }
 
 button,
