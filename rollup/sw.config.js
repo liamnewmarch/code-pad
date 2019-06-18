@@ -1,6 +1,6 @@
 import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
-import { version } from './package.json'; // eslint-disable-line
+import { version } from '../package.json';
 
 const plugins = [
   replace({
