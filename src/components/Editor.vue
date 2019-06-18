@@ -43,6 +43,10 @@ export default {
   <div class="project__pane">
     <textarea
       ref="editor"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
       class="editor"
     />
   </div>
