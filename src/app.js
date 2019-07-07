@@ -9,6 +9,6 @@ new Vue({
   render: h => h(App),
   router,
   store,
-}).$mount('FiddleApp');
+}).$mount('code-pad');
 
 registerServiceWorker();

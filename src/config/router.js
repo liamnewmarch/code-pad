@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Editor from '../components/Editor.vue';
-import Fiddle from '../components/Fiddle.vue';
+import Project from '../components/Project.vue';
 import List from '../components/List.vue';
 import Result from '../components/Result.vue';
 import Settings from '../components/Settings.vue';
@@ -14,7 +14,7 @@ const routes = [{
   name: 'list',
   path: '/',
 }, {
-  component: Fiddle,
+  component: Project,
   name: 'project',
   path: '/project/:key',
   children: [{

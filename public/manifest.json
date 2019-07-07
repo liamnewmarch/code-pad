@@ -1,6 +1,6 @@
 {
-  "name": "Fiddle",
-  "start_url": "https://liamnewmarch-fiddle.firebaseapp.com",
+  "name": "Code Pad",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "icons": [{
