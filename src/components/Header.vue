@@ -22,7 +22,7 @@ export default {
       </div>
     </nav>
     <nav
-      v-else-if="isSettingsRoute"
+      v-else
       class="top-nav"
     >
       <RouterLink
@@ -32,21 +32,6 @@ export default {
       >
         ←
       </RouterLink>
-      <div class="top-nav__item top-nav__item--title">
-        Settings
-      </div>
-      <RouterLink
-        class="top-nav__item top-nav__item--settings"
-        tag="button"
-        :to="{ name: 'editor', params: { type: 'html' }}"
-      >
-        ⋮
-      </RouterLink>
-    </nav>
-    <nav
-      v-else
-      class="top-nav"
-    >
       <RouterLink
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"
@@ -84,6 +69,7 @@ export default {
         Result
       </RouterLink>
       <RouterLink
+        active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--settings"
         tag="button"
         replace
