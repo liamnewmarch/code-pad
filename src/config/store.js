@@ -5,7 +5,7 @@ import { loadState, saveState } from './persistance';
 
 Vue.use(Vuex);
 
-const createKey = () => Math.floor(new Date() / 1000).toString(36);
+const createKey = () => Math.random().toString(36).substr(2, 9);
 
 const defaults = {
   css: 'html {\n  background-color: #272822;\n  color: #fff;\n}\n',

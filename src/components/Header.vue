@@ -4,8 +4,8 @@ export default {
     isListRoute() {
       return this.$route.name === 'list';
     },
-    isSettingsRoute() {
-      return this.$route.name === 'settings';
+    isImportExportRoute() {
+      return this.$route.name === 'import-export';
     },
   },
 };
@@ -20,6 +20,19 @@ export default {
       <div class="top-nav__item top-nav__item--title">
         &lt;/&gt;
       </div>
+    </nav>
+    <nav
+      v-else-if="isImportExportRoute"
+      class="top-nav"
+    >
+      <RouterLink
+        class="top-nav__item top-nav__item--back"
+        tag="button"
+        :to="{ name: 'list' }"
+      >
+        ←
+      </RouterLink>
+      <div class="top-nav__item top-nav__item--title" />
     </nav>
     <nav
       v-else

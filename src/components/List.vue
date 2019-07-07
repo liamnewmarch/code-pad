@@ -1,30 +1,9 @@
 <script>
-import Modal from './Modal.vue';
-
 export default {
-  components: {
-    Modal,
-  },
-  data() {
-    return {
-      importError: '',
-      json: '',
-    };
-  },
   methods: {
     async add() {
       const key = await this.$store.dispatch('addProject');
       this.$router.push({ name: 'editor', params: { key, type: 'html' } });
-    },
-    async importJSON() {
-      try {
-        const project = JSON.parse(this.json);
-        const key = await this.$store.dispatch('addProject', project);
-        this.$router.push({ name: 'editor', params: { key, type: 'html' } });
-      } catch (error) {
-        this.importError = `There was an error importing the project: “${error.message}”`;
-        this.$refs.modal.show();
-      }
     },
     reverse(object) {
       const reduce = (obj, [key, value]) => Object.assign(obj, { [key]: value });
@@ -53,39 +32,27 @@ export default {
         {{ project.name }}
       </RouterLink>
     </div>
-    <div class="list__import">
-      <input
-        v-model="json"
-        class="list__import-input"
-        placeholder="Paste JSON"
-        type="text"
+    <div class="list__import-export">
+      <RouterLink
+        class="list__import-export-item button"
+        tag="button"
+        :to="{ name: 'import-export' }"
       >
-      <button
-        class="list__import-button"
-        @click="importJSON"
-      >
-        Import project
-      </button>
+        Import / Export
+      </RouterLink>
     </div>
-    <Modal
-      ref="modal"
-      :buttons="[{ label: 'Dismiss', value: true }]"
-      :text="importError"
-    />
   </section>
 </template>
 
 <style>
-.list__items,
-.list__import {
+.list__items {
   display: flex;
   flex-flow: row wrap;
   flex-shrink: 0;
   padding: 1rem 0 0 1rem;
 }
 
-.list__item,
-.list__import-button {
+.list__item {
   background: #444;
   border-radius: .2rem;
   flex: 1 0 8rem;
@@ -94,15 +61,17 @@ export default {
   text-align: center;
 }
 
-.list__item--add,
-.list__import-button {
+.list__item--add {
   background-color: #333;
 }
 
-.list__import-input {
-  flex: 1 0 8rem;
-  margin: 0 1rem 1rem 0;
-  padding: 3rem 1rem;
+.list__import-export {
+  padding: 1em;
   text-align: center;
+}
+
+.list__import-export-item {
+  color: #fff;
+  text-decoration: none;
 }
 </style>

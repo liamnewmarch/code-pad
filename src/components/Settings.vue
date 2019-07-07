@@ -13,7 +13,10 @@ export default {
   },
   data() {
     return {
-      modalButtons: [{
+      modalCopiedButtons: [{
+        label: 'Dismiss',
+      }],
+      modalDeleteButtons: [{
         label: 'Cancel',
         value: false,
       }, {
@@ -27,16 +30,13 @@ export default {
     clone() {
       this.$store.dispatch('addProject', this.project);
     },
-    copyToClipboard() {
-      const textarea = document.createElement('textarea');
-      textarea.value = JSON.stringify({ ...this.project });
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
+    async copyToClipboard() {
+      const json = JSON.stringify([{ ...this.project }]);
+      await navigator.clipboard.writeText(json);
+      this.$refs.modalCopied.show();
     },
     async deleteProject() {
-      const value = await this.$refs.modal.show();
+      const value = await this.$refs.modalDelete.show();
       if (!value) return;
       this.$store.dispatch('deleteProject', { key: this.project.key });
       this.$router.push({ name: 'list' });
@@ -76,8 +76,13 @@ export default {
       </div>
     </div>
     <Modal
-      ref="modal"
-      :buttons="modalButtons"
+      ref="modalCopied"
+      :buttons="modalCopiedButtons"
+      text="Project copied to clipboard."
+    />
+    <Modal
+      ref="modalDelete"
+      :buttons="modalDeleteButtons"
       text="Are you sure you want to delete this project?"
     />
   </section>
