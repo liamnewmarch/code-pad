@@ -14,12 +14,13 @@ export default () => {
   if (!json) return {};
   try {
     const keys = JSON.parse(json);
-    const projects = keys.map(migrateProject)
-      .filter(project => project)
-      .reduce((obj, project) => {
-        obj[project.key] = project;
-        return obj;
-      }, {});
+    const projects = keys
+        .map(migrateProject)
+        .filter(project => project)
+        .reduce((obj, project) => {
+          obj[project.key] = project;
+          return obj;
+        }, {});
     localStorage.removeItem('fiddles');
     return { projects };
   } catch (error) {

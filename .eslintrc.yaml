@@ -1,0 +1,26 @@
+env:
+  browser: true
+  es6: true
+  node: true
+extends:
+  - eslint:recommended
+  - google
+  - plugin:vue/recommended
+parserOptions:
+  ecmaVersion: 2018
+  sourceType: module
+plugins:
+  - vue
+rules:
+  arrow-parens:
+    - error
+    - as-needed
+    - requireForBlockBody: true
+  max-len:
+    - error
+    - code: 120
+  object-curly-spacing:
+    - error
+    - always
+    - objectsInObjects: false
+  require-jsdoc: 0
