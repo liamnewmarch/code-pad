@@ -1,4 +1,3 @@
-/* eslint no-restricted-globals: 1 */
 const CACHE_VERSION = 'VERSION';
 
 const CACHE_FILES = [

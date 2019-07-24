@@ -3,7 +3,7 @@ export default {
   methods: {
     async add() {
       const key = await this.$store.dispatch('addProject');
-      this.$router.push({ name: 'editor', params: { key, type: 'html' } });
+      this.$router.push({ name: 'editor', params: { key, type: 'html' }});
     },
     reverse(object) {
       const reduce = (obj, [key, value]) => Object.assign(obj, { [key]: value });

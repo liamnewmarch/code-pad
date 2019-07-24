@@ -18,9 +18,11 @@ export default {
   },
   methods: {
     async exportJSON() {
-      const projects = Object
-        .entries(this.$store.state.projects)
-        .map(([, project]) => project);
+      const projects = (
+        Object
+            .entries(this.$store.state.projects)
+            .map(([, project]) => project)
+      );
       const json = JSON.stringify(projects);
       await navigator.clipboard.writeText(json);
       this.showModal('Projects copied to clipboard.');
