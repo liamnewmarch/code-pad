@@ -28,6 +28,7 @@ export default {
         const type = this.type(item);
         switch (type) {
           case 'Array':
+            return `(${item.length}) ${JSON.stringify(item)}`;
           case 'Boolean':
           case 'Number':
           case 'Object':
@@ -39,7 +40,7 @@ export default {
           case 'Undefined':
             return 'undefined';
           default:
-            return `${type} {}`;
+            return `${type} { ${Object.keys(item).join(', ')} }`;
         }
       }).join(', ');
     },
@@ -103,6 +104,7 @@ export default {
 
   .console__line {
     margin: 1rem 0;
+    white-space: nowrap;
   }
 
   .console__line::before {
