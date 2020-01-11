@@ -33,12 +33,13 @@ export default {
     injectHTML(targetDocument, html = '') {
       targetDocument.body.innerHTML = html;
     },
-    injectJS(targetWindow, javascript = '') {
-      this.$data.consoleMethods.forEach((key) => {
-        targetWindow.console[key] = (...args) => this.logging.push(...args);
-      });
+    async injectJS(targetWindow, javascript = '') {
       try {
-        targetWindow.eval(javascript);
+        for (const key of this.$data.consoleMethods) {
+          targetWindow.console[key] = (...args) => this.logging.push(...args);
+        }
+        const url = JSON.stringify(`data:text/javascript, ${javascript}`);
+        await targetWindow.eval(`import(${url});`);
       } catch (error) {
         this.logging.push('message' in error ? error.message : error);
       }
