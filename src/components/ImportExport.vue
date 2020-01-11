@@ -31,9 +31,9 @@ export default {
       try {
         const json = await navigator.clipboard.readText();
         const projects = JSON.parse(json);
-        projects.forEach((project) => {
+        for (const project of projects) {
           this.$store.dispatch('addProject', project);
-        });
+        }
         this.showModal(`Success! Imported ${projects.length} project(s).`);
       } catch (error) {
         this.showModal(`There was an error:\n“${error.message}”`);
