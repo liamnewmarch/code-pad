@@ -28,6 +28,9 @@ const mutations = {
     Vue.delete(state.projects, data.key);
     saveState(state);
   },
+  setUser(state, user) {
+    Vue.set(state, 'user', user);
+  },
   setProject(state, { key, name, value }) {
     Vue.set(state.projects[key], name, value);
     saveState(state);
@@ -42,6 +45,9 @@ const actions = {
   },
   deleteProject({ commit }, { key }) {
     commit('deleteProject', { key });
+  },
+  setUser({ commit }, { uid }) {
+    commit('setUser', { uid });
   },
   updateProject({ commit }, { key, name, value }) {
     commit('setProject', { key, name, value });

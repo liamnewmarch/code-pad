@@ -32,13 +32,13 @@ export default {
         {{ project.name }}
       </RouterLink>
     </div>
-    <div class="list__import-export">
+    <div class="list__global-settings button">
       <RouterLink
-        class="list__import-export-item button"
+        class="list__global-settings-item button"
         tag="button"
-        :to="{ name: 'import-export' }"
+        :to="{ name: 'global-settings' }"
       >
-        Import / Export
+        Settings
       </RouterLink>
     </div>
   </section>
@@ -65,12 +65,12 @@ export default {
   background-color: #333;
 }
 
-.list__import-export {
+.list__global-settings {
   padding: 1em;
   text-align: center;
 }
 
-.list__import-export-item {
+.list__global-settings-item {
   color: #fff;
   text-decoration: none;
 }

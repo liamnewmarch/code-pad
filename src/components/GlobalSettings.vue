@@ -1,6 +1,8 @@
 <script>
 import Modal from './Modal.vue';
 
+import { signIn, signOut } from '../config/firebase.js';
+
 export default {
   components: {
     Modal,
@@ -15,6 +17,11 @@ export default {
     return {
       modalText: '',
     };
+  },
+  computed: {
+    isAuthenticated() {
+      return Boolean(this.$store.state.user.uid);
+    },
   },
   methods: {
     async exportJSON() {
@@ -43,6 +50,8 @@ export default {
       this.modalText = text;
       this.$refs.modal.show();
     },
+    signIn,
+    signOut,
   },
 };
 </script>
@@ -51,14 +60,14 @@ export default {
   <section>
     <h2> Export all projects </h2>
     <button
-      class="import-export__export-button"
+      class="global-settings__export-button"
       @click="exportJSON"
     >
       Export to clipboard
     </button>
     <h2> Import project(s) </h2>
     <button
-      class="import-export__import-button"
+      class="global-settings__import-button"
       @click="importJSON"
     >
       Import from clipboard
@@ -68,6 +77,18 @@ export default {
       :buttons="[{ label: 'Dismiss', value: true }]"
       :text="modalText"
     />
+    <div v-if="isAuthenticated">
+      <h2> Sign out </h2>
+      <button @click="signOut">
+        Sign out
+      </button>
+    </div>
+    <div v-else>
+      <h2> Sign in </h2>
+      <button @click="signIn">
+        Sign in with Google
+      </button>
+    </div>
   </section>
 </template>
 

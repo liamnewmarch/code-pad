@@ -4,8 +4,8 @@ export default {
     isListRoute() {
       return this.$route.name === 'list';
     },
-    isImportExportRoute() {
-      return this.$route.name === 'import-export';
+    isGlobalSettingsRoute() {
+      return this.$route.name === 'global-settings';
     },
   },
 };
@@ -22,7 +22,7 @@ export default {
       </div>
     </nav>
     <nav
-      v-else-if="isImportExportRoute"
+      v-else-if="isGlobalSettingsRoute"
       class="top-nav"
     >
       <RouterLink
@@ -32,7 +32,9 @@ export default {
       >
         ←
       </RouterLink>
-      <div class="top-nav__item top-nav__item--title" />
+      <div class="top-nav__item top-nav__item--title">
+        Settings
+      </div>
     </nav>
     <nav
       v-else
@@ -86,7 +88,7 @@ export default {
         class="top-nav__item top-nav__item--settings"
         tag="button"
         replace
-        :to="{ name: 'settings' }"
+        :to="{ name: 'project-settings' }"
       >
         ⋮
       </RouterLink>
