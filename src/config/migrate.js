@@ -1,4 +1,4 @@
-const migrateProject = (key) => {
+export function migrateProject(key) {
   try {
     const json = localStorage.getItem(key);
     const project = JSON.parse(json);
@@ -9,7 +9,7 @@ const migrateProject = (key) => {
   }
 };
 
-export default () => {
+export function getLegacy() {
   const json = localStorage.getItem('fiddles');
   if (!json) return {};
   try {
@@ -26,4 +26,4 @@ export default () => {
   } catch (error) {
     throw new Error(`Migration failed: ${error.message}`);
   }
-};
+}

@@ -1,4 +1,4 @@
-import getLegacy from './migrate';
+import { getLegacy } from './migrate';
 
 const SERVICE_WORKER_URL = '/service-worker.js';
 const STORAGE_KEY = 'project-store';

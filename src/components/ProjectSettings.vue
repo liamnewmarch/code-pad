@@ -41,6 +41,13 @@ export default {
       this.$store.dispatch('deleteProject', { key: this.project.key });
       this.$router.push({ name: 'list' });
     },
+    updateName() {
+      this.$store.dispatch('updateProject', {
+        key: this.project.key,
+        name: 'name',
+        value: this.project.name,
+      });
+    },
   },
 };
 </script>
@@ -58,6 +65,7 @@ export default {
         <input
           v-model="project.name"
           class="settings__input"
+          @input="updateName"
         >
       </div>
       <div class="settings__item">

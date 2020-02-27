@@ -1,11 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { loadState, saveState } from './persistance';
+import { firestore } from './firebase';
 
 Vue.use(Vuex);
-
-const createKey = () => Math.random().toString(36).substr(2, 9);
 
 const defaults = {
   css: 'html {\n  background-color: #272822;\n  color: #fff;\n}\n',
@@ -14,43 +12,89 @@ const defaults = {
   name: 'Untitled',
 };
 
-const state = loadState({
+const state = {
   projects: {},
   user: {},
-});
+};
 
 const mutations = {
   addProject(state, data) {
     Vue.set(state.projects, data.key, data);
-    saveState(state);
   },
   deleteProject(state, data) {
     Vue.delete(state.projects, data.key);
-    saveState(state);
   },
   setUser(state, user) {
     Vue.set(state, 'user', user);
   },
   setProject(state, { key, name, value }) {
     Vue.set(state.projects[key], name, value);
-    saveState(state);
   },
 };
 
 const actions = {
-  addProject({ commit }, data = {}) {
-    const key = createKey();
-    commit('addProject', { ...defaults, ...data, key });
-    return key;
+  async addProject({ commit, state }, data = {}) {
+    try {
+      const doc = await firestore
+          .collection('users')
+          .doc(state.user.uid)
+          .collection('projects')
+          .add(data);
+      const key = doc.id;
+      await firestore
+          .collection('users')
+          .doc(state.user.uid)
+          .collection('projects')
+          .doc(key)
+          .update({ key });
+      commit('addProject', { ...defaults, ...data, key });
+      return key;
+    } catch ({ message }) {
+      console.log(message);
+    }
   },
-  deleteProject({ commit }, { key }) {
-    commit('deleteProject', { key });
+  async deleteProject({ commit, state }, { key }) {
+    try {
+      commit('deleteProject', { key });
+      await firestore
+          .collection('users')
+          .doc(state.user.uid)
+          .collection('projects')
+          .doc(key)
+          .delete();
+    } catch ({ message }) {
+      console.log(message);
+    }
+  },
+  async loadProjects({ commit }) {
+    try {
+      const projects = await firestore
+          .collection('users')
+          .doc(state.user.uid)
+          .collection('projects')
+          .get();
+      for (const project of projects.docs) {
+        commit('addProject', project.data());
+      }
+    } catch ({ message }) {
+      console.log(message);
+    }
   },
   setUser({ commit }, { uid }) {
     commit('setUser', { uid });
   },
-  updateProject({ commit }, { key, name, value }) {
-    commit('setProject', { key, name, value });
+  async updateProject({ commit, state }, { key, name, value }) {
+    try {
+      commit('setProject', { key, name, value });
+      await firestore
+          .collection('users')
+          .doc(state.user.uid)
+          .collection('projects')
+          .doc(key)
+          .update({ [name]: value });
+    } catch ({ message }) {
+      console.log(message);
+    }
   },
 };
 

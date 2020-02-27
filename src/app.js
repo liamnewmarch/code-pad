@@ -16,7 +16,8 @@ registerServiceWorker();
 
 auth.onAuthStateChanged(async (user) => {
   try {
-    store.dispatch('setUser', user);
+    await store.dispatch('setUser', user);
+    await store.dispatch('loadProjects');
   } catch ({ message }) {
     console.error(message);
   }
