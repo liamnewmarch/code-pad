@@ -1,8 +1,6 @@
 <script>
 import Modal from './Modal.vue';
 
-import { signIn, signOut } from '../config/firebase.js';
-
 export default {
   components: {
     Modal,
@@ -39,19 +37,20 @@ export default {
         const json = await navigator.clipboard.readText();
         const projects = JSON.parse(json);
         for (const project of projects) {
-          this.$store.dispatch('addProject', project);
+          await this.$store.dispatch('addProject', project);
         }
         this.showModal(`Success! Imported ${projects.length} project(s).`);
       } catch (error) {
         this.showModal(`There was an error:\n“${error.message}”`);
       }
     },
+    async signOut() {
+      await this.$store.dispatch('signOut');
+    },
     showModal(text) {
       this.modalText = text;
       this.$refs.modal.show();
     },
-    signIn,
-    signOut,
   },
 };
 </script>
@@ -77,18 +76,13 @@ export default {
       :buttons="[{ label: 'Dismiss', value: true }]"
       :text="modalText"
     />
-    <div v-if="isAuthenticated">
-      <h2> Sign out </h2>
-      <button @click="signOut">
-        Sign out
-      </button>
-    </div>
-    <div v-else>
-      <h2> Sign in </h2>
-      <button @click="signIn">
-        Sign in with Google
-      </button>
-    </div>
+    <h2> Sign out </h2>
+    <button
+      class="global-settings__sign-out"
+      @click="signOut"
+    >
+      Sign out from Code Pad
+    </button>
   </section>
 </template>
 

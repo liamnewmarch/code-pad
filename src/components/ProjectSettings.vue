@@ -27,8 +27,8 @@ export default {
     };
   },
   methods: {
-    clone() {
-      this.$store.dispatch('addProject', this.project);
+    async clone() {
+      await this.$store.dispatch('addProject', this.project);
     },
     async copyToClipboard() {
       const json = JSON.stringify([{ ...this.project }]);
@@ -38,11 +38,10 @@ export default {
     async deleteProject() {
       const value = await this.$refs.modalDelete.show();
       if (!value) return;
-      this.$store.dispatch('deleteProject', { key: this.project.key });
-      this.$router.push({ name: 'list' });
+      await this.$store.dispatch('deleteProject', { key: this.project.key });
     },
-    updateName() {
-      this.$store.dispatch('updateProject', {
+    async updateName() {
+      await this.$store.dispatch('updateProject', {
         key: this.project.key,
         name: 'name',
         value: this.project.name,

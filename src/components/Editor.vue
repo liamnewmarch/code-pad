@@ -24,8 +24,8 @@ export default {
     });
   },
   methods: {
-    onChange() {
-      this.$store.dispatch('updateProject', {
+    async onChange() {
+      await this.$store.dispatch('updateProject', {
         key: this.$route.params.key,
         name: this.type,
         value: this.editor.getValue(),

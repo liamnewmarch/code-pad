@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
-import { auth } from './config/firebase.js';
-import { registerServiceWorker } from './config/persistance';
+import register from './config/service-worker';
 import router from './config/router';
 import store from './config/store';
 import App from './components/App.vue';
@@ -12,13 +11,4 @@ new Vue({
   store,
 }).$mount('code-pad');
 
-registerServiceWorker();
-
-auth.onAuthStateChanged(async (user) => {
-  try {
-    await store.dispatch('setUser', user);
-    await store.dispatch('loadProjects');
-  } catch ({ message }) {
-    console.error(message);
-  }
-});
+register();

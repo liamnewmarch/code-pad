@@ -1,24 +1,18 @@
 <script>
-import store from '../config/store';
-
 export default {
-  beforeRouteEnter(to, from, next) {
-    if (to.params.key in store.state.projects) {
-      next();
-    } else {
-      next({ name: 'list' });
-    }
-  },
-  computed: {
-    project() {
-      return this.$store.state.projects[this.$route.params.key];
+  methods: {
+    getProjectOrNavigate() {
+      if (this.$route.params.key in this.$store.state.projects) {
+        return this.$store.state.projects[this.$route.params.key];
+      }
+      this.$router.push({ name: 'list' });
     },
   },
 };
 </script>
 
 <template>
-  <RouterView :project="project" />
+  <RouterView :project="getProjectOrNavigate()" />
 </template>
 
 <style>
