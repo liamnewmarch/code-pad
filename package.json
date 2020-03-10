@@ -19,10 +19,10 @@
     "watch": "NODE_ENV=development rollup -w -c rollup.config.js"
   },
   "dependencies": {
-    "codemirror": "^5.51.0",
+    "codemirror": "^5.52.0",
     "codemirror-one-dark-theme": "^1.1.1",
-    "firebase": "^7.8.2",
-    "rollup": "^1.31.1",
+    "firebase": "^7.9.3",
+    "rollup": "^1.32.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-css-only": "^2.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
@@ -30,7 +30,7 @@
     "rollup-plugin-terser": "^5.2.0",
     "rollup-plugin-vue": "^5.1.6",
     "vue": "^2.6.11",
-    "vue-router": "^3.1.5",
+    "vue-router": "^3.1.6",
     "vue-template-compiler": "^2.6.11",
     "vuex": "^3.1.2"
   },
