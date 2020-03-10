@@ -3,8 +3,8 @@ const CACHE_VERSION = 'VERSION';
 const CACHE_FILES = [
   '.',
   'bundle.css',
-  'icon-192.png',
   'bundle.js',
+  'icon-192.png',
   'index.html',
 ];
 
@@ -43,6 +43,8 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  const response = STRATEGY.respondFromCache(event);
-  event.respondWith(response);
+  if (event.request.url.startsWith(location.origin)) {
+    const response = STRATEGY.respondFromCache(event);
+    event.respondWith(response);
+  }
 });
