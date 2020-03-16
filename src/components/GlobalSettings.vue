@@ -1,5 +1,6 @@
 <script>
 import Modal from './Modal.vue';
+import getUnmigratedProjects from '../config/migrate/index.js';
 
 export default {
   components: {
@@ -44,12 +45,24 @@ export default {
         this.showModal(`There was an error:\n“${error.message}”`);
       }
     },
+    async migrate() {
+      const { count, migrate } = getUnmigratedProjects();
+      if (count) {
+        this.modalText = `Found ${count} project(s). Migrate?`;
+        if (await this.$refs.confirm.show()) {
+          migrate();
+        }
+        this.showModal(`Success! Imported ${count} project(s).`);
+      } else {
+        this.showModal('No projects found to migrate.');
+      }
+    },
     async signOut() {
       await this.$store.dispatch('signOut');
     },
-    showModal(text) {
+    async showModal(text) {
       this.modalText = text;
-      this.$refs.modal.show();
+      return await this.$refs.modal.show();
     },
   },
 };
@@ -71,11 +84,13 @@ export default {
     >
       Import from clipboard
     </button>
-    <Modal
-      ref="modal"
-      :buttons="[{ label: 'Dismiss', value: true }]"
-      :text="modalText"
-    />
+    <h2> Migrate </h2>
+    <button
+      class="global-settings__migrate"
+      @click="migrate"
+    >
+      Migrate old data
+    </button>
     <h2> Sign out </h2>
     <button
       class="global-settings__sign-out"
@@ -83,6 +98,22 @@ export default {
     >
       Sign out from Code Pad
     </button>
+    <Modal
+      ref="modal"
+      :buttons="[{ label: 'Dismiss', value: true }]"
+      :text="modalText"
+    />
+    <Modal
+      ref="confirm"
+      :buttons="[{
+        label: 'Migrate',
+        value: true,
+      }, {
+        label: 'Dismiss',
+        value: false,
+      }]"
+      :text="modalText"
+    />
   </section>
 </template>
 

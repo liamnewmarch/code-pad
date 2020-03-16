@@ -4,8 +4,13 @@ const STORAGE_KEY = 'fiddles';
 
 const load = key => JSON.parse(localStorage.getItem(key));
 
-export default async function() {
-  if (!localStorage.hasItem(STORAGE_KEY)) return;
+export function count() {
+  if (!(STORAGE_KEY in localStorage)) return 0;
+  return load(STORAGE_KEY).length;
+}
+
+export async function migrate() {
+  if (!(STORAGE_KEY in localStorage)) return;
   for (const key of load(STORAGE_KEY)) {
     const project = load(key);
     delete project.key;

@@ -1,17 +1,12 @@
-import one from './01';
-import two from './02';
+import { count as count1, migrate as migrate1 } from './01';
+import { count as count2, migrate as migrate2 } from './02';
 
-const migrations = [
-  one,
-  two,
-];
-
-export async function migrate() {
-  try {
-    for (const migration of migrations) {
-      migration();
-    }
-  } catch ({ message }) {
-    console.log(`Error migrating data: ${message}`);
-  }
+export default function() {
+  return {
+    count: count1() + count2(),
+    async migrate() {
+      await migrate1();
+      await migrate2();
+    },
+  };
 }

@@ -7,10 +7,6 @@ const defaultData = {
   name: 'Untitled',
 };
 
-// function projects({ uid }) {
-//   return firestore.collection('users').doc(uid).collection('projects');
-// }
-
 export async function addProject({ commit, state }, data = defaultData) {
   try {
     const doc = await resolveOffline(firestore
