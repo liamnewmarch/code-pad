@@ -54,8 +54,10 @@ export async function loadProjects({ commit, state }) {
         .doc(state.user.uid)
         .collection('projects')
         .get());
-    for (const doc of projects.docs) {
-      commit('addProject', { ...doc.data(), key: doc.id });
+    if (projects && projects.docs) {
+      for (const doc of projects.docs) {
+        commit('addProject', { ...doc.data(), key: doc.id });
+      }
     }
     commit('loaded');
   } catch ({ message }) {
