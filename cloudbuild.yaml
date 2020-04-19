@@ -1,0 +1,15 @@
+steps:
+  - name: gcr.io/cloud-builders/npm:current
+    entrypoint: npm
+    args:
+      - ci
+  - name: gcr.io/cloud-builders/npm:current
+    entrypoint: npm
+    args:
+      - run
+      - build
+  - name: gcr.io/cloud-builders/npm:current
+    entrypoint: npm
+    args:
+      - run
+      - deploy

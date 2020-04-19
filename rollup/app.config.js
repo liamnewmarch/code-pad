@@ -1,5 +1,5 @@
 import commonjs from 'rollup-plugin-commonjs';
-import css from 'rollup-plugin-css-only';
+import css from 'rollup-plugin-css-bundle';
 import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
@@ -7,10 +7,10 @@ import vue from 'rollup-plugin-vue';
 
 const plugins = [
   commonjs(),
-  css(),
   vue({
     css: false,
   }),
+  css(),
   replace({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     'process.env.VUE_ENV': '"browser"',
