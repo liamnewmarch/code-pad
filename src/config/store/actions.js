@@ -9,6 +9,7 @@ const defaultData = {
 
 export async function addProject({ commit, state }, data = defaultData) {
   try {
+    data.created = data.updated = firebase.firestore.Timestamp.now();
     const doc = await resolveOffline(firestore
         .collection('users')
         .doc(state.user.uid)
@@ -81,7 +82,10 @@ export async function updateProject({ commit, state }, { key, name, value }) {
         .doc(state.user.uid)
         .collection('projects')
         .doc(key)
-        .update({ [name]: value }));
+        .update({
+          [name]: value,
+          updated: firebase.firestore.Timestamp.now(),
+        }));
   } catch ({ message }) {
     console.log(message);
   }

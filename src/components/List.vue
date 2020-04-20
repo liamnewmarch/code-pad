@@ -1,13 +1,20 @@
 <script>
 export default {
+  computed: {
+    projects() {
+      return this.sort('-created', Object.values(this.$store.state.projects));
+    },
+  },
   methods: {
     async add() {
       const key = await this.$store.dispatch('addProject');
       this.$router.push({ name: 'editor', params: { key, type: 'html' }});
     },
-    reverse(object) {
-      const reduce = (obj, [key, value]) => Object.assign(obj, { [key]: value });
-      return Object.entries(object).reverse().reduce(reduce, {});
+    sort(key, array) {
+      const ascending = key.startsWith('-');
+      if (ascending) key = key.substr(1);
+      const fn = ({ [key]: a }, { [key]: b }) => a < b ? -1 : a > b ? 1 : 0;
+      return ascending ? array.sort(fn).reverse() : array.sort(fn);
     },
   },
 };
@@ -23,7 +30,7 @@ export default {
         New project
       </button>
       <RouterLink
-        v-for="(project, index) in reverse($store.state.projects)"
+        v-for="(project, index) of projects"
         :key="index"
         class="list__item button"
         tag="button"
