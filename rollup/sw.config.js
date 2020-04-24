@@ -16,7 +16,7 @@ export default {
   input: 'src/service-worker.js',
   output: {
     file: 'public/service-worker.js',
-    format: 'iife',
+    format: 'es',
     sourcemap: false,
   },
   plugins,

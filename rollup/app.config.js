@@ -28,7 +28,7 @@ export default {
   input: 'src/app.js',
   output: {
     file: 'public/bundle.js',
-    format: 'iife',
+    format: 'es',
     sourcemap: false,
   },
   plugins,
