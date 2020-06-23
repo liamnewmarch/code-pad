@@ -14,13 +14,14 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c rollup.config.js",
     "deploy": "firebase deploy",
-    "serve": "firebase serve",
+    "serve": "firebase emulators:start",
     "start": "concurrently npm:watch npm:serve --kill-others",
     "watch": "NODE_ENV=development rollup -w -c rollup.config.js"
   },
   "dependencies": {
     "codemirror": "^5.53.2",
     "codemirror-one-dark-theme": "^1.1.1",
+    "concurrently": "^5.1.0",
     "firebase": "^7.14.2",
     "rollup": "^2.7.2",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -35,7 +36,6 @@
     "vuex": "^3.2.0"
   },
   "devDependencies": {
-    "concurrently": "^5.1.0",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-html": "^6.0.2",
