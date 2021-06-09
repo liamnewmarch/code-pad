@@ -31,7 +31,7 @@ export default {
       targetDocument.head.appendChild(style);
     },
     injectHTML(targetDocument, html = '') {
-      targetDocument.body.innerHTML = html;
+      this.$refs.result.src = 'data:text/html;base64,' + btoa(html);
     },
     async injectJS(targetWindow, javascript = '') {
       try {
