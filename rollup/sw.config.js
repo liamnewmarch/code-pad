@@ -1,10 +1,13 @@
-import replace from 'rollup-plugin-replace';
+import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import { version } from '../package.json';
 
 const plugins = [
   replace({
-    VERSION: version,
+    preventAssignment: true,
+    values: {
+      VERSION: version,
+    },
   }),
 ];
 

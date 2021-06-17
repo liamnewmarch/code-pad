@@ -1,6 +1,23 @@
 <script>
 import Console from './Console.vue';
 
+const template = ({ css, consoleMethods, html, javascript }) => `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script>
+      ${consoleMethods}.map(k=>console[k]=(...a)=>parent.postMessage(...a));
+      onerror=m=>parent.postMessage(m);
+    </${'script'}>
+    <style>${css}</style>
+  </head>
+  <body>
+    ${html}
+    <script type="module">${javascript}</${'script'}>
+  </body>
+</html>
+`;
+
 export default {
   components: {
     Console,
@@ -13,36 +30,24 @@ export default {
   },
   data() {
     return {
-      consoleMethods: ['error', 'log', 'warn'],
+      consoleMethods: ['error', 'info', 'log', 'warn'],
       logging: [],
+      srcdoc: null,
     };
   },
   mounted() {
-    const { css, html, javascript } = this.project;
-    const { contentWindow, contentDocument } = this.$refs.result;
-    this.injectHTML(contentDocument, html);
-    this.injectCSS(contentDocument, css);
-    this.injectJS(contentWindow, javascript);
+    try {
+      window.onmessage = ({ data }) => this.logging.push(data);
+      this.srcdoc = this.renderTemplate();
+    } catch (error) {
+      this.logging.push(error.message);
+    }
   },
   methods: {
-    injectCSS(targetDocument, css = '') {
-      const style = targetDocument.createElement('style');
-      style.textContent = css;
-      targetDocument.head.appendChild(style);
-    },
-    injectHTML(targetDocument, html = '') {
-      this.$refs.result.src = 'data:text/html;base64,' + btoa(html);
-    },
-    async injectJS(targetWindow, javascript = '') {
-      try {
-        for (const key of this.$data.consoleMethods) {
-          targetWindow.console[key] = (...args) => this.logging.push(...args);
-        }
-        const url = 'data:text/javascript;base64,' + btoa(javascript);
-        await targetWindow.eval(`import('${url}');`);
-      } catch (error) {
-        this.logging.push('message' in error ? error.message : error);
-      }
+    renderTemplate() {
+      const { css = '', html = '', javascript = '' } = this.project;
+      const consoleMethods = JSON.stringify(this.consoleMethods);
+      return template({ css, consoleMethods, html, javascript });
     },
   },
 };
@@ -51,8 +56,8 @@ export default {
 <template>
   <div class="project__pane">
     <iframe
-      ref="result"
       class="project__result"
+      :srcdoc="srcdoc"
     />
     <Console
       :logging="logging"
