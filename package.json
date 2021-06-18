@@ -1,6 +1,6 @@
 {
   "name": "code-pad",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "description": "A code scratchpad for HTML, CSS and JavaScript ideas which works offline.",
   "private": true,
   "homepage": "https://github.com/liamnewmarch/code-pad#readme",
@@ -16,6 +16,7 @@
     "deploy": "firebase deploy",
     "serve": "firebase emulators:start",
     "start": "concurrently npm:watch npm:serve --kill-others",
+    "test": "eslint --ext .js,.vue src",
     "watch": "NODE_ENV=development rollup -w -c rollup.config.js"
   },
   "dependencies": {

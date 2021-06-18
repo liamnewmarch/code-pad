@@ -1,15 +1,19 @@
 steps:
-  - name: gcr.io/cloud-builders/npm:current
-    entrypoint: npm
+  - name: node:16-alpine
     args:
-      - ci
-  - name: gcr.io/cloud-builders/npm:current
-    entrypoint: npm
+      - npm
+      - clean-install
+  - name: node:16-alpine
     args:
+      - npm
+      - test
+  - name: node:16-alpine
+    args:
+      - npm
       - run
       - build
-  - name: gcr.io/cloud-builders/npm:current
-    entrypoint: npm
+  - name: node:16-alpine
     args:
+      - npm
       - run
       - deploy

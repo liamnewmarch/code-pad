@@ -40,11 +40,11 @@ export default {
       if (!value) return;
       await this.$store.dispatch('deleteProject', { key: this.project.key });
     },
-    async updateName() {
+    async updateName(event) {
       await this.$store.dispatch('updateProject', {
         key: this.project.key,
         name: 'name',
-        value: this.project.name,
+        value: event.target.value,
       });
     },
   },
@@ -62,7 +62,7 @@ export default {
           Project name
         </label>
         <input
-          v-model="project.name"
+          :value="project.name"
           class="settings__input"
           @input="updateName"
         >
