@@ -6,10 +6,10 @@ import { terser } from 'rollup-plugin-terser';
 import vue from 'rollup-plugin-vue';
 
 const plugins = [
-  commonjs(),
   vue({
     css: false,
   }),
+  commonjs(),
   css(),
   replace({
     preventAssignment: true,
