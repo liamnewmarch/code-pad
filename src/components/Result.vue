@@ -74,7 +74,7 @@ export default {
 }
 
 .result__iframe {
-  background-color: #272822;
+  background-color: #111;
   border: 0;
   color: #fff;
   display: flex;

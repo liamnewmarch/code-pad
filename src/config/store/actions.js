@@ -1,7 +1,7 @@
 import firebase, { auth, firestore, resolveOffline } from '../firebase';
 
 const defaultData = {
-  css: 'html {\n  background-color: #272822;\n  color: #fff;\n}\n',
+  css: 'html {\n  background-color: #111;\n  color: #fff;\n}\n',
   html: '<p> Hello, world! </p>\n',
   javascript: 'const p = document.querySelector(\'p\');\n',
   name: 'Untitled',

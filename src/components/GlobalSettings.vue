@@ -15,11 +15,19 @@ export default {
   data() {
     return {
       modalText: '',
+      version: 'VERSION',
     };
   },
   computed: {
     isAuthenticated() {
       return Boolean(this.$store.state.user.uid);
+    },
+    year() {
+      try {
+        return new Intl.DateTimeFormat('en', { year: 'numeric' }).format();
+      } catch {
+        return new Date().getFullYear();
+      }
     },
   },
   methods: {
@@ -69,35 +77,38 @@ export default {
 </script>
 
 <template>
-  <section>
+  <section class="global-settings__container">
     <h2> Export all projects </h2>
     <button
-      class="global-settings__export-button"
+      class="global-settings__button"
       @click="exportJSON"
     >
       Export to clipboard
     </button>
     <h2> Import project(s) </h2>
     <button
-      class="global-settings__import-button"
+      class="global-settings__button"
       @click="importJSON"
     >
       Import from clipboard
     </button>
     <h2> Migrate </h2>
     <button
-      class="global-settings__migrate"
+      class="global-settings__button"
       @click="migrate"
     >
       Migrate old data
     </button>
     <h2> Sign out </h2>
     <button
-      class="global-settings__sign-out"
+      class="global-settings__button"
       @click="signOut"
     >
       Sign out from Code Pad
     </button>
+    <h2>About</h2>
+    <p>Code Pad version {{ version }}</p>
+    <p>© {{ year }} Liam Newmarch</p>
     <Modal
       ref="modal"
       :buttons="[{ label: 'Dismiss', value: true }]"
@@ -117,7 +128,14 @@ export default {
   </section>
 </template>
 
-
 <style>
+.global-settings__container {
+  padding: 1rem;
+}
 
+.global-settings__button {
+  border: 1px solid #fff4;
+  border-radius: .2rem;
+  padding: 1rem 2rem;
+}
 </style>

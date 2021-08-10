@@ -61,8 +61,8 @@ export default {
 .editor .CodeMirror {
   background-color: inherit;
   flex: 1 0 auto;
-  font-size: inherit;
-  line-height: inherit;
+  font-size: 16px;
+  line-height: 1.2;
 }
 
 .editor .CodeMirror-scroll {

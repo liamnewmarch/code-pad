@@ -113,7 +113,7 @@ export default {
   }
 
   .console__output {
-    background-color: #272822;
+    background-color: #111;
     border-top: 1px solid #fff;
     height: 8rem;
     overflow: auto;

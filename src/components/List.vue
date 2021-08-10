@@ -57,15 +57,6 @@ export default {
         {{ project.name }}
       </RouterLink>
     </div>
-    <div class="list__global-settings button">
-      <RouterLink
-        class="list__global-settings-item button"
-        tag="button"
-        :to="{ name: 'global-settings' }"
-      >
-        Settings
-      </RouterLink>
-    </div>
   </section>
 </template>
 
@@ -100,15 +91,5 @@ export default {
 
 .list__item--add {
   background-color: #333;
-}
-
-.list__global-settings {
-  padding: 1em;
-  text-align: center;
-}
-
-.list__global-settings-item {
-  color: #fff;
-  text-decoration: none;
 }
 </style>

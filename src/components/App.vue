@@ -43,11 +43,11 @@ export default {
 }
 
 html {
-  background-color: #272822;
+  background-color: #111;
   box-sizing: border-box;
   color: #fff;
-  font: 16px / 1.2 Roboto Mono, monospace;
-  text-rendering: optimizeLegibility;
+  font-family: system-ui, sans-serif;
+  text-rendering: geometricPrecision;
 }
 
 body {

@@ -18,8 +18,16 @@ export default {
       class="top-nav"
     >
       <div class="top-nav__item top-nav__item--title">
-        &lt;/&gt;
+        Code Pad
       </div>
+      <RouterLink
+        active-class="top-nav__item--active"
+        class="top-nav__item top-nav__item--settings"
+        replace
+        :to="{ name: 'global-settings' }"
+      >
+        ⚙
+      </RouterLink>
     </nav>
     <nav
       v-else-if="isGlobalSettingsRoute"
@@ -27,7 +35,6 @@ export default {
     >
       <RouterLink
         class="top-nav__item top-nav__item--back"
-        tag="button"
         :to="{ name: 'list' }"
       >
         ←
@@ -42,7 +49,6 @@ export default {
     >
       <RouterLink
         class="top-nav__item top-nav__item--back"
-        tag="button"
         :to="{ name: 'list' }"
       >
         ←
@@ -50,7 +56,6 @@ export default {
       <RouterLink
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"
-        tag="button"
         replace
         :to="{ name: 'editor', params: { type: 'html' }}"
       >
@@ -59,7 +64,6 @@ export default {
       <RouterLink
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"
-        tag="button"
         replace
         :to="{ name: 'editor', params: { type: 'css' }}"
       >
@@ -68,7 +72,6 @@ export default {
       <RouterLink
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"
-        tag="button"
         replace
         :to="{ name: 'editor', params: { type: 'javascript' }}"
       >
@@ -77,7 +80,6 @@ export default {
       <RouterLink
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--tab"
-        tag="button"
         replace
         :to="{ name: 'result' }"
       >
@@ -86,11 +88,10 @@ export default {
       <RouterLink
         active-class="top-nav__item--active"
         class="top-nav__item top-nav__item--settings"
-        tag="button"
         replace
         :to="{ name: 'project-settings' }"
       >
-        ⋮
+        ⚙
       </RouterLink>
     </nav>
   </div>
@@ -98,7 +99,7 @@ export default {
 
 <style>
 .top-nav {
-  background: linear-gradient(to right, #e06c75, #56b6c2);
+  background-color: #fff2;
   display: flex;
   flex-shrink: 0;
   list-style: none;
@@ -107,24 +108,28 @@ export default {
 }
 
 .top-nav__item {
-  background-color: #272822;
-  background-color: #27282288;
-  border: 0;
+  background-color: #0006;
   border-radius: .2rem .2rem 0 0;
+  color: inherit;
   flex: 0 0 2rem;
   line-height: 3rem;
   margin: .4rem .2rem 0;
   padding: 0 1rem;
   text-align: center;
+  text-decoration: none;
   user-select: none;
 }
 
 .top-nav__item--active {
-  background-color: #272822;
+  background-color: #111;
 }
 
 .top-nav__item--tab,
 .top-nav__item--title {
   flex-grow: 1;
+}
+
+.top-nav__item--title {
+  font-size: 1.2rem;
 }
 </style>

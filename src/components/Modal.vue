@@ -67,7 +67,7 @@ export default {
 }
 
 .modal__popup {
-  background-color: #272822;
+  background-color: #111;
   border-radius: .2rem;
   box-shadow: 0 .1rem 2rem #0008;
   color: #fff;
