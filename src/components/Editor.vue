@@ -1,5 +1,5 @@
 <script>
-import createEditor from '../config/editor';
+import { createEditor } from '../config/editor.js';
 
 export default {
   beforeRouteUpdate(to, from, next) {
@@ -40,22 +40,27 @@ export default {
 </script>
 
 <template>
-  <div class="project__pane">
+  <div class="editor">
     <textarea
       ref="editor"
       autocomplete="off"
       autocorrect="off"
       autocapitalize="off"
       spellcheck="false"
-      class="editor"
     />
   </div>
 </template>
 
 <style>
+.editor {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 0 auto;
+}
+
 .editor .CodeMirror {
   background-color: inherit;
-  flex-grow: 1;
+  flex: 1 0 auto;
   font-size: inherit;
   line-height: inherit;
 }

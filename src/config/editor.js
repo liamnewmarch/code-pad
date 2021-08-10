@@ -14,7 +14,7 @@ const defaults = {
   theme: 'one-dark',
 };
 
-export default function(textarea, methods) {
+export function createEditor(textarea, methods) {
   const editor = CodeMirror.fromTextArea(textarea, defaults);
   Vue.nextTick(() => {
     editor.on('change', () => methods.onChange());

@@ -123,7 +123,7 @@ export default {
 .settings__button {
   background-color: #444;
   border-radius: .2rem;
-  flex-grow: 1;
+  flex: 1 0 auto;
   padding: 1rem;
   text-align: center;
 }

@@ -54,9 +54,9 @@ export default {
 </script>
 
 <template>
-  <div class="project__pane">
+  <div class="result">
     <iframe
-      class="project__result"
+      class="result__iframe"
       :srcdoc="srcdoc"
     />
     <Console
@@ -65,3 +65,20 @@ export default {
     />
   </div>
 </template>
+
+<style>
+.result {
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: column nowrap;
+}
+
+.result__iframe {
+  background-color: #272822;
+  border: 0;
+  color: #fff;
+  display: flex;
+  flex: 1 0 auto;
+  flex-flow: column nowrap;
+}
+</style>

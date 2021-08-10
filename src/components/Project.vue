@@ -14,22 +14,3 @@ export default {
 <template>
   <RouterView :project="getProjectOrNavigate()" />
 </template>
-
-<style>
-.project__pane {
-  display: flex;
-  flex-flow: column nowrap;
-  flex-grow: 1;
-}
-
-.project__pane,
-.project__result {
-  background-color: #272822;
-  border: 0;
-  color: #fff;
-  flex-basis: 100%;
-  flex-grow: 1;
-  position: relative;
-  width: 100%;
-}
-</style>
