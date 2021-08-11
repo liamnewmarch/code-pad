@@ -15,10 +15,12 @@ const STRATEGY = {
   },
 
   async deleteStale() {
-    const staleCaches = key => key !== CACHE_VERSION;
-    const deleteCaches = key => caches.delete(key);
     const keys = await caches.keys();
-    return Promise.all(keys.filter(staleCaches).map(deleteCaches));
+    for (const key of keys) {
+      if (key !== CACHE_FILES) {
+        await caches.delete(key);
+      }
+    }
   },
 
   async respondFromCache(event) {

@@ -2,7 +2,7 @@ import store from '../store';
 
 const STORAGE_KEY = 'fiddles';
 
-const load = key => JSON.parse(localStorage.getItem(key));
+const load = (key) => JSON.parse(localStorage.getItem(key));
 
 export function count() {
   if (!(STORAGE_KEY in localStorage)) return 0;

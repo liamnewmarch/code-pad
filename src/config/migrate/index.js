@@ -1,12 +1,12 @@
-import { count as count1, migrate as migrate1 } from './01';
-import { count as count2, migrate as migrate2 } from './02';
+import * as m1 from './01';
+import * as m2 from './02';
 
 export default function() {
   return {
-    count: count1() + count2(),
+    count: m1.count() + m2.count(),
     async migrate() {
-      await migrate1();
-      await migrate2();
+      await m1.migrate();
+      await m2.migrate();
     },
   };
 }

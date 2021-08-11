@@ -15,13 +15,14 @@ root: true
 rules:
   arrow-parens:
     - error
-    - as-needed
-    - requireForBlockBody: true
-  max-len:
-    - error
-    - code: 120
+    - always
+  max-len: 0  # See vue/max-len below
   object-curly-spacing:
     - error
     - always
     - objectsInObjects: false
   require-jsdoc: 0
+  vue/max-len:
+    - error
+    - code: 80
+      template: 120
