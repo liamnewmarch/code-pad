@@ -1,14 +1,11 @@
 <script>
 import Console from './Console.vue';
 
-const template = ({ css, consoleMethods, html, javascript }) => `<!DOCTYPE html>
+const template = ({ css, html, javascript }) => `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <script>
-      ${consoleMethods}.map(k=>console[k]=(...a)=>parent.postMessage(...a));
-      onerror=m=>parent.postMessage(m);
-    </${'script'}>
+    <script>parent.injectHandlers(this);</${'script'}>
     <style>${css}</style>
   </head>
   <body>
@@ -30,24 +27,41 @@ export default {
   },
   data() {
     return {
-      consoleMethods: ['error', 'info', 'log', 'warn'],
       logging: [],
       srcdoc: null,
     };
   },
   mounted() {
     try {
-      window.onmessage = ({ data }) => this.logging.push(data);
-      this.srcdoc = this.renderTemplate();
+      // Code Pad listens for errors and certain console methods in the
+      // results iframe and relays them to the Console component. We could
+      // use postMessage to communicate between windows but the structured
+      // clone algorithm doesn’t support all data types. The two windows
+      // share an origin so we can use a function instead. This isn’t good
+      // but it works for now.
+
+      // In order to capture as many errors as possible we want to bind the
+      // onerror listener as soon as we can. We can’t do this before the
+      // iframe.srcdoc is set because the window will be reset and waiting
+      // until after would miss errors relating to the injected JavaScript.
+
+      // Instead we provide a global hook function in the parent window that
+      // the iframe can call from its <head>.
+      window.injectHandlers = this.injectHandlers;
+      // Apply the template which calls the hook.
+      this.srcdoc = template(this.project);
     } catch (error) {
-      this.logging.push(error.message);
+      this.logging.push([error]);
     }
   },
   methods: {
-    renderTemplate() {
-      const { css = '', html = '', javascript = '' } = this.project;
-      const consoleMethods = JSON.stringify(this.consoleMethods);
-      return template({ css, consoleMethods, html, javascript });
+    injectHandlers(window) {
+      window.addEventListener('error', ({ message }) => {
+        this.logging.push([new Error(message)]);
+      });
+      for (const key of ['error', 'info', 'log', 'warn']) {
+        window.console[key] = (...args) => this.logging.push(args);
+      }
     },
   },
 };

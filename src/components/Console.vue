@@ -23,25 +23,25 @@ export default {
     },
   },
   methods: {
-    format(...data) {
-      return data.map((item) => {
-        const type = this.type(item);
-        switch (type) {
-          case 'Array':
-            return `(${item.length}) ${JSON.stringify(item)}`;
-          case 'Boolean':
-          case 'Number':
-          case 'Object':
-          case 'String':
-            return JSON.stringify(item);
-          case 'Class':
-          case 'Function':
-            return item.toString();
-          case 'Undefined':
-            return 'undefined';
-          default:
-            return `${type} { ${Object.keys(item).join(', ')} }`;
+    format(line) {
+      // This method uses typeof because instanceof fails across Realms. Sigh.
+      return line.map((item) => {
+        // Special case for iterable objects (Array, Uint8Array, etc.)
+        if (typeof item === 'object' && Symbol.iterator in item) {
+          const type = item.constructor.name;
+          const toString = [...item].map((v) => JSON.stringify(v)).join(', ');
+          return `${type}(${item.length}) [${toString}]`;
         }
+        // Special case for callables (various Function types, classes, etc.)
+        if (typeof item === 'function') {
+          return 'ƒ ' + item.toString();
+        }
+        // Special case for Errors. TODO find a better way of detecting them.
+        if (typeof item === 'object' && 'message' in item) {
+          return `${item.constructor.name}: ${item.message}`;
+        }
+        // For everything else, attempt to serialise as JSON.
+        return JSON.stringify(item);
       }).join(', ');
     },
     scrollToBottom() {
@@ -50,10 +50,6 @@ export default {
     toggle() {
       this.active = !this.active;
       if (this.active) Vue.nextTick(this.scrollToBottom);
-    },
-    type(thing) {
-      const toString = Object.prototype.toString.call(thing);
-      return toString.replace(/\[\w+ (\w+)\]/, '$1');
     },
   },
 };
