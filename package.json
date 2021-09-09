@@ -26,7 +26,7 @@
     "codemirror": "^5.57.0",
     "codemirror-one-dark-theme": "^1.1.1",
     "concurrently": "^6.2.0",
-    "firebase": "^8.1.2",
+    "firebase": "^9.0.2",
     "rollup": "^2.27.1",
     "rollup-plugin-css-bundle": "^1.0.4",
     "rollup-plugin-terser": "^7.0.2",
