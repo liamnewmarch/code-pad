@@ -1,5 +1,5 @@
 <script>
-import Console from './Console.vue';
+import ProjectConsole from './ProjectConsole.vue';
 
 const template = ({ css, html, javascript }) => `<!DOCTYPE html>
 <html>
@@ -17,7 +17,7 @@ const template = ({ css, html, javascript }) => `<!DOCTYPE html>
 
 export default {
   components: {
-    Console,
+    ProjectConsole,
   },
   props: {
     project: {
@@ -34,7 +34,7 @@ export default {
   mounted() {
     try {
       // Code Pad listens for errors and certain console methods in the
-      // results iframe and relays them to the Console component. We could
+      // results iframe and relays them to the console component. We could
       // use postMessage to communicate between windows but the structured
       // clone algorithm doesn’t support all data types. The two windows
       // share an origin so we can use a function instead. This isn’t good
@@ -73,7 +73,7 @@ export default {
       class="result__iframe"
       :srcdoc="srcdoc"
     />
-    <Console
+    <ProjectConsole
       :logging="logging"
       :project="project"
     />

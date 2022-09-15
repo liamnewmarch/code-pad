@@ -1,17 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import Editor from '../components/Editor.vue';
+import CodeEditor from '../components/CodeEditor.vue';
 import GlobalSettings from '../components/GlobalSettings.vue';
-import List from '../components/List.vue';
-import Project from '../components/Project.vue';
-import Result from '../components/Result.vue';
+import ProjectList from '../components/ProjectList.vue';
+import ProjectLoader from '../components/ProjectLoader.vue';
+import ProjectPreview from '../components/ProjectPreview.vue';
 import ProjectSettings from '../components/ProjectSettings.vue';
 
 Vue.use(VueRouter);
 
 const routes = [{
-  component: List,
+  component: ProjectList,
   name: 'list',
   path: '/',
 }, {
@@ -19,15 +19,15 @@ const routes = [{
   name: 'global-settings',
   path: '/settings',
 }, {
-  component: Project,
+  component: ProjectLoader,
   name: 'project',
   path: '/project/:key',
   children: [{
-    component: Editor,
+    component: CodeEditor,
     name: 'editor',
     path: 'editor/:type',
   }, {
-    component: Result,
+    component: ProjectPreview,
     name: 'result',
     path: 'result',
   }, {

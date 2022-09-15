@@ -1,12 +1,12 @@
 <script>
-import Header from './Header.vue';
-import Loading from './Loading.vue';
+import AppHeader from './AppHeader.vue';
+import LoadingState from './LoadingState.vue';
 import SignIn from './SignIn.vue';
 
 export default {
   components: {
-    Header,
-    Loading,
+    AppHeader,
+    LoadingState,
     SignIn,
   },
   computed: {
@@ -28,8 +28,8 @@ export default {
     class="view"
     :class="`view--${$route.name} ${$route.name}`"
   >
-    <Loading v-if="loading" />
-    <Header v-if="!loading && user" />
+    <LoadingState v-if="loading" />
+    <AppHeader v-if="!loading && user" />
     <RouterView v-if="!loading && user" />
     <SignIn v-if="!loading && !user" />
   </div>

@@ -1,9 +1,9 @@
 <script>
-import Modal from './Modal.vue';
+import ModalDialog from './ModalDialog.vue';
 
 export default {
   components: {
-    Modal,
+    ModalDialog,
   },
   props: {
     project: {
@@ -82,12 +82,12 @@ export default {
         </button>
       </div>
     </div>
-    <Modal
+    <ModalDialog
       ref="modalCopied"
       :buttons="modalCopiedButtons"
       text="Project copied to clipboard."
     />
-    <Modal
+    <ModalDialog
       ref="modalDelete"
       :buttons="modalDeleteButtons"
       text="Are you sure you want to delete this project?"

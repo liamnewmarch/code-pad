@@ -1,10 +1,10 @@
 <script>
-import Modal from './Modal.vue';
+import ModalDialog from './ModalDialog.vue';
 import getUnmigratedProjects from '../config/migrate/index.js';
 
 export default {
   components: {
-    Modal,
+    ModalDialog,
   },
   props: {
     project: {
@@ -109,12 +109,12 @@ export default {
     <h2>About</h2>
     <p>Code Pad version {{ version }}</p>
     <p>© {{ year }} Liam Newmarch</p>
-    <Modal
+    <ModalDialog
       ref="modal"
       :buttons="[{ label: 'Dismiss', value: true }]"
       :text="modalText"
     />
-    <Modal
+    <ModalDialog
       ref="confirm"
       :buttons="[{
         label: 'Migrate',
