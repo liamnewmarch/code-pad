@@ -1,6 +1,6 @@
 import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
-import { version } from '../package.json';
+import { version } from './package.js';
 
 const plugins = [
   replace({

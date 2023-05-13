@@ -2,6 +2,7 @@
   "name": "code-pad",
   "version": "3.7.3",
   "description": "A code scratchpad for HTML, CSS and JavaScript ideas which works offline.",
+  "type": "module",
   "private": true,
   "homepage": "https://github.com/liamnewmarch/code-pad#readme",
   "repository": {
@@ -23,11 +24,11 @@
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-replace": "^3.0.0",
-    "codemirror": "^5.65.7",
+    "codemirror": "^5.65.13",
     "codemirror-one-dark-theme": "^1.1.1",
-    "concurrently": "^7.3.0",
-    "firebase": "^9.9.2",
-    "rollup": "^2.27.1",
+    "concurrently": "^8.0.1",
+    "firebase": "9.22",
+    "rollup": "^3.21.6",
     "rollup-plugin-css-bundle": "^1.0.4",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-vue": "^5.1.9",
@@ -40,8 +41,8 @@
     "eslint": "^8.22.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-html": "^7.1.0",
-    "eslint-plugin-import": "2.26",
+    "eslint-plugin-import": "2.27",
     "eslint-plugin-vue": "^9.3.0",
-    "firebase-tools": "^11.7.0"
+    "firebase-tools": "^12.0.0"
   }
 }
