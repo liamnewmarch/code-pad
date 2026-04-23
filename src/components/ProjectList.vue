@@ -1,39 +1,39 @@
 <script>
-import { useProjectStore } from '../config/store.js';
+import { useProjectStore } from "../config/store.js"
 
 export default {
   setup() {
-    return { store: useProjectStore() };
+    return { store: useProjectStore() }
   },
   data() {
     return {
-      filterText: '',
-    };
+      filterText: "",
+    }
   },
   computed: {
     projects() {
-      return Object.values(this.store.projects);
+      return Object.values(this.store.projects)
     },
   },
   methods: {
     async add() {
-      const key = await this.store.addProject();
-      this.$router.push({ name: 'editor', params: { key, type: 'html' }});
+      const key = await this.store.addProject()
+      this.$router.push({ name: "editor", params: { key, type: "html" }})
     },
     filter(key, text, array) {
-      text = text.trim().toLowerCase();
+      text = text.trim().toLowerCase()
       return array.filter((item) => {
-        return text ? item[key].trim().toLowerCase().includes(text) : true;
-      });
+        return text ? item[key].trim().toLowerCase().includes(text) : true
+      })
     },
     sort(key, array) {
-      const ascending = key.startsWith('-');
-      if (ascending) key = key.substr(1);
-      const fn = ({ [key]: a }, { [key]: b }) => a < b ? -1 : a > b ? 1 : 0;
-      return ascending ? [...array].sort(fn).reverse() : [...array].sort(fn);
+      const ascending = key.startsWith("-")
+      if (ascending) key = key.substr(1)
+      const fn = ({ [key]: a }, { [key]: b }) => a < b ? -1 : a > b ? 1 : 0
+      return ascending ? [...array].sort(fn).reverse() : [...array].sort(fn)
     },
   },
-};
+}
 </script>
 
 <template>

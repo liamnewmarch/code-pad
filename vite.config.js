@@ -1,15 +1,15 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import { VitePWA } from 'vite-plugin-pwa';
-import { version } from './package.json';
+import { defineConfig } from "vite"
+import vue from "@vitejs/plugin-vue"
+import { VitePWA as pwa } from "vite-plugin-pwa"
+import { version } from "./package.json"
 
 export default defineConfig({
   plugins: [
     vue(),
-    VitePWA({
-      registerType: 'autoUpdate',
+    pwa({
+      registerType: "autoUpdate",
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png}'],
+        globPatterns: ["**/*.{js,css,html,png}"],
       },
       manifest: false,
     }),
@@ -17,4 +17,4 @@ export default defineConfig({
   define: {
     VERSION: JSON.stringify(version),
   },
-});
+})

@@ -1,16 +1,16 @@
 <script>
-import { useProjectStore } from '../config/store.js';
+import { useProjectStore } from "../config/store.js"
 
 export default {
   setup() {
-    return { store: useProjectStore() };
+    return { store: useProjectStore() }
   },
   methods: {
     signIn() {
-      this.store.signIn();
+      this.store.signIn()
     },
   },
-};
+}
 </script>
 
 <template>

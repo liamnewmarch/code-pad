@@ -2,13 +2,13 @@
 export default {
   computed: {
     isListRoute() {
-      return this.$route.name === 'list';
+      return this.$route.name === "list"
     },
     isGlobalSettingsRoute() {
-      return this.$route.name === 'global-settings';
+      return this.$route.name === "global-settings"
     },
   },
-};
+}
 </script>
 
 <template>

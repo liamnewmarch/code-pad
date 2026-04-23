@@ -1,27 +1,59 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+import { initializeApp } from "firebase/app"
+import {
+  browserLocalPersistence,
+  getAuth,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  setPersistence,
+  signInWithRedirect,
+  signOut,
+} from "firebase/auth"
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  initializeFirestore,
+  persistentLocalCache,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore"
 
-firebase.initializeApp({
-  apiKey: 'AIzaSyCXzUiopEMyN3XFUav9LIQ1MLP7X7tpvRw',
-  authDomain: 'code-pad.web.app',
-  projectId: 'code-pad',
-});
+const app = initializeApp({
+  apiKey: "AIzaSyCXzUiopEMyN3XFUav9LIQ1MLP7X7tpvRw",
+  authDomain: "code-pad.web.app",
+  projectId: "code-pad",
+})
 
-export default firebase;
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
+export const auth = getAuth(app)
+setPersistence(auth, browserLocalPersistence)
+
+export const db = initializeFirestore(app, {
+  localCache: persistentLocalCache(),
+})
+
+export {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithRedirect,
+  signOut,
+  Timestamp,
+  updateDoc,
+}
 
 export function resolveOffline(action, { timeout = 1000 } = {}) {
   return new Promise((resolve) => {
     if (navigator.onLine) {
-      setTimeout(resolve, timeout);
-      resolve(action);
+      setTimeout(resolve, timeout)
+      resolve(action)
     } else {
-      requestIdleCallback(resolve, { timeout });
+      requestIdleCallback(resolve, { timeout })
     }
-  });
+  })
 }
-
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-firestore.enablePersistence();

@@ -1,6 +1,6 @@
 <script>
-import { useProjectStore } from '../config/store.js';
-import ModalDialog from './ModalDialog.vue';
+import { useProjectStore } from "../config/store.js"
+import ModalDialog from "./ModalDialog.vue"
 
 export default {
   components: {
@@ -13,46 +13,46 @@ export default {
     },
   },
   setup() {
-    return { store: useProjectStore() };
+    return { store: useProjectStore() }
   },
   data() {
     return {
       modalCopiedButtons: [{
-        label: 'Dismiss',
+        label: "Dismiss",
       }],
       modalDeleteButtons: [{
-        label: 'Cancel',
+        label: "Cancel",
         value: false,
       }, {
         danger: true,
-        label: 'Delete',
+        label: "Delete",
         value: true,
       }],
-    };
+    }
   },
   methods: {
     async clone() {
-      await this.store.addProject(this.project);
+      await this.store.addProject(this.project)
     },
     async copyToClipboard() {
-      const json = JSON.stringify([{ ...this.project }]);
-      await navigator.clipboard.writeText(json);
-      this.$refs.modalCopied.show();
+      const json = JSON.stringify([{ ...this.project }])
+      await navigator.clipboard.writeText(json)
+      this.$refs.modalCopied.show()
     },
     async deleteProject() {
-      const value = await this.$refs.modalDelete.show();
-      if (!value) return;
-      await this.store.deleteProject({ key: this.project.key });
+      const value = await this.$refs.modalDelete.show()
+      if (!value) return
+      await this.store.deleteProject({ key: this.project.key })
     },
     async updateName(event) {
       await this.store.updateProject({
         key: this.project.key,
-        name: 'name',
+        name: "name",
         value: event.target.value,
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <template>

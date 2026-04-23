@@ -1,17 +1,35 @@
-import { createPinia, defineStore } from 'pinia';
+import { createPinia, defineStore } from "pinia"
 
-import firebase, { auth, firestore, resolveOffline } from './firebase.js';
+import {
+  addDoc,
+  auth,
+  collection,
+  db,
+  deleteDoc,
+  doc,
+  getDocs,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  resolveOffline,
+  signInWithRedirect,
+  signOut,
+  Timestamp,
+  updateDoc,
+} from "./firebase.js"
 
-export const pinia = createPinia();
+export const pinia = createPinia()
 
 const defaultData = {
-  css: 'html {\n  background-color: #111;\n  color: #fff;\n}\n',
-  html: '<p> Hello, world! </p>\n',
-  javascript: 'const p = document.querySelector(\'p\');\n',
-  name: 'Untitled',
-};
+  css: "html {\n  background-color: #111;\n  color: #fff;\n}\n",
+  html: "<p> Hello, world! </p>\n",
+  javascript: "const p = document.querySelector('p');\n",
+  name: "Untitled",
+}
 
-export const useProjectStore = defineStore('projects', {
+const projectsRef = (uid) => collection(db, "users", uid, "projects")
+const projectRef = (uid, key) => doc(db, "users", uid, "projects", key)
+
+export const useProjectStore = defineStore("projects", {
   state: () => ({
     loading: true,
     projects: {},
@@ -19,82 +37,68 @@ export const useProjectStore = defineStore('projects', {
   }),
   actions: {
     init() {
-      auth.onAuthStateChanged((user) => {
+      onAuthStateChanged(auth, (user) => {
         if (user) {
-          this.user = user;
-          this.loadProjects();
+          this.user = user
+          this.loadProjects()
         } else {
-          this.user = null;
-          this.loading = false;
+          this.user = null
+          this.loading = false
         }
-      });
+      })
     },
     async loadProjects() {
       try {
-        const result = await resolveOffline(firestore
-            .collection('users')
-            .doc(this.user.uid)
-            .collection('projects')
-            .get());
+        const result = await resolveOffline(
+            getDocs(projectsRef(this.user.uid)))
         if (result && result.docs) {
-          for (const doc of result.docs) {
-            this.projects[doc.id] = { ...doc.data(), key: doc.id };
+          for (const snapshot of result.docs) {
+            this.projects[snapshot.id] = {
+              ...snapshot.data(), key: snapshot.id,
+            }
           }
         }
-        this.loading = false;
+        this.loading = false
       } catch ({ message }) {
-        console.log(message);
+        console.log(message)
       }
     },
     async addProject(data = defaultData) {
       try {
-        const project = { ...data };
-        project.created = project.updated = firebase.firestore.Timestamp.now();
-        const doc = await resolveOffline(firestore
-            .collection('users')
-            .doc(this.user.uid)
-            .collection('projects')
-            .add(project));
-        this.projects[doc.id] = { ...project, key: doc.id };
-        return doc.id;
+        const project = { ...data }
+        project.created = project.updated = Timestamp.now()
+        const snapshot = await resolveOffline(
+            addDoc(projectsRef(this.user.uid), project))
+        this.projects[snapshot.id] = { ...project, key: snapshot.id }
+        return snapshot.id
       } catch ({ message }) {
-        console.log(message);
+        console.log(message)
       }
     },
     async deleteProject({ key }) {
       try {
-        await resolveOffline(firestore
-            .collection('users')
-            .doc(this.user.uid)
-            .collection('projects')
-            .doc(key)
-            .delete());
-        delete this.projects[key];
+        await resolveOffline(deleteDoc(projectRef(this.user.uid, key)))
+        delete this.projects[key]
       } catch ({ message }) {
-        console.log(message);
+        console.log(message)
       }
     },
     async updateProject({ key, name, value }) {
       try {
-        this.projects[key][name] = value;
-        await resolveOffline(firestore
-            .collection('users')
-            .doc(this.user.uid)
-            .collection('projects')
-            .doc(key)
-            .update({
-              [name]: value,
-              updated: firebase.firestore.Timestamp.now(),
-            }));
+        this.projects[key][name] = value
+        await resolveOffline(updateDoc(projectRef(this.user.uid, key), {
+          [name]: value,
+          updated: Timestamp.now(),
+        }))
       } catch ({ message }) {
-        console.log(message);
+        console.log(message)
       }
     },
     signIn() {
-      auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+      signInWithRedirect(auth, new GoogleAuthProvider())
     },
     signOut() {
-      auth.signOut();
+      signOut(auth)
     },
   },
-});
+})

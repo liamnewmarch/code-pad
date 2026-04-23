@@ -1,5 +1,5 @@
 <script>
-import { nextTick } from 'vue';
+import { nextTick } from "vue"
 
 export default {
   props: {
@@ -13,13 +13,13 @@ export default {
     },
   },
   data() {
-    return { active: false };
+    return { active: false }
   },
   computed: {
     toggleLabel() {
-      if (this.active) return '×';
-      if (!this.logging.length) return '$_';
-      return `$${this.logging.length}`;
+      if (this.active) return "×"
+      if (!this.logging.length) return "$_"
+      return `$${this.logging.length}`
     },
   },
   methods: {
@@ -27,32 +27,32 @@ export default {
       // This method uses typeof because instanceof fails across Realms. Sigh.
       return line.map((item) => {
         // Special case for iterable objects (Array, Uint8Array, etc.)
-        if (typeof item === 'object' && Symbol.iterator in item) {
-          const type = item.constructor.name;
-          const toString = [...item].map((v) => JSON.stringify(v)).join(', ');
-          return `${type}(${item.length}) [${toString}]`;
+        if (typeof item === "object" && Symbol.iterator in item) {
+          const type = item.constructor.name
+          const toString = [...item].map((v) => JSON.stringify(v)).join(", ")
+          return `${type}(${item.length}) [${toString}]`
         }
         // Special case for callables (various Function types, classes, etc.)
-        if (typeof item === 'function') {
-          return 'ƒ ' + item.toString();
+        if (typeof item === "function") {
+          return "ƒ " + item.toString()
         }
         // Special case for Errors. TODO find a better way of detecting them.
-        if (typeof item === 'object' && 'message' in item) {
-          return `${item.constructor.name}: ${item.message}`;
+        if (typeof item === "object" && "message" in item) {
+          return `${item.constructor.name}: ${item.message}`
         }
         // For everything else, attempt to serialise as JSON.
-        return JSON.stringify(item);
-      }).join(', ');
+        return JSON.stringify(item)
+      }).join(", ")
     },
     scrollToBottom() {
-      this.$refs.output.scrollTop = this.$refs.output.scrollHeight;
+      this.$refs.output.scrollTop = this.$refs.output.scrollHeight
     },
     toggle() {
-      this.active = !this.active;
-      if (this.active) nextTick(this.scrollToBottom);
+      this.active = !this.active
+      if (this.active) nextTick(this.scrollToBottom)
     },
   },
-};
+}
 </script>
 
 <template>

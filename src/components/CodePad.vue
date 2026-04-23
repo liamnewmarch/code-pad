@@ -1,8 +1,8 @@
 <script>
-import { useProjectStore } from '../config/store.js';
-import AppHeader from './AppHeader.vue';
-import LoadingState from './LoadingState.vue';
-import SignIn from './SignIn.vue';
+import { useProjectStore } from "../config/store.js"
+import AppHeader from "./AppHeader.vue"
+import LoadingState from "./LoadingState.vue"
+import SignIn from "./SignIn.vue"
 
 export default {
   components: {
@@ -11,20 +11,20 @@ export default {
     SignIn,
   },
   setup() {
-    return { store: useProjectStore() };
+    return { store: useProjectStore() }
   },
   computed: {
     loading() {
-      return this.store.loading;
+      return this.store.loading
     },
     user() {
-      return this.store.user;
+      return this.store.user
     },
   },
   async created() {
-    await this.store.init();
+    await this.store.init()
   },
-};
+}
 </script>
 
 <template>

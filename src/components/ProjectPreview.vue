@@ -1,19 +1,19 @@
 <script>
-import ProjectConsole from './ProjectConsole.vue';
+import ProjectConsole from "./ProjectConsole.vue"
 
 const template = ({ css, html, javascript }) => `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <script>parent.injectHandlers(this);</${'script'}>
+    <script>parent.injectHandlers(this);</${"script"}>
     <style>${css}</style>
   </head>
   <body>
     ${html}
-    <script type="module">${javascript}</${'script'}>
+    <script type="module">${javascript}</${"script"}>
   </body>
 </html>
-`;
+`
 
 export default {
   components: {
@@ -29,7 +29,7 @@ export default {
     return {
       logging: [],
       srcdoc: null,
-    };
+    }
   },
   mounted() {
     try {
@@ -47,24 +47,24 @@ export default {
 
       // Instead we provide a global hook function in the parent window that
       // the iframe can call from its <head>.
-      window.injectHandlers = this.injectHandlers;
+      window.injectHandlers = this.injectHandlers
       // Apply the template which calls the hook.
-      this.srcdoc = template(this.project);
+      this.srcdoc = template(this.project)
     } catch (error) {
-      this.logging.push([error]);
+      this.logging.push([error])
     }
   },
   methods: {
     injectHandlers(window) {
-      window.addEventListener('error', ({ message }) => {
-        this.logging.push([new Error(message)]);
-      });
-      for (const key of ['error', 'info', 'log', 'warn']) {
-        window.console[key] = (...args) => this.logging.push(args);
+      window.addEventListener("error", ({ message }) => {
+        this.logging.push([new Error(message)])
+      })
+      for (const key of ["error", "info", "log", "warn"]) {
+        window.console[key] = (...args) => this.logging.push(args)
       }
     },
   },
-};
+}
 </script>
 
 <template>

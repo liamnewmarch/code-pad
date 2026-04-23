@@ -1,11 +1,11 @@
 <script>
-import { useProjectStore } from '../config/store.js';
-import { createEditor } from '../config/editor.js';
+import { useProjectStore } from "../config/store.js"
+import { createEditor } from "../config/editor.js"
 
 export default {
   beforeRouteUpdate(to, from, next) {
-    this.onTypeChange(to.params.type);
-    next();
+    this.onTypeChange(to.params.type)
+    next()
   },
   props: {
     project: {
@@ -14,22 +14,22 @@ export default {
     },
   },
   setup() {
-    return { store: useProjectStore() };
+    return { store: useProjectStore() }
   },
   computed: {
     type() {
-      return this.$route.params.type;
+      return this.$route.params.type
     },
   },
   mounted() {
     this.editor = createEditor(this.$refs.editor, {
       onChange: this.onChange,
       getType: () => this.type,
-    });
-    this.onTypeChange();
+    })
+    this.onTypeChange()
   },
   unmounted() {
-    if (this.editor) this.editor.destroy();
+    if (this.editor) this.editor.destroy()
   },
   methods: {
     async onChange() {
@@ -37,14 +37,14 @@ export default {
         key: this.$route.params.key,
         name: this.type,
         value: this.editor.getValue(),
-      });
+      })
     },
     onTypeChange(type = this.type) {
-      this.editor.setLanguage(type);
-      this.editor.setValue(this.project[type]);
+      this.editor.setLanguage(type)
+      this.editor.setValue(this.project[type])
     },
   },
-};
+}
 </script>
 
 <template>

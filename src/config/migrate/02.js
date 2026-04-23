@@ -1,22 +1,22 @@
-import { useProjectStore } from '../store.js';
+import { useProjectStore } from "../store.js"
 
-const STORAGE_KEY = 'project-store';
+const STORAGE_KEY = "project-store"
 
-const load = (key) => JSON.parse(localStorage.getItem(key));
+const load = (key) => JSON.parse(localStorage.getItem(key))
 
 export function count() {
-  if (!(STORAGE_KEY in localStorage)) return;
-  const { projects } = load(STORAGE_KEY);
-  return Object.values(projects).length;
+  if (!(STORAGE_KEY in localStorage)) return
+  const { projects } = load(STORAGE_KEY)
+  return Object.values(projects).length
 }
 
 export async function migrate() {
-  if (!(STORAGE_KEY in localStorage)) return;
-  const store = useProjectStore();
-  const { projects } = load(STORAGE_KEY);
+  if (!(STORAGE_KEY in localStorage)) return
+  const store = useProjectStore()
+  const { projects } = load(STORAGE_KEY)
   for (const project of Object.values(projects)) {
-    delete project.key;
-    await store.addProject(project);
+    delete project.key
+    await store.addProject(project)
   }
-  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(STORAGE_KEY)
 }

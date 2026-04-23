@@ -1,16 +1,16 @@
-import { Compartment, EditorState } from '@codemirror/state';
-import { EditorView, keymap } from '@codemirror/view';
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
-import { oneDark } from '@codemirror/theme-one-dark';
-import { css } from '@codemirror/lang-css';
-import { html } from '@codemirror/lang-html';
-import { javascript } from '@codemirror/lang-javascript';
+import { Compartment, EditorState } from "@codemirror/state"
+import { EditorView, keymap } from "@codemirror/view"
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands"
+import { oneDark } from "@codemirror/theme-one-dark"
+import { css } from "@codemirror/lang-css"
+import { html } from "@codemirror/lang-html"
+import { javascript } from "@codemirror/lang-javascript"
 
-const langMap = { css, html, javascript };
+const langMap = { css, html, javascript }
 
 export function createEditor(container, { onChange, getType }) {
-  const language = new Compartment();
-  let settingValue = false;
+  const language = new Compartment()
+  let settingValue = false
 
   const view = new EditorView({
     parent: container,
@@ -21,26 +21,26 @@ export function createEditor(container, { onChange, getType }) {
         keymap.of([...defaultKeymap, ...historyKeymap]),
         EditorView.updateListener.of((update) => {
           if (update.docChanged && !settingValue) {
-            onChange(view.state.doc.toString());
+            onChange(view.state.doc.toString())
           }
         }),
         language.of(langMap[getType()]()),
       ],
     }),
-  });
+  })
 
   return {
     getValue: () => view.state.doc.toString(),
     setValue: (value) => {
-      settingValue = true;
+      settingValue = true
       view.dispatch({
         changes: { from: 0, to: view.state.doc.length, insert: value },
-      });
-      settingValue = false;
+      })
+      settingValue = false
     },
     setLanguage: (type) => view.dispatch({
       effects: language.reconfigure(langMap[type]()),
     }),
     destroy: () => view.destroy(),
-  };
+  }
 }

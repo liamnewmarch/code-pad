@@ -6,7 +6,7 @@ export default {
       type: Array,
     },
     text: {
-      default: () => '',
+      default: () => "",
       type: String,
     },
   },
@@ -14,21 +14,21 @@ export default {
     return {
       resolve: null,
       visible: false,
-    };
+    }
   },
   methods: {
     respond(value) {
-      this.visible = false;
-      this.resolve(value);
+      this.visible = false
+      this.resolve(value)
     },
     show() {
-      this.visible = true;
+      this.visible = true
       return new Promise((resolve) => {
-        this.resolve = resolve;
-      });
+        this.resolve = resolve
+      })
     },
   },
-};
+}
 </script>
 
 <template>

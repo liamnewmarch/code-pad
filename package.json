@@ -17,7 +17,7 @@
     "deploy": "firebase deploy",
     "serve": "firebase emulators:start",
     "start": "vite",
-    "test": "eslint --ext .js,.vue src"
+    "test": "eslint"
   },
   "dependencies": {
     "@codemirror/commands": "^6.0.0",
@@ -27,20 +27,20 @@
     "@codemirror/state": "^6.0.0",
     "@codemirror/theme-one-dark": "^6.0.0",
     "@codemirror/view": "^6.0.0",
-    "@vitejs/plugin-vue": "^4.5.0",
-    "firebase": "9.22",
-    "pinia": "^2.1.7",
-    "vite": "^5.0.0",
-    "vite-plugin-pwa": "^0.17.0",
-    "vue": "^3.3.4",
-    "vue-router": "^4.2.5"
+    "@vitejs/plugin-vue": "^6.0.0",
+    "firebase": "^12.0.0",
+    "pinia": "^3.0.4",
+    "vite": "^7.0.0",
+    "vite-plugin-pwa": "^1.0.0",
+    "vue": "^3.5.11",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "eslint": "^8.22.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-plugin-html": "^7.1.0",
-    "eslint-plugin-import": "2.27",
-    "eslint-plugin-vue": "^9.3.0",
-    "firebase-tools": "^12.0.0"
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-vue": "^10.0.0",
+    "firebase-tools": "^15.0.0",
+    "vue-eslint-parser": "^10.4.0"
   }
 }
