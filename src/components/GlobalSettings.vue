@@ -1,4 +1,5 @@
 <script>
+import { useProjectStore } from '../config/store.js';
 import ModalDialog from './ModalDialog.vue';
 import getUnmigratedProjects from '../config/migrate/index.js';
 
@@ -6,11 +7,8 @@ export default {
   components: {
     ModalDialog,
   },
-  props: {
-    project: {
-      default: null,
-      type: Object,
-    },
+  setup() {
+    return { store: useProjectStore() };
   },
   data() {
     return {
@@ -20,7 +18,7 @@ export default {
   },
   computed: {
     isAuthenticated() {
-      return Boolean(this.$store.state.user.uid);
+      return Boolean(this.store.user && this.store.user.uid);
     },
     year() {
       try {
@@ -32,11 +30,7 @@ export default {
   },
   methods: {
     async exportJSON() {
-      const projects = (
-        Object
-            .entries(this.$store.state.projects)
-            .map(([, project]) => project)
-      );
+      const projects = Object.values(this.store.projects);
       const json = JSON.stringify(projects);
       await navigator.clipboard.writeText(json);
       this.showModal('Projects copied to clipboard.');
@@ -46,11 +40,11 @@ export default {
         const json = await navigator.clipboard.readText();
         const projects = JSON.parse(json);
         for (const project of projects) {
-          await this.$store.dispatch('addProject', project);
+          await this.store.addProject(project);
         }
         this.showModal(`Success! Imported ${projects.length} project(s).`);
       } catch (error) {
-        this.showModal(`There was an error:\n“${error.message}”`);
+        this.showModal(`There was an error:\n"${error.message}"`);
       }
     },
     async migrate() {
@@ -66,7 +60,7 @@ export default {
       }
     },
     async signOut() {
-      await this.$store.dispatch('signOut');
+      await this.store.signOut();
     },
     async showModal(text) {
       this.modalText = text;

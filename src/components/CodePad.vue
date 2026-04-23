@@ -1,4 +1,5 @@
 <script>
+import { useProjectStore } from '../config/store.js';
 import AppHeader from './AppHeader.vue';
 import LoadingState from './LoadingState.vue';
 import SignIn from './SignIn.vue';
@@ -9,16 +10,19 @@ export default {
     LoadingState,
     SignIn,
   },
+  setup() {
+    return { store: useProjectStore() };
+  },
   computed: {
     loading() {
-      return this.$store.state.loading;
+      return this.store.loading;
     },
     user() {
-      return this.$store.state.user;
+      return this.store.user;
     },
   },
   async created() {
-    await this.$store.dispatch('init');
+    await this.store.init();
   },
 };
 </script>
@@ -54,8 +58,12 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   overscroll-behavior: none;
+}
+
+code-pad {
+  display: contents;
 }
 
 button,
@@ -66,6 +74,7 @@ input {
 .view {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1 0 0;
+  min-height: 0;
 }
 </style>

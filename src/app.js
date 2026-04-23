@@ -1,14 +1,7 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 
-import { registerServiceWorker } from './config/service-worker';
-import router from './config/router';
-import store from './config/store';
+import { pinia } from './config/store.js';
+import router from './config/router.js';
 import CodePad from './components/CodePad.vue';
 
-new Vue({
-  render: (h) => h(CodePad),
-  router,
-  store,
-}).$mount('code-pad');
-
-registerServiceWorker();
+createApp(CodePad).use(pinia).use(router).mount('code-pad');

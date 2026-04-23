@@ -1,6 +1,6 @@
 {
   "name": "code-pad",
-  "version": "3.7.3",
+  "version": "4.0.0",
   "description": "A code scratchpad for HTML, CSS and JavaScript ideas which works offline.",
   "type": "module",
   "private": true,
@@ -13,29 +13,27 @@
     "url": "https://github.com/liamnewmarch/code-pad/issues"
   },
   "scripts": {
-    "build": "NODE_ENV=production rollup -c rollup.config.js",
+    "build": "vite build",
     "deploy": "firebase deploy",
     "serve": "firebase emulators:start",
-    "start": "concurrently npm:watch npm:serve --kill-others",
-    "test": "eslint --ext .js,.vue src",
-    "watch": "NODE_ENV=development rollup -w -c rollup.config.js"
+    "start": "vite",
+    "test": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "@rollup/plugin-replace": "^3.0.0",
-    "codemirror": "^5.65.13",
-    "codemirror-one-dark-theme": "^1.1.1",
-    "concurrently": "^8.0.1",
+    "@codemirror/commands": "^6.0.0",
+    "@codemirror/lang-css": "^6.0.0",
+    "@codemirror/lang-html": "^6.0.0",
+    "@codemirror/lang-javascript": "^6.0.0",
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/theme-one-dark": "^6.0.0",
+    "@codemirror/view": "^6.0.0",
+    "@vitejs/plugin-vue": "^4.5.0",
     "firebase": "9.22",
-    "rollup": "^3.21.6",
-    "rollup-plugin-css-bundle": "^1.0.4",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-vue": "^5.1.9",
-    "vue": "^2.6.12",
-    "vue-router": "^3.4.3",
-    "vue-template-compiler": "^2.6.12",
-    "vuex": "^3.5.1"
+    "pinia": "^2.1.7",
+    "vite": "^5.0.0",
+    "vite-plugin-pwa": "^0.17.0",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "eslint": "^8.22.0",

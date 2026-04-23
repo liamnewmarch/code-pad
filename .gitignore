@@ -1,6 +1,4 @@
-/.firebase
-/.vsconfig
-/firebase-debug.log
-/node_modules
-/public/bundle.*
-/public/service-worker.js
+.firebase
+dist
+firebase-debug.log
+node_modules

@@ -83,16 +83,16 @@ export default {
 <style>
 .result {
   display: flex;
-  flex: 1 0 auto;
+  flex: 1 0 0;
   flex-flow: column nowrap;
+  min-height: 0;
 }
 
 .result__iframe {
   background-color: #111;
   border: 0;
   color: #fff;
-  display: flex;
-  flex: 1 0 auto;
-  flex-flow: column nowrap;
+  flex: 1 0 0;
+  min-height: 0;
 }
 </style>

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 
 import CodeEditor from '../components/CodeEditor.vue';
 import GlobalSettings from '../components/GlobalSettings.vue';
@@ -7,8 +6,6 @@ import ProjectList from '../components/ProjectList.vue';
 import ProjectLoader from '../components/ProjectLoader.vue';
 import ProjectPreview from '../components/ProjectPreview.vue';
 import ProjectSettings from '../components/ProjectSettings.vue';
-
-Vue.use(VueRouter);
 
 const routes = [{
   component: ProjectList,
@@ -37,7 +34,7 @@ const routes = [{
   }],
 }];
 
-export default new VueRouter({
-  mode: 'history',
+export default createRouter({
+  history: createWebHistory(),
   routes,
 });

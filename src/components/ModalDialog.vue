@@ -18,13 +18,13 @@ export default {
   },
   methods: {
     respond(value) {
-      this.$data.visible = false;
-      this.$data.resolve(value);
+      this.visible = false;
+      this.resolve(value);
     },
     show() {
-      this.$data.visible = true;
+      this.visible = true;
       return new Promise((resolve) => {
-        this.$data.resolve = resolve;
+        this.resolve = resolve;
       });
     },
   },

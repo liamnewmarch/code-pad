@@ -1,5 +1,5 @@
 <script>
-import Vue from 'vue';
+import { nextTick } from 'vue';
 
 export default {
   props: {
@@ -49,7 +49,7 @@ export default {
     },
     toggle() {
       this.active = !this.active;
-      if (this.active) Vue.nextTick(this.scrollToBottom);
+      if (this.active) nextTick(this.scrollToBottom);
     },
   },
 };
@@ -121,14 +121,13 @@ export default {
     transition: transform .1s ease-in-out;
   }
 
-  .console__output--enter,
+  .console__output--enter-from,
   .console__output--leave-to {
     transform: translateY(100%);
-
   }
 
   .console__output--enter-to,
-  .console__output--leave {
-    transition: translateY(0);
+  .console__output--leave-from {
+    transform: translateY(0);
   }
 </style>

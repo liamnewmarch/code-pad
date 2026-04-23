@@ -1,28 +1,46 @@
-import Vue from 'vue';
+import { Compartment, EditorState } from '@codemirror/state';
+import { EditorView, keymap } from '@codemirror/view';
+import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { css } from '@codemirror/lang-css';
+import { html } from '@codemirror/lang-html';
+import { javascript } from '@codemirror/lang-javascript';
 
-import CodeMirror from 'codemirror';
+const langMap = { css, html, javascript };
 
-import 'codemirror/lib/codemirror.css';
-import 'codemirror-one-dark-theme';
+export function createEditor(container, { onChange, getType }) {
+  const language = new Compartment();
+  let settingValue = false;
 
-import 'codemirror/mode/css/css';
-import 'codemirror/mode/htmlmixed/htmlmixed';
-import 'codemirror/mode/javascript/javascript';
-
-const defaults = {
-  inputStyle: 'textarea',
-  theme: 'one-dark',
-};
-
-export function createEditor(textarea, methods) {
-  const editor = CodeMirror.fromTextArea(textarea, defaults);
-  Vue.nextTick(() => {
-    editor.on('change', () => methods.onChange());
-    methods.onTypeChange();
+  const view = new EditorView({
+    parent: container,
+    state: EditorState.create({
+      extensions: [
+        oneDark,
+        history(),
+        keymap.of([...defaultKeymap, ...historyKeymap]),
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged && !settingValue) {
+            onChange(view.state.doc.toString());
+          }
+        }),
+        language.of(langMap[getType()]()),
+      ],
+    }),
   });
+
   return {
-    getValue: (...args) => editor.getValue(...args),
-    setOption: (...args) => editor.setOption(...args),
-    setValue: (...args) => Vue.nextTick(() => editor.setValue(...args)),
+    getValue: () => view.state.doc.toString(),
+    setValue: (value) => {
+      settingValue = true;
+      view.dispatch({
+        changes: { from: 0, to: view.state.doc.length, insert: value },
+      });
+      settingValue = false;
+    },
+    setLanguage: (type) => view.dispatch({
+      effects: language.reconfigure(langMap[type]()),
+    }),
+    destroy: () => view.destroy(),
   };
 }

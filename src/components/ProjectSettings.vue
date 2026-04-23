@@ -1,4 +1,5 @@
 <script>
+import { useProjectStore } from '../config/store.js';
 import ModalDialog from './ModalDialog.vue';
 
 export default {
@@ -10,6 +11,9 @@ export default {
       default: null,
       type: Object,
     },
+  },
+  setup() {
+    return { store: useProjectStore() };
   },
   data() {
     return {
@@ -28,7 +32,7 @@ export default {
   },
   methods: {
     async clone() {
-      await this.$store.dispatch('addProject', this.project);
+      await this.store.addProject(this.project);
     },
     async copyToClipboard() {
       const json = JSON.stringify([{ ...this.project }]);
@@ -38,10 +42,10 @@ export default {
     async deleteProject() {
       const value = await this.$refs.modalDelete.show();
       if (!value) return;
-      await this.$store.dispatch('deleteProject', { key: this.project.key });
+      await this.store.deleteProject({ key: this.project.key });
     },
     async updateName(event) {
-      await this.$store.dispatch('updateProject', {
+      await this.store.updateProject({
         key: this.project.key,
         name: 'name',
         value: event.target.value,

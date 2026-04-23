@@ -1,5 +1,10 @@
 <script>
+import { useProjectStore } from '../config/store.js';
+
 export default {
+  setup() {
+    return { store: useProjectStore() };
+  },
   data() {
     return {
       filterText: '',
@@ -7,12 +12,12 @@ export default {
   },
   computed: {
     projects() {
-      return Object.values(this.$store.state.projects);
+      return Object.values(this.store.projects);
     },
   },
   methods: {
     async add() {
-      const key = await this.$store.dispatch('addProject');
+      const key = await this.store.addProject();
       this.$router.push({ name: 'editor', params: { key, type: 'html' }});
     },
     filter(key, text, array) {
@@ -51,7 +56,6 @@ export default {
         v-for="(project, index) of sort('-created', filter('name', filterText, projects))"
         :key="index"
         class="list__item button"
-        tag="button"
         :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"
       >
         {{ project.name }}
@@ -81,11 +85,13 @@ export default {
 .list__item {
   background: #444;
   border-radius: .2rem;
+  color: inherit;
   flex: 1 0 8rem;
   hyphens: auto;
   margin: 0 1rem 1rem 0;
   padding: 3rem 1rem;
   text-align: center;
+  text-decoration: none;
   word-break: break-all;
 }
 

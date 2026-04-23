@@ -1,8 +1,13 @@
 <script>
+import { useProjectStore } from '../config/store.js';
+
 export default {
+  setup() {
+    return { store: useProjectStore() };
+  },
   methods: {
     signIn() {
-      this.$store.dispatch('signIn');
+      this.store.signIn();
     },
   },
 };
@@ -12,7 +17,7 @@ export default {
   <div class="sign-in">
     <button @click="signIn">
       Sign in with Google
-    </Button>
+    </button>
   </div>
 </template>
 

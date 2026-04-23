@@ -1,4 +1,4 @@
-import store from '../store';
+import { useProjectStore } from '../store.js';
 
 const STORAGE_KEY = 'project-store';
 
@@ -12,10 +12,11 @@ export function count() {
 
 export async function migrate() {
   if (!(STORAGE_KEY in localStorage)) return;
+  const store = useProjectStore();
   const { projects } = load(STORAGE_KEY);
   for (const project of Object.values(projects)) {
     delete project.key;
-    await store.dispatch('addProject', project);
+    await store.addProject(project);
   }
   localStorage.removeItem(STORAGE_KEY);
 }

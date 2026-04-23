@@ -1,4 +1,5 @@
 <script>
+import { useProjectStore } from '../config/store.js';
 import { createEditor } from '../config/editor.js';
 
 export default {
@@ -12,6 +13,9 @@ export default {
       type: Object,
     },
   },
+  setup() {
+    return { store: useProjectStore() };
+  },
   computed: {
     type() {
       return this.$route.params.type;
@@ -20,19 +24,23 @@ export default {
   mounted() {
     this.editor = createEditor(this.$refs.editor, {
       onChange: this.onChange,
-      onTypeChange: this.onTypeChange,
+      getType: () => this.type,
     });
+    this.onTypeChange();
+  },
+  unmounted() {
+    if (this.editor) this.editor.destroy();
   },
   methods: {
     async onChange() {
-      await this.$store.dispatch('updateProject', {
+      await this.store.updateProject({
         key: this.$route.params.key,
         name: this.type,
         value: this.editor.getValue(),
       });
     },
     onTypeChange(type = this.type) {
-      this.editor.setOption('mode', type === 'html' ? 'htmlmixed' : type);
+      this.editor.setLanguage(type);
       this.editor.setValue(this.project[type]);
     },
   },
@@ -41,12 +49,9 @@ export default {
 
 <template>
   <div class="editor">
-    <textarea
+    <div
       ref="editor"
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
+      class="editor__cm"
     />
   </div>
 </template>
@@ -54,28 +59,29 @@ export default {
 <style>
 .editor {
   display: flex;
-  flex-flow: column nowrap;
-  flex: 1 0 auto;
+  flex-direction: column;
+  flex: 1 0 0;
+  min-height: 0;
 }
 
-.editor .CodeMirror {
-  background-color: inherit;
-  flex: 1 0 auto;
+.editor__cm {
+  display: flex;
+  flex: 1 0 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.editor__cm .cm-editor {
+  background-color: #111;
+  flex: 1 0 0;
   font-size: 16px;
   line-height: 1.2;
+  overflow: hidden;
 }
 
-.editor .CodeMirror-scroll {
-  box-sizing: inherit;
-  height: 100%;
-  left: 0;
+.editor__cm .cm-scroller {
+  flex: 1 0 0;
+  overflow: auto;
   padding: 1rem;
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-.editor .CodeMirror-sizer {
-  border-right-width: 1rem;
 }
 </style>
