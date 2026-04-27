@@ -31,9 +31,8 @@ function onTypeChange(t = type.value) {
   editor.setValue(props.project[t])
 }
 
-onBeforeRouteUpdate((to, from, next) => {
+onBeforeRouteUpdate((to) => {
   onTypeChange(to.params.type)
-  next()
 })
 
 onMounted(() => {

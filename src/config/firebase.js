@@ -46,14 +46,3 @@ export {
   Timestamp,
   updateDoc,
 }
-
-export function resolveOffline(action, { timeout = 1000 } = {}) {
-  return new Promise((resolve) => {
-    if (navigator.onLine) {
-      setTimeout(resolve, timeout)
-      resolve(action)
-    } else {
-      requestIdleCallback(resolve, { timeout })
-    }
-  })
-}

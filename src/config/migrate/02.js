@@ -5,7 +5,7 @@ const STORAGE_KEY = "project-store"
 const load = (key) => JSON.parse(localStorage.getItem(key))
 
 export function count() {
-  if (!(STORAGE_KEY in localStorage)) return
+  if (!(STORAGE_KEY in localStorage)) return 0
   const { projects } = load(STORAGE_KEY)
   return Object.values(projects).length
 }

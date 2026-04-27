@@ -23,7 +23,7 @@ function filter(key, text, array) {
 
 function sort(key, array) {
   const ascending = key.startsWith("-")
-  if (ascending) key = key.substr(1)
+  if (ascending) key = key.slice(1)
   const fn = ({ [key]: a }, { [key]: b }) => a < b ? -1 : a > b ? 1 : 0
   return ascending ? [...array].sort(fn).reverse() : [...array].sort(fn)
 }

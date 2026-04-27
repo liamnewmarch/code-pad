@@ -2,15 +2,11 @@
 import { useProjectStore } from "../config/store.js"
 
 const store = useProjectStore()
-
-function signIn() {
-  store.signIn()
-}
 </script>
 
 <template>
   <div class="sign-in">
-    <button @click="signIn">
+    <button @click="store.signIn">
       Sign in with Google
     </button>
   </div>
@@ -25,9 +21,5 @@ function signIn() {
   justify-content: space-between;
   padding: 5rem 0;
   text-align: center;
-}
-
-.google-icon {
-  margin-left: .5rem;
 }
 </style>

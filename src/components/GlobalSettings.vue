@@ -8,7 +8,7 @@ const store = useProjectStore()
 const modal = ref(null)
 const confirm = ref(null)
 const modalText = ref("")
-const version = "VERSION"
+const version = VERSION
 
 const year = computed(() => {
   try {

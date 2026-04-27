@@ -16,7 +16,7 @@ export async function migrate() {
     const project = load(key)
     delete project.key
     await store.addProject(project)
-    localStorage.removeItem(project.key)
+    localStorage.removeItem(key)
   }
   localStorage.removeItem(STORAGE_KEY)
 }

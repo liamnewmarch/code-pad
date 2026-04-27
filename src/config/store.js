@@ -10,7 +10,6 @@ import {
   getDocs,
   GoogleAuthProvider,
   onAuthStateChanged,
-  resolveOffline,
   signInWithRedirect,
   signOut,
   Timestamp,
@@ -49,13 +48,10 @@ export const useProjectStore = defineStore("projects", {
     },
     async loadProjects() {
       try {
-        const result = await resolveOffline(
-            getDocs(projectsRef(this.user.uid)))
-        if (result && result.docs) {
-          for (const snapshot of result.docs) {
-            this.projects[snapshot.id] = {
-              ...snapshot.data(), key: snapshot.id,
-            }
+        const result = await getDocs(projectsRef(this.user.uid))
+        for (const snapshot of result.docs) {
+          this.projects[snapshot.id] = {
+            ...snapshot.data(), key: snapshot.id,
           }
         }
         this.loading = false
@@ -67,8 +63,7 @@ export const useProjectStore = defineStore("projects", {
       try {
         const project = { ...data }
         project.created = project.updated = Timestamp.now()
-        const snapshot = await resolveOffline(
-            addDoc(projectsRef(this.user.uid), project))
+        const snapshot = await addDoc(projectsRef(this.user.uid), project)
         this.projects[snapshot.id] = { ...project, key: snapshot.id }
         return snapshot.id
       } catch ({ message }) {
@@ -77,7 +72,7 @@ export const useProjectStore = defineStore("projects", {
     },
     async deleteProject({ key }) {
       try {
-        await resolveOffline(deleteDoc(projectRef(this.user.uid, key)))
+        await deleteDoc(projectRef(this.user.uid, key))
         delete this.projects[key]
       } catch ({ message }) {
         console.log(message)
@@ -86,10 +81,10 @@ export const useProjectStore = defineStore("projects", {
     async updateProject({ key, name, value }) {
       try {
         this.projects[key][name] = value
-        await resolveOffline(updateDoc(projectRef(this.user.uid, key), {
+        await updateDoc(projectRef(this.user.uid, key), {
           [name]: value,
           updated: Timestamp.now(),
-        }))
+        })
       } catch ({ message }) {
         console.log(message)
       }

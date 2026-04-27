@@ -10,6 +10,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
+        VERSION: "readonly",
       },
     },
     plugins: {

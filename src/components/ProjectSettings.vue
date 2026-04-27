@@ -46,10 +46,7 @@ async function updateName(event) {
 </script>
 
 <template>
-  <section
-    class="view settings"
-    ng-if="vm.view === 'settings'"
-  >
+  <section class="view settings">
     <div class="settings__items">
       <div class="settings__item">
         <label class="settings__label">
