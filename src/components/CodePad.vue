@@ -42,7 +42,8 @@ body {
   flex-direction: column;
   margin: 0;
   min-height: 100dvh;
-  overscroll-behavior: none;
+  overscroll-behavior: contain;
+  touch-action: manipulation;
 }
 
 code-pad {
