@@ -1,38 +1,31 @@
-<script>
+<script setup>
+import { computed, ref } from "vue"
+import { useRouter } from "vue-router"
 import { useProjectStore } from "../config/store.js"
 
-export default {
-  setup() {
-    return { store: useProjectStore() }
-  },
-  data() {
-    return {
-      filterText: "",
-    }
-  },
-  computed: {
-    projects() {
-      return Object.values(this.store.projects)
-    },
-  },
-  methods: {
-    async add() {
-      const key = await this.store.addProject()
-      this.$router.push({ name: "editor", params: { key, type: "html" }})
-    },
-    filter(key, text, array) {
-      text = text.trim().toLowerCase()
-      return array.filter((item) => {
-        return text ? item[key].trim().toLowerCase().includes(text) : true
-      })
-    },
-    sort(key, array) {
-      const ascending = key.startsWith("-")
-      if (ascending) key = key.substr(1)
-      const fn = ({ [key]: a }, { [key]: b }) => a < b ? -1 : a > b ? 1 : 0
-      return ascending ? [...array].sort(fn).reverse() : [...array].sort(fn)
-    },
-  },
+const store = useProjectStore()
+const router = useRouter()
+const filterText = ref("")
+
+const projects = computed(() => Object.values(store.projects))
+
+async function add() {
+  const key = await store.addProject()
+  router.push({ name: "editor", params: { key, type: "html" }})
+}
+
+function filter(key, text, array) {
+  text = text.trim().toLowerCase()
+  return array.filter((item) => {
+    return text ? item[key].trim().toLowerCase().includes(text) : true
+  })
+}
+
+function sort(key, array) {
+  const ascending = key.startsWith("-")
+  if (ascending) key = key.substr(1)
+  const fn = ({ [key]: a }, { [key]: b }) => a < b ? -1 : a > b ? 1 : 0
+  return ascending ? [...array].sort(fn).reverse() : [...array].sort(fn)
 }
 </script>
 

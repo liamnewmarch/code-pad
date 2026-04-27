@@ -83,7 +83,7 @@ export default [
       "object-curly-spacing": ["error", "always", { objectsInObjects: false }],
       "prefer-const": ["error", { destructuring: "all" }],
       "require-jsdoc": 0,
-      "vue/max-len": ["error", { code: 80, template: 120 }],
+      "vue/max-len": ["error", { code: 120, ignoreUrls: true }],
     },
   },
   {

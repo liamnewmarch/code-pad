@@ -1,57 +1,47 @@
-<script>
+<script setup>
+import { ref } from "vue"
 import { useProjectStore } from "../config/store.js"
 import ModalDialog from "./ModalDialog.vue"
 
-export default {
-  components: {
-    ModalDialog,
+const props = defineProps({
+  project: {
+    default: null,
+    type: Object,
   },
-  props: {
-    project: {
-      default: null,
-      type: Object,
-    },
-  },
-  setup() {
-    return { store: useProjectStore() }
-  },
-  data() {
-    return {
-      modalCopiedButtons: [{
-        label: "Dismiss",
-      }],
-      modalDeleteButtons: [{
-        label: "Cancel",
-        value: false,
-      }, {
-        danger: true,
-        label: "Delete",
-        value: true,
-      }],
-    }
-  },
-  methods: {
-    async clone() {
-      await this.store.addProject(this.project)
-    },
-    async copyToClipboard() {
-      const json = JSON.stringify([{ ...this.project }])
-      await navigator.clipboard.writeText(json)
-      this.$refs.modalCopied.show()
-    },
-    async deleteProject() {
-      const value = await this.$refs.modalDelete.show()
-      if (!value) return
-      await this.store.deleteProject({ key: this.project.key })
-    },
-    async updateName(event) {
-      await this.store.updateProject({
-        key: this.project.key,
-        name: "name",
-        value: event.target.value,
-      })
-    },
-  },
+})
+
+const store = useProjectStore()
+const modalCopied = ref(null)
+const modalDelete = ref(null)
+
+const modalCopiedButtons = [{ label: "Dismiss" }]
+const modalDeleteButtons = [{
+  label: "Cancel",
+  value: false,
+}, {
+  danger: true,
+  label: "Delete",
+  value: true,
+}]
+
+async function copyToClipboard() {
+  const json = JSON.stringify([{ ...props.project }])
+  await navigator.clipboard.writeText(json)
+  modalCopied.value.show()
+}
+
+async function deleteProject() {
+  const value = await modalDelete.value.show()
+  if (!value) return
+  await store.deleteProject({ key: props.project.key })
+}
+
+async function updateName(event) {
+  await store.updateProject({
+    key: props.project.key,
+    name: "name",
+    value: event.target.value,
+  })
 }
 </script>
 

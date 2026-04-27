@@ -1,57 +1,55 @@
-<script>
-import { nextTick } from "vue"
+<script setup>
+import { computed, nextTick, ref } from "vue"
 
-export default {
-  props: {
-    logging: {
-      default: () => [],
-      type: Array,
-    },
-    project: {
-      default: () => null,
-      type: Object,
-    },
+const props = defineProps({
+  logging: {
+    default: () => [],
+    type: Array,
   },
-  data() {
-    return { active: false }
+  project: {
+    default: () => null,
+    type: Object,
   },
-  computed: {
-    toggleLabel() {
-      if (this.active) return "×"
-      if (!this.logging.length) return "$_"
-      return `$${this.logging.length}`
-    },
-  },
-  methods: {
-    format(line) {
-      // This method uses typeof because instanceof fails across Realms. Sigh.
-      return line.map((item) => {
-        // Special case for iterable objects (Array, Uint8Array, etc.)
-        if (typeof item === "object" && Symbol.iterator in item) {
-          const type = item.constructor.name
-          const toString = [...item].map((v) => JSON.stringify(v)).join(", ")
-          return `${type}(${item.length}) [${toString}]`
-        }
-        // Special case for callables (various Function types, classes, etc.)
-        if (typeof item === "function") {
-          return "ƒ " + item.toString()
-        }
-        // Special case for Errors. TODO find a better way of detecting them.
-        if (typeof item === "object" && "message" in item) {
-          return `${item.constructor.name}: ${item.message}`
-        }
-        // For everything else, attempt to serialise as JSON.
-        return JSON.stringify(item)
-      }).join(", ")
-    },
-    scrollToBottom() {
-      this.$refs.output.scrollTop = this.$refs.output.scrollHeight
-    },
-    toggle() {
-      this.active = !this.active
-      if (this.active) nextTick(this.scrollToBottom)
-    },
-  },
+})
+
+const output = ref(null)
+const active = ref(false)
+
+const toggleLabel = computed(() => {
+  if (active.value) return "×"
+  if (!props.logging.length) return "$_"
+  return `$${props.logging.length}`
+})
+
+function format(line) {
+  // This method uses typeof because instanceof fails across Realms. Sigh.
+  return line.map((item) => {
+    // Special case for iterable objects (Array, Uint8Array, etc.)
+    if (typeof item === "object" && Symbol.iterator in item) {
+      const type = item.constructor.name
+      const toString = [...item].map((v) => JSON.stringify(v)).join(", ")
+      return `${type}(${item.length}) [${toString}]`
+    }
+    // Special case for callables (various Function types, classes, etc.)
+    if (typeof item === "function") {
+      return "ƒ " + item.toString()
+    }
+    // Special case for Errors. TODO find a better way of detecting them.
+    if (typeof item === "object" && "message" in item) {
+      return `${item.constructor.name}: ${item.message}`
+    }
+    // For everything else, attempt to serialise as JSON.
+    return JSON.stringify(item)
+  }).join(", ")
+}
+
+function scrollToBottom() {
+  output.value.scrollTop = output.value.scrollHeight
+}
+
+function toggle() {
+  active.value = !active.value
+  if (active.value) nextTick(scrollToBottom)
 }
 </script>
 

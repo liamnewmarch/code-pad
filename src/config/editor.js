@@ -21,7 +21,7 @@ export function createEditor(container, { onChange, getType }) {
         history(),
         closeBrackets(),
         autocompletion(),
-        keymap.of([...closeBracketsKeymap, ...defaultKeymap, ...historyKeymap, ...completionKeymap]),
+        keymap.of([...defaultKeymap, ...closeBracketsKeymap, ...completionKeymap, ...historyKeymap]),
         EditorView.updateListener.of((update) => {
           if (update.docChanged && !settingValue) {
             onChange(view.state.doc.toString())

@@ -1,34 +1,33 @@
-<script>
-export default {
-  props: {
-    buttons: {
-      default: () => [],
-      type: Array,
-    },
-    text: {
-      default: () => "",
-      type: String,
-    },
+<script setup>
+import { ref } from "vue"
+
+defineProps({
+  buttons: {
+    default: () => [],
+    type: Array,
   },
-  data() {
-    return {
-      resolve: null,
-      visible: false,
-    }
+  text: {
+    default: () => "",
+    type: String,
   },
-  methods: {
-    respond(value) {
-      this.visible = false
-      this.resolve(value)
-    },
-    show() {
-      this.visible = true
-      return new Promise((resolve) => {
-        this.resolve = resolve
-      })
-    },
-  },
+})
+
+const resolve = ref(null)
+const visible = ref(false)
+
+function respond(value) {
+  visible.value = false
+  resolve.value(value)
 }
+
+function show() {
+  visible.value = true
+  return new Promise((r) => {
+    resolve.value = r
+  })
+}
+
+defineExpose({ show })
 </script>
 
 <template>

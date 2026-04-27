@@ -1,56 +1,58 @@
-<script>
+<script setup>
+import { computed, onMounted, onUnmounted, ref } from "vue"
+import { onBeforeRouteUpdate, useRoute } from "vue-router"
 import { useProjectStore } from "../config/store.js"
 import { createEditor } from "../config/editor.js"
 
-export default {
-  beforeRouteUpdate(to, from, next) {
-    this.onTypeChange(to.params.type)
-    next()
+const props = defineProps({
+  project: {
+    default: null,
+    type: Object,
   },
-  props: {
-    project: {
-      default: null,
-      type: Object,
-    },
-  },
-  setup() {
-    return { store: useProjectStore() }
-  },
-  computed: {
-    type() {
-      return this.$route.params.type
-    },
-  },
-  mounted() {
-    this.editor = createEditor(this.$refs.editor, {
-      onChange: this.onChange,
-      getType: () => this.type,
-    })
-    this.onTypeChange()
-  },
-  unmounted() {
-    if (this.editor) this.editor.destroy()
-  },
-  methods: {
-    async onChange() {
-      await this.store.updateProject({
-        key: this.$route.params.key,
-        name: this.type,
-        value: this.editor.getValue(),
-      })
-    },
-    onTypeChange(type = this.type) {
-      this.editor.setLanguage(type)
-      this.editor.setValue(this.project[type])
-    },
-  },
+})
+
+const store = useProjectStore()
+const route = useRoute()
+const editorEl = ref(null)
+const type = computed(() => route.params.type)
+
+let editor
+
+async function onChange() {
+  await store.updateProject({
+    key: route.params.key,
+    name: type.value,
+    value: editor.getValue(),
+  })
 }
+
+function onTypeChange(t = type.value) {
+  editor.setLanguage(t)
+  editor.setValue(props.project[t])
+}
+
+onBeforeRouteUpdate((to, from, next) => {
+  onTypeChange(to.params.type)
+  next()
+})
+
+onMounted(() => {
+  editor = createEditor(editorEl.value, {
+    onChange,
+    getType: () => type.value,
+  })
+  onTypeChange()
+})
+
+onUnmounted(() => {
+  if (editor) editor.destroy()
+})
 </script>
 
 <template>
   <div class="editor">
     <div
-      ref="editor"
+      ref="editorEl"
       class="editor__cm"
     />
   </div>

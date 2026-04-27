@@ -1,18 +1,16 @@
-<script>
+<script setup>
+import { useRoute, useRouter } from "vue-router"
 import { useProjectStore } from "../config/store.js"
 
-export default {
-  setup() {
-    return { store: useProjectStore() }
-  },
-  methods: {
-    getProjectOrNavigate() {
-      if (this.$route.params.key in this.store.projects) {
-        return this.store.projects[this.$route.params.key]
-      }
-      this.$router.push({ name: "list" })
-    },
-  },
+const store = useProjectStore()
+const route = useRoute()
+const router = useRouter()
+
+function getProjectOrNavigate() {
+  if (route.params.key in store.projects) {
+    return store.projects[route.params.key]
+  }
+  router.push({ name: "list" })
 }
 </script>
 

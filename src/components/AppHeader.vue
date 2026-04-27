@@ -1,14 +1,10 @@
-<script>
-export default {
-  computed: {
-    isListRoute() {
-      return this.$route.name === "list"
-    },
-    isGlobalSettingsRoute() {
-      return this.$route.name === "global-settings"
-    },
-  },
-}
+<script setup>
+import { computed } from "vue"
+import { useRoute } from "vue-router"
+
+const route = useRoute()
+const isListRoute = computed(() => route.name === "list")
+const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
 </script>
 
 <template>

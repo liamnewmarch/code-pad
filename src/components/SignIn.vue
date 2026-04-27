@@ -1,15 +1,10 @@
-<script>
+<script setup>
 import { useProjectStore } from "../config/store.js"
 
-export default {
-  setup() {
-    return { store: useProjectStore() }
-  },
-  methods: {
-    signIn() {
-      this.store.signIn()
-    },
-  },
+const store = useProjectStore()
+
+function signIn() {
+  store.signIn()
 }
 </script>
 

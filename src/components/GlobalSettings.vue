@@ -1,72 +1,63 @@
-<script>
+<script setup>
+import { computed, ref } from "vue"
 import { useProjectStore } from "../config/store.js"
 import ModalDialog from "./ModalDialog.vue"
 import getUnmigratedProjects from "../config/migrate/index.js"
 
-export default {
-  components: {
-    ModalDialog,
-  },
-  setup() {
-    return { store: useProjectStore() }
-  },
-  data() {
-    return {
-      modalText: "",
-      version: "VERSION",
+const store = useProjectStore()
+const modal = ref(null)
+const confirm = ref(null)
+const modalText = ref("")
+const version = "VERSION"
+
+const year = computed(() => {
+  try {
+    return new Intl.DateTimeFormat("en", { year: "numeric" }).format()
+  } catch {
+    return new Date().getFullYear()
+  }
+})
+
+async function exportJSON() {
+  const projects = Object.values(store.projects)
+  const json = JSON.stringify(projects)
+  await navigator.clipboard.writeText(json)
+  showModal("Projects copied to clipboard.")
+}
+
+async function importJSON() {
+  try {
+    const json = await navigator.clipboard.readText()
+    const projects = JSON.parse(json)
+    for (const project of projects) {
+      await store.addProject(project)
     }
-  },
-  computed: {
-    isAuthenticated() {
-      return Boolean(this.store.user && this.store.user.uid)
-    },
-    year() {
-      try {
-        return new Intl.DateTimeFormat("en", { year: "numeric" }).format()
-      } catch {
-        return new Date().getFullYear()
-      }
-    },
-  },
-  methods: {
-    async exportJSON() {
-      const projects = Object.values(this.store.projects)
-      const json = JSON.stringify(projects)
-      await navigator.clipboard.writeText(json)
-      this.showModal("Projects copied to clipboard.")
-    },
-    async importJSON() {
-      try {
-        const json = await navigator.clipboard.readText()
-        const projects = JSON.parse(json)
-        for (const project of projects) {
-          await this.store.addProject(project)
-        }
-        this.showModal(`Success! Imported ${projects.length} project(s).`)
-      } catch (error) {
-        this.showModal(`There was an error:\n"${error.message}"`)
-      }
-    },
-    async migrate() {
-      const { count, migrate } = getUnmigratedProjects()
-      if (count) {
-        this.modalText = `Found ${count} project(s). Migrate?`
-        if (await this.$refs.confirm.show()) {
-          migrate()
-        }
-        this.showModal(`Success! Imported ${count} project(s).`)
-      } else {
-        this.showModal("No projects found to migrate.")
-      }
-    },
-    async signOut() {
-      await this.store.signOut()
-    },
-    async showModal(text) {
-      this.modalText = text
-      return await this.$refs.modal.show()
-    },
-  },
+    showModal(`Success! Imported ${projects.length} project(s).`)
+  } catch (error) {
+    showModal(`There was an error:\n"${error.message}"`)
+  }
+}
+
+async function migrate() {
+  const { count, migrate: doMigrate } = getUnmigratedProjects()
+  if (count) {
+    modalText.value = `Found ${count} project(s). Migrate?`
+    if (await confirm.value.show()) {
+      doMigrate()
+    }
+    showModal(`Success! Imported ${count} project(s).`)
+  } else {
+    showModal("No projects found to migrate.")
+  }
+}
+
+async function signOut() {
+  await store.signOut()
+}
+
+async function showModal(text) {
+  modalText.value = text
+  return await modal.value.show()
 }
 </script>
 

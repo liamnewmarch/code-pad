@@ -1,41 +1,24 @@
-<script>
+<script setup>
+import { useRoute } from "vue-router"
 import { useProjectStore } from "../config/store.js"
 import AppHeader from "./AppHeader.vue"
 import LoadingState from "./LoadingState.vue"
 import SignIn from "./SignIn.vue"
 
-export default {
-  components: {
-    AppHeader,
-    LoadingState,
-    SignIn,
-  },
-  setup() {
-    return { store: useProjectStore() }
-  },
-  computed: {
-    loading() {
-      return this.store.loading
-    },
-    user() {
-      return this.store.user
-    },
-  },
-  async created() {
-    await this.store.init()
-  },
-}
+const route = useRoute()
+const store = useProjectStore()
+store.init()
 </script>
 
 <template>
   <div
     class="view"
-    :class="`view--${$route.name} ${$route.name}`"
+    :class="`view--${route.name} ${route.name}`"
   >
-    <LoadingState v-if="loading" />
-    <AppHeader v-if="!loading && user" />
-    <RouterView v-if="!loading && user" />
-    <SignIn v-if="!loading && !user" />
+    <LoadingState v-if="store.loading" />
+    <AppHeader v-if="!store.loading && store.user" />
+    <RouterView v-if="!store.loading && store.user" />
+    <SignIn v-if="!store.loading && !store.user" />
   </div>
 </template>
 
