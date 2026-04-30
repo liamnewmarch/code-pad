@@ -9,7 +9,12 @@ import { javascript } from "@codemirror/lang-javascript"
 
 const langMap = { css, html, javascript }
 
-export function createEditor(container, { onChange, getType }) {
+export type LangKey = keyof typeof langMap
+
+export function createEditor(
+    container: HTMLElement,
+    { onChange, getType }: { onChange: () => void; getType: () => LangKey },
+) {
   const language = new Compartment()
   let settingValue = false
 
@@ -24,7 +29,7 @@ export function createEditor(container, { onChange, getType }) {
         keymap.of([...defaultKeymap, ...closeBracketsKeymap, ...completionKeymap, ...historyKeymap]),
         EditorView.updateListener.of((update) => {
           if (update.docChanged && !settingValue) {
-            onChange(view.state.doc.toString())
+            onChange()
           }
         }),
         language.of(langMap[getType()]()),
@@ -34,14 +39,14 @@ export function createEditor(container, { onChange, getType }) {
 
   return {
     getValue: () => view.state.doc.toString(),
-    setValue: (value) => {
+    setValue: (value: string) => {
       settingValue = true
       view.dispatch({
         changes: { from: 0, to: view.state.doc.length, insert: value },
       })
       settingValue = false
     },
-    setLanguage: (type) => view.dispatch({
+    setLanguage: (type: LangKey) => view.dispatch({
       effects: language.reconfigure(langMap[type]()),
     }),
     destroy: () => view.destroy(),

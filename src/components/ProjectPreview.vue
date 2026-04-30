@@ -1,18 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue"
 import ProjectConsole from "./ProjectConsole.vue"
+import type { Project } from "../config/store.js"
 
-const props = defineProps({
-  project: {
-    default: null,
-    type: Object,
-  },
-})
+const props = defineProps<{ project?: Project }>()
 
-const logging = ref([])
-const srcdoc = ref(null)
+const logging = ref<unknown[][]>([])
+const srcdoc = ref<string>()
 
-const template = ({ css, html, javascript }) => `<!DOCTYPE html>
+const template = ({ css, html, javascript }: Project) => `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -26,12 +22,14 @@ const template = ({ css, html, javascript }) => `<!DOCTYPE html>
 </html>
 `
 
-function injectHandlers(window) {
-  window.addEventListener("error", ({ message }) => {
+type ConsoleMethod = "error" | "info" | "log" | "warn"
+
+function injectHandlers(win: Window) {
+  win.addEventListener("error", ({ message }) => {
     logging.value.push([new Error(message)])
   })
-  for (const key of ["error", "info", "log", "warn"]) {
-    window.console[key] = (...args) => logging.value.push(args)
+  for (const key of (["error", "info", "log", "warn"] satisfies ConsoleMethod[])) {
+    win.console[key] = (...args: unknown[]) => logging.value.push(args)
   }
 }
 
@@ -53,7 +51,7 @@ onMounted(() => {
     // the iframe can call from its <head>.
     window.injectHandlers = injectHandlers
     // Apply the template which calls the hook.
-    srcdoc.value = template(props.project)
+    if (props.project) srcdoc.value = template(props.project)
   } catch (error) {
     logging.value.push([error])
   }
@@ -64,12 +62,10 @@ onMounted(() => {
   <div class="result">
     <iframe
       class="result__iframe"
+      title="Project preview"
       :srcdoc="srcdoc"
     />
-    <ProjectConsole
-      :logging="logging"
-      :project="project"
-    />
+    <ProjectConsole :logging="logging" />
   </div>
 </template>
 

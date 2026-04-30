@@ -1,18 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { computed, nextTick, ref } from "vue"
 
-const props = defineProps({
-  logging: {
-    default: () => [],
-    type: Array,
-  },
-  project: {
-    default: () => null,
-    type: Object,
-  },
+const props = withDefaults(defineProps<{
+  logging?: unknown[][]
+}>(), {
+  logging: () => [],
 })
 
-const output = ref(null)
+const output = ref<HTMLElement>()
 const active = ref(false)
 
 const toggleLabel = computed(() => {
@@ -21,30 +16,44 @@ const toggleLabel = computed(() => {
   return `$${props.logging.length}`
 })
 
-function format(line) {
-  // This method uses typeof because instanceof fails across Realms. Sigh.
+interface IterableLike {
+  constructor: { name: string }
+  length?: number
+  [Symbol.iterator](): Iterator<unknown>
+}
+
+interface ErrorLike {
+  constructor: { name: string }
+  message: unknown
+}
+
+function isIterableLike(v: unknown): v is IterableLike {
+  return v !== null && typeof v === "object" && Symbol.iterator in v
+}
+
+function isErrorLike(v: unknown): v is ErrorLike {
+  return v !== null && typeof v === "object" && "message" in v
+}
+
+function format(line: unknown[]) {
+  // Uses typeof/in checks because instanceof fails across iframe Realms.
   return line.map((item) => {
-    // Special case for iterable objects (Array, Uint8Array, etc.)
-    if (typeof item === "object" && Symbol.iterator in item) {
-      const type = item.constructor.name
-      const toString = [...item].map((v) => JSON.stringify(v)).join(", ")
-      return `${type}(${item.length}) [${toString}]`
+    if (typeof item === "function") return "ƒ " + item.toString()
+    // Iterable objects (Array, Uint8Array, etc.)
+    if (isIterableLike(item)) {
+      const content = [...item].map((v) => JSON.stringify(v)).join(", ")
+      return `${item.constructor.name}(${item.length ?? "?"}) [${content}]`
     }
-    // Special case for callables (various Function types, classes, etc.)
-    if (typeof item === "function") {
-      return "ƒ " + item.toString()
-    }
-    // Special case for Errors. TODO find a better way of detecting them.
-    if (typeof item === "object" && "message" in item) {
-      return `${item.constructor.name}: ${item.message}`
-    }
-    // For everything else, attempt to serialise as JSON.
+    // Error-like objects
+    if (isErrorLike(item)) return `${item.constructor.name}: ${String(item.message)}`
     return JSON.stringify(item)
   }).join(", ")
 }
 
 function scrollToBottom() {
-  output.value.scrollTop = output.value.scrollHeight
+  if (output.value) {
+    output.value.scrollTop = output.value.scrollHeight
+  }
 }
 
 function toggle() {
@@ -71,6 +80,8 @@ function toggle() {
       </div>
     </Transition>
     <button
+      :aria-expanded="active"
+      aria-label="Toggle console"
       class="console__button"
       @click="toggle"
     >
@@ -98,7 +109,7 @@ function toggle() {
 
   .console__line {
     margin: 1rem 0;
-    white-space: nowrap;
+    white-space: pre-wrap;
   }
 
   .console__line::before {

@@ -41,6 +41,9 @@
     "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-vue": "^10.9.0",
-    "vue-eslint-parser": "^10.4.0"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.1",
+    "vue-eslint-parser": "^10.4.0",
+    "vue-tsc": "^3.2.7"
   }
 }

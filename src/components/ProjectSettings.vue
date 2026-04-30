@@ -1,18 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 import { useProjectStore } from "../config/store.js"
 import ModalDialog from "./ModalDialog.vue"
+import type { Project } from "../config/store.js"
 
-const props = defineProps({
-  project: {
-    default: null,
-    type: Object,
-  },
-})
+const props = defineProps<{ project?: Project }>()
 
 const store = useProjectStore()
-const modalCopied = ref(null)
-const modalDelete = ref(null)
+const modalCopied = ref<InstanceType<typeof ModalDialog>>()
+const modalDelete = ref<InstanceType<typeof ModalDialog>>()
 
 const modalCopiedButtons = [{ label: "Dismiss" }]
 const modalDeleteButtons = [{
@@ -25,18 +21,21 @@ const modalDeleteButtons = [{
 }]
 
 async function copyToClipboard() {
+  if (!props.project) return
   const json = JSON.stringify([{ ...props.project }])
   await navigator.clipboard.writeText(json)
-  modalCopied.value.show()
+  modalCopied.value?.show()
 }
 
 async function deleteProject() {
-  const value = await modalDelete.value.show()
+  if (!props.project) return
+  const value = await modalDelete.value?.show()
   if (!value) return
   await store.deleteProject({ key: props.project.key })
 }
 
-async function updateName(event) {
+async function updateName(event: InputEvent) {
+  if (!props.project || !(event.target instanceof HTMLInputElement)) return
   await store.updateProject({
     key: props.project.key,
     name: "name",
@@ -46,13 +45,20 @@ async function updateName(event) {
 </script>
 
 <template>
-  <section class="view settings">
+  <section
+    v-if="project"
+    class="view settings"
+  >
     <div class="settings__items">
       <div class="settings__item">
-        <label class="settings__label">
+        <label
+          class="settings__label"
+          for="project-name"
+        >
           Project name
         </label>
         <input
+          id="project-name"
           :value="project.name"
           class="settings__input"
           @input="updateName"

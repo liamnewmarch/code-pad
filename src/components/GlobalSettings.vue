@@ -1,12 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from "vue"
 import { useProjectStore } from "../config/store.js"
 import ModalDialog from "./ModalDialog.vue"
-import getUnmigratedProjects from "../config/migrate/index.js"
 
 const store = useProjectStore()
-const modal = ref(null)
-const confirm = ref(null)
+const modal = ref<InstanceType<typeof ModalDialog>>()
 const modalText = ref("")
 const version = VERSION
 
@@ -33,21 +31,8 @@ async function importJSON() {
       await store.addProject(project)
     }
     showModal(`Success! Imported ${projects.length} project(s).`)
-  } catch (error) {
-    showModal(`There was an error:\n"${error.message}"`)
-  }
-}
-
-async function migrate() {
-  const { count, migrate: doMigrate } = getUnmigratedProjects()
-  if (count) {
-    modalText.value = `Found ${count} project(s). Migrate?`
-    if (await confirm.value.show()) {
-      doMigrate()
-    }
-    showModal(`Success! Imported ${count} project(s).`)
-  } else {
-    showModal("No projects found to migrate.")
+  } catch (e) {
+    showModal(`There was an error:\n"${e instanceof Error ? e.message : e}"`)
   }
 }
 
@@ -55,9 +40,9 @@ async function signOut() {
   await store.signOut()
 }
 
-async function showModal(text) {
+async function showModal(text: string) {
   modalText.value = text
-  return await modal.value.show()
+  return modal.value?.show()
 }
 </script>
 
@@ -77,13 +62,6 @@ async function showModal(text) {
     >
       Import from clipboard
     </button>
-    <h2> Migrate </h2>
-    <button
-      class="global-settings__button"
-      @click="migrate"
-    >
-      Migrate old data
-    </button>
     <h2> Sign out </h2>
     <button
       class="global-settings__button"
@@ -97,17 +75,6 @@ async function showModal(text) {
     <ModalDialog
       ref="modal"
       :buttons="[{ label: 'Dismiss', value: true }]"
-      :text="modalText"
-    />
-    <ModalDialog
-      ref="confirm"
-      :buttons="[{
-        label: 'Migrate',
-        value: true,
-      }, {
-        label: 'Dismiss',
-        value: false,
-      }]"
       :text="modalText"
     />
   </section>
