@@ -1,7 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useProjectStore } from "../config/store.js"
+import type { Project } from "../config/store.js"
 
 const store = useProjectStore()
 const router = useRouter()
@@ -11,21 +12,23 @@ const projects = computed(() => Object.values(store.projects))
 
 async function add() {
   const key = await store.addProject()
-  router.push({ name: "editor", params: { key, type: "html" }})
+  if (key) router.push({ name: "editor", params: { key, type: "html" }})
 }
 
-function filter(key, text, array) {
-  text = text.trim().toLowerCase()
+function filter(key: keyof Project, text: string, array: Project[]) {
+  const lower = text.trim().toLowerCase()
   return array.filter((item) => {
-    return text ? item[key].trim().toLowerCase().includes(text) : true
+    return lower ? String(item[key]).trim().toLowerCase().includes(lower) : true
   })
 }
 
-function sort(key, array) {
-  const ascending = key.startsWith("-")
-  if (ascending) key = key.slice(1)
-  const fn = ({ [key]: a }, { [key]: b }) => a < b ? -1 : a > b ? 1 : 0
-  return ascending ? [...array].sort(fn).reverse() : [...array].sort(fn)
+function sort(key: keyof Project, array: Project[], descending = false) {
+  const fn = (a: Project, b: Project) => {
+    const av = String(a[key])
+    const bv = String(b[key])
+    return av < bv ? -1 : av > bv ? 1 : 0
+  }
+  return descending ? [...array].sort(fn).reverse() : [...array].sort(fn)
 }
 </script>
 
@@ -34,6 +37,7 @@ function sort(key, array) {
     <input
       v-if="projects.length > 12"
       v-model="filterText"
+      aria-label="Filter projects"
       class="list__filter"
       placeholder="Filter projects"
       type="text"
@@ -46,7 +50,7 @@ function sort(key, array) {
         New project
       </button>
       <RouterLink
-        v-for="(project, index) of sort('-created', filter('name', filterText, projects))"
+        v-for="(project, index) of sort('created', filter('name', filterText, projects), true)"
         :key="index"
         class="list__item button"
         :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"

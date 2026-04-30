@@ -1,14 +1,16 @@
-<script setup>
+<script setup lang="ts">
 import { useRoute, useRouter } from "vue-router"
 import { useProjectStore } from "../config/store.js"
+import { stringParam } from "../config/utils.js"
 
 const store = useProjectStore()
 const route = useRoute()
 const router = useRouter()
 
 function getProjectOrNavigate() {
-  if (route.params.key in store.projects) {
-    return store.projects[route.params.key]
+  const key = stringParam(route.params.key)
+  if (key in store.projects) {
+    return store.projects[key]
   }
   router.push({ name: "list" })
 }

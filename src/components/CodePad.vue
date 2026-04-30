@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useRoute } from "vue-router"
 import { useProjectStore } from "../config/store.js"
 import AppHeader from "./AppHeader.vue"
@@ -13,7 +13,7 @@ store.init()
 <template>
   <div
     class="view"
-    :class="`view--${route.name} ${route.name}`"
+    :class="`view--${String(route.name)} ${String(route.name)}`"
   >
     <LoadingState v-if="store.loading" />
     <AppHeader v-if="!store.loading && store.user" />
@@ -53,6 +53,12 @@ code-pad {
 button,
 input {
   all: unset;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .view {

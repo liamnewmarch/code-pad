@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue"
 import { useRoute } from "vue-router"
 
@@ -18,6 +18,7 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
       </div>
       <RouterLink
         active-class="top-nav__item--active"
+        aria-label="Settings"
         class="top-nav__item top-nav__item--settings"
         replace
         :to="{ name: 'global-settings' }"
@@ -30,6 +31,7 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
       class="top-nav"
     >
       <RouterLink
+        aria-label="Back"
         class="top-nav__item top-nav__item--back"
         :to="{ name: 'list' }"
       >
@@ -44,6 +46,7 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
       class="top-nav"
     >
       <RouterLink
+        aria-label="Back"
         class="top-nav__item top-nav__item--back"
         :to="{ name: 'list' }"
       >
@@ -51,6 +54,7 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
       </RouterLink>
       <RouterLink
         active-class="top-nav__item--active"
+        aria-label="HTML editor"
         class="top-nav__item top-nav__item--tab"
         replace
         :to="{ name: 'editor', params: { type: 'html' }}"
@@ -59,6 +63,7 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
       </RouterLink>
       <RouterLink
         active-class="top-nav__item--active"
+        aria-label="CSS editor"
         class="top-nav__item top-nav__item--tab"
         replace
         :to="{ name: 'editor', params: { type: 'css' }}"
@@ -67,6 +72,7 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
       </RouterLink>
       <RouterLink
         active-class="top-nav__item--active"
+        aria-label="JavaScript editor"
         class="top-nav__item top-nav__item--tab"
         replace
         :to="{ name: 'editor', params: { type: 'javascript' }}"
@@ -75,6 +81,7 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
       </RouterLink>
       <RouterLink
         active-class="top-nav__item--active"
+        aria-label="Result"
         class="top-nav__item top-nav__item--tab"
         replace
         :to="{ name: 'result' }"
@@ -83,6 +90,7 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
       </RouterLink>
       <RouterLink
         active-class="top-nav__item--active"
+        aria-label="Project settings"
         class="top-nav__item top-nav__item--settings"
         replace
         :to="{ name: 'project-settings' }"

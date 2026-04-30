@@ -1,23 +1,23 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue"
 
-defineProps({
-  buttons: {
-    default: () => [],
-    type: Array,
-  },
-  text: {
-    default: () => "",
-    type: String,
-  },
+interface Button {
+  label: string
+  value?: unknown
+  danger?: boolean
+}
+
+withDefaults(defineProps<{ buttons?: Button[]; text?: string }>(), {
+  buttons: () => [],
+  text: "",
 })
 
-const resolve = ref(null)
+const resolve = ref<(value: unknown) => void>()
 const visible = ref(false)
 
-function respond(value) {
+function respond(value: unknown) {
   visible.value = false
-  resolve.value(value)
+  resolve.value?.(value)
 }
 
 function show() {
@@ -33,10 +33,16 @@ defineExpose({ show })
 <template>
   <div
     v-if="visible"
-    ref="modal"
+    aria-modal="true"
     class="modal"
+    role="dialog"
+    @keydown.escape="respond(false)"
   >
-    <div class="modal__popup modal__popup--centered">
+    <div
+      autofocus
+      class="modal__popup modal__popup--centered"
+      tabindex="-1"
+    >
       <div class="modal__body">
         <p>{{ text }}</p>
       </div>

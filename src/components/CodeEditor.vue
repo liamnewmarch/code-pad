@@ -1,42 +1,42 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue"
 import { onBeforeRouteUpdate, useRoute } from "vue-router"
 import { useProjectStore } from "../config/store.js"
 import { createEditor } from "../config/editor.js"
+import { stringParam, toLangKey } from "../config/utils.js"
+import type { Project } from "../config/store.js"
+import type { LangKey } from "../config/editor.js"
 
-const props = defineProps({
-  project: {
-    default: null,
-    type: Object,
-  },
-})
+const props = defineProps<{ project?: Project }>()
 
 const store = useProjectStore()
 const route = useRoute()
-const editorEl = ref(null)
-const type = computed(() => route.params.type)
-
-let editor
+const editorEl = ref<HTMLElement>()
+const editor = ref<ReturnType<typeof createEditor>>()
+const type = computed(() => toLangKey(stringParam(route.params.type)))
 
 async function onChange() {
+  if (!editor.value) return
   await store.updateProject({
-    key: route.params.key,
+    key: stringParam(route.params.key),
     name: type.value,
-    value: editor.getValue(),
+    value: editor.value.getValue(),
   })
 }
 
-function onTypeChange(t = type.value) {
-  editor.setLanguage(t)
-  editor.setValue(props.project[t])
+function onTypeChange(t: LangKey = type.value) {
+  if (!editor.value || !props.project) return
+  editor.value.setLanguage(t)
+  editor.value.setValue(props.project[t])
 }
 
 onBeforeRouteUpdate((to) => {
-  onTypeChange(to.params.type)
+  onTypeChange(toLangKey(stringParam(to.params.type)))
 })
 
 onMounted(() => {
-  editor = createEditor(editorEl.value, {
+  if (!editorEl.value) return
+  editor.value = createEditor(editorEl.value, {
     onChange,
     getType: () => type.value,
   })
@@ -44,7 +44,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  if (editor) editor.destroy()
+  editor.value?.destroy()
 })
 </script>
 

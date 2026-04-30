@@ -2,10 +2,39 @@ import js from "@eslint/js"
 import globals from "globals"
 import pluginVue from "eslint-plugin-vue"
 import pluginImport from "eslint-plugin-import"
+import tseslint from "typescript-eslint"
 
 export default [
   js.configs.recommended,
   ...pluginVue.configs["flat/recommended"],
+  {
+    files: ["**/*.ts"],
+    plugins: { "@typescript-eslint": tseslint.plugin },
+    languageOptions: { parser: tseslint.parser },
+    rules: {
+      "@typescript-eslint/no-non-null-assertion": "error",
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
+      "no-restricted-syntax": ["error", {
+        selector: "TSUndefinedKeyword",
+        message: "Use optional `?` or `void` instead of `undefined` in types",
+      }],
+    },
+  },
+  {
+    files: ["**/*.vue"],
+    plugins: { "@typescript-eslint": tseslint.plugin },
+    languageOptions: { parserOptions: { parser: tseslint.parser }},
+    rules: {
+      "@typescript-eslint/no-non-null-assertion": "error",
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
+      "no-restricted-syntax": ["error", {
+        selector: "TSUndefinedKeyword",
+        message: "Use optional `?` or `void` instead of `undefined` in types",
+      }],
+    },
+  },
   {
     languageOptions: {
       globals: {
@@ -80,6 +109,7 @@ export default [
       "prefer-spread": 2,
       "arrow-parens": ["error", "always"],
       "max-len": 0,
+      "no-undefined": "error",
       "no-var": "error",
       "object-curly-spacing": ["error", "always", { objectsInObjects: false }],
       "prefer-const": ["error", { destructuring: "all" }],
@@ -88,6 +118,6 @@ export default [
     },
   },
   {
-    ignores: ["dist/**", "public/**"],
+    ignores: ["dist/**", "public/**", "src/env.d.ts"],
   },
 ]
