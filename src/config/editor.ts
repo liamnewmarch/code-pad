@@ -1,6 +1,6 @@
 import { Compartment, EditorState } from "@codemirror/state"
 import { EditorView, keymap } from "@codemirror/view"
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands"
+import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands"
 import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete"
 import { oneDark } from "@codemirror/theme-one-dark"
 import { css } from "@codemirror/lang-css"
@@ -26,7 +26,7 @@ export function createEditor(
         history(),
         closeBrackets(),
         autocompletion(),
-        keymap.of([...defaultKeymap, ...closeBracketsKeymap, ...completionKeymap, ...historyKeymap]),
+        keymap.of([...defaultKeymap, ...closeBracketsKeymap, ...completionKeymap, ...historyKeymap, indentWithTab]),
         EditorView.updateListener.of((update) => {
           if (update.docChanged && !settingValue) {
             onChange()
