@@ -10,6 +10,7 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{js,css,html,png}"],
+        navigateFallbackDenylist: [/^\/__\//],
       },
       manifest: false,
     }),
