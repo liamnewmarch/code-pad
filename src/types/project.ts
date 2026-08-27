@@ -1,12 +1,10 @@
-import type { Timestamp } from "firebase/firestore"
-
 export interface Project {
   css: string
   html: string
   javascript: string
   name: string
-  created: Timestamp
-  updated: Timestamp
+  created: number
+  updated: number
   key: string
 }
 
