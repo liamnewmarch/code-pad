@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
+import { useRouter } from "vue-router"
 import { useProjectStore } from "../stores/project.js"
 import ModalDialog from "./ModalDialog.vue"
 import type { Project } from "../types/project.js"
@@ -7,6 +8,7 @@ import type { Project } from "../types/project.js"
 const props = defineProps<{ project?: Project }>()
 
 const store = useProjectStore()
+const router = useRouter()
 const modalCopied = ref<InstanceType<typeof ModalDialog>>()
 const modalDelete = ref<InstanceType<typeof ModalDialog>>()
 const saving = ref(false)
@@ -33,6 +35,7 @@ async function deleteProject() {
   const value = await modalDelete.value?.show()
   if (!value) return
   await store.deleteProject({ key: props.project.key })
+  router.push({ name: "list" })
 }
 
 async function saveToAccount() {
@@ -117,7 +120,8 @@ async function updateName(event: InputEvent) {
 .settings__items {
   display: flex;
   flex-direction: column;
-  margin: 1rem;
+  margin: 1rem auto;
+  max-width: 30rem;
 }
 
 .settings__item {

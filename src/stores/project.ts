@@ -122,8 +122,8 @@ export const useProjectStore = defineStore("projects", {
         contentLoaded: true,
       }
       try {
-        this.projects[project.key] = project
         await putLocalProject(project)
+        this.projects[project.key] = project
         return project.key
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)
@@ -219,10 +219,12 @@ export const useProjectStore = defineStore("projects", {
         console.log(e instanceof Error ? e.message : e)
       }
     },
-    signIn() {
-      signInWithRedirect(auth, new GoogleAuthProvider()).catch((e) => {
+    async signIn() {
+      try {
+        await signInWithRedirect(auth, new GoogleAuthProvider())
+      } catch (e) {
         console.log(e instanceof Error ? e.message : e)
-      })
+      }
     },
     signOut() {
       signOut(auth)

@@ -6,6 +6,7 @@ import ModalDialog from "./ModalDialog.vue"
 const store = useProjectStore()
 const modal = ref<InstanceType<typeof ModalDialog>>()
 const modalText = ref("")
+const signingIn = ref(false)
 const version = VERSION
 
 const year = computed(() => {
@@ -36,8 +37,10 @@ async function importJSON() {
   }
 }
 
-function signIn() {
-  store.signIn()
+async function signIn() {
+  signingIn.value = true
+  await store.signIn()
+  signingIn.value = false
 }
 
 async function signOut() {
@@ -79,9 +82,10 @@ async function showModal(text: string) {
       <h2> Sign in </h2>
       <button
         class="global-settings__button"
+        :disabled="signingIn"
         @click="signIn"
       >
-        Sign in with Google
+        {{ signingIn ? "Signing in…" : "Sign in with Google" }}
       </button>
     </template>
     <h2>About</h2>
