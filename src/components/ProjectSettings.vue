@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import { useProjectStore } from "../config/store.js"
+import { useProjectStore } from "../stores/project.js"
 import ModalDialog from "./ModalDialog.vue"
-import type { Project } from "../config/store.js"
+import type { Project } from "../types/project.js"
 
 const props = defineProps<{ project?: Project }>()
 

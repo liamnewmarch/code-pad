@@ -1,4 +1,4 @@
-import type { LangKey } from "./editor.js"
+import type { LangKey } from "./composables/editor.js"
 
 export function stringParam(value: string | string[]): string {
   return Array.isArray(value) ? value[0] ?? "" : value

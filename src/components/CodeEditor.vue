@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue"
 import { onBeforeRouteUpdate, useRoute } from "vue-router"
-import { useProjectStore } from "../config/store.js"
-import { createEditor } from "../config/editor.js"
-import { stringParam, toLangKey } from "../config/utils.js"
-import type { Project } from "../config/store.js"
-import type { LangKey } from "../config/editor.js"
+import { useProjectStore } from "../stores/project.js"
+import { createEditor } from "../composables/editor.js"
+import { stringParam, toLangKey } from "../utils.js"
+import type { Project } from "../types/project.js"
+import type { LangKey } from "../composables/editor.js"
 
 const props = defineProps<{ project?: Project }>()
 

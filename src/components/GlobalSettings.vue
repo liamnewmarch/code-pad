@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import { useProjectStore } from "../config/store.js"
+import { useProjectStore } from "../stores/project.js"
 import ModalDialog from "./ModalDialog.vue"
 
 const store = useProjectStore()

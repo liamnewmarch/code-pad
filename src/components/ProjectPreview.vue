@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import ProjectConsole from "./ProjectConsole.vue"
-import type { Project } from "../config/store.js"
+import type { Project } from "../types/project.js"
 
 const props = defineProps<{ project?: Project }>()
 

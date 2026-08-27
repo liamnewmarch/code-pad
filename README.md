@@ -19,10 +19,9 @@ Check it out at [code-pad.web.app](https://code-pad.web.app)
 
 ## Development
 
+To run Code Pad locally, check out the repo and run:
+
 ```bash
-npm start        # Vite dev server with hot reload
-npm test         # ESLint
-npm run build    # Production build → dist/
-npm run serve    # Firebase emulator only
-npm run deploy   # Production build + deploy to Firebase Hosting
+npm install
+npm start
 ```

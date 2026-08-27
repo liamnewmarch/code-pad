@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
-import { useProjectStore } from "../config/store.js"
-import type { Project } from "../config/store.js"
+import { useProjectStore } from "../stores/project.js"
+import type { Project } from "../types/project.js"
 
 const store = useProjectStore()
 const router = useRouter()

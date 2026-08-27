@@ -17,7 +17,10 @@
     "deploy": "vite build && firebase deploy",
     "serve": "firebase emulators:start",
     "start": "vite",
-    "test": "eslint"
+    "format": "eslint --fix",
+    "lint": "eslint",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "npm run lint && npm run typecheck"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.1",
@@ -38,6 +41,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@vue/typescript-plugin": "^3.2.7",
     "eslint": "^9.39.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-vue": "^10.9.0",

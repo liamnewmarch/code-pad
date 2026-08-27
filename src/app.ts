@@ -1,7 +1,7 @@
 import { createApp } from "vue"
+import { createPinia } from "pinia"
 
-import { pinia } from "./config/store.js"
-import router from "./config/router.js"
+import router from "./router/index.js"
 import CodePad from "./components/CodePad.vue"
 
-createApp(CodePad).use(pinia).use(router).mount("code-pad")
+createApp(CodePad).use(createPinia()).use(router).mount("code-pad")

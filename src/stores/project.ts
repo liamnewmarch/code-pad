@@ -1,35 +1,10 @@
-import { createPinia, defineStore } from "pinia"
+import { defineStore } from "pinia"
 import type { User } from "firebase/auth"
+import { GoogleAuthProvider, onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth"
+import { addDoc, collection, deleteDoc, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore"
 
-import {
-  addDoc,
-  auth,
-  collection,
-  db,
-  deleteDoc,
-  doc,
-  getDocs,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithRedirect,
-  signOut,
-  Timestamp,
-  updateDoc,
-} from "./firebase.js"
-
-export interface Project {
-  css: string
-  html: string
-  javascript: string
-  name: string
-  created: Timestamp
-  updated: Timestamp
-  key: string
-}
-
-export type ProjectData = Pick<Project, "css" | "html" | "javascript" | "name">
-
-export const pinia = createPinia()
+import { auth, db } from "../firebase.js"
+import type { Project, ProjectData } from "../types/project.js"
 
 const defaultData: ProjectData = {
   css: "html {\n  background-color: #111;\n  color: #fff;\n}\n",
@@ -49,8 +24,14 @@ function toTimestamp(v: unknown): Timestamp {
   return v instanceof Timestamp ? v : Timestamp.now()
 }
 
+export interface State {
+   loading: boolean;
+   projects: Record<string, Project>;
+   user?: User;
+}
+
 export const useProjectStore = defineStore("projects", {
-  state: (): { loading: boolean; projects: Record<string, Project>; user?: User } => ({
+  state: (): State => ({
     loading: true,
     projects: {},
   }),

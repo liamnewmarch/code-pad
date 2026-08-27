@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router"
-import { useProjectStore } from "../config/store.js"
+import { useProjectStore } from "../stores/project.js"
 import AppHeader from "./AppHeader.vue"
 import LoadingState from "./LoadingState.vue"
 import SignIn from "./SignIn.vue"

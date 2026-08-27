@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useProjectStore } from "../config/store.js"
+import { useProjectStore } from "../stores/project.js"
 
 const store = useProjectStore()
 </script>

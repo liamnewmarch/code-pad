@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router"
-import { useProjectStore } from "../config/store.js"
-import { stringParam } from "../config/utils.js"
+import { useProjectStore } from "../stores/project.js"
+import { stringParam } from "../utils.js"
 
 const store = useProjectStore()
 const route = useRoute()

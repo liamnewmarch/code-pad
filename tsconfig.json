@@ -9,7 +9,8 @@
     "noEmit": true,
     "jsx": "preserve",
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "plugins": [{ "name": "@vue/typescript-plugin" }]
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts"]
 }
