@@ -8,8 +8,9 @@ Check it out at [code-pad.web.app](https://code-pad.web.app)
 
 - Write HTML, CSS, and JavaScript and see the result
 - Syntax highlighting and autocomplete for all three languages
-- Projects are saved to the cloud and synced across devices when signed in with Google
 - Fully offline-capable — install it as a PWA and use it without an internet connection
+- No account needed — projects are created and edited locally
+- Optional Google sign in – allows you to sync projects across devices
 
 ## Use cases
 
