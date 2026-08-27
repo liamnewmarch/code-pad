@@ -1,6 +1,6 @@
 {
   "name": "code-pad",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "A code scratchpad for HTML, CSS and JavaScript ideas which works offline.",
   "type": "module",
   "private": true,
