@@ -1,7 +1,7 @@
 import { defineStore } from "pinia"
 import { toRaw } from "vue"
 import type { User } from "firebase/auth"
-import { GoogleAuthProvider, onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth"
+import { getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth"
 import { collection, doc, getDocs, Timestamp, updateDoc, writeBatch } from "firebase/firestore"
 
 import { auth, db } from "../firebase.js"
@@ -48,6 +48,7 @@ export interface State {
    loading: boolean;
    loadPromise?: Promise<void>;
    projects: Record<string, Project>;
+   signInError?: string;
    user?: User;
 }
 
@@ -69,6 +70,12 @@ export const useProjectStore = defineStore("projects", {
           delete this.loadPromise
         }
       })
+      try {
+        await getRedirectResult(auth)
+      } catch (e) {
+        this.signInError = e instanceof Error ? e.message : String(e)
+        console.log(this.signInError)
+      }
     },
     async hydrateLocal() {
       for (const project of await getAllLocalProjects()) {
@@ -223,7 +230,8 @@ export const useProjectStore = defineStore("projects", {
       try {
         await signInWithRedirect(auth, new GoogleAuthProvider())
       } catch (e) {
-        console.log(e instanceof Error ? e.message : e)
+        this.signInError = e instanceof Error ? e.message : String(e)
+        console.log(this.signInError)
       }
     },
     signOut() {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { useProjectStore } from "../stores/project.js"
 import ModalDialog from "./ModalDialog.vue"
 
@@ -8,6 +8,12 @@ const modal = ref<InstanceType<typeof ModalDialog>>()
 const modalText = ref("")
 const signingIn = ref(false)
 const version = VERSION
+
+watch(() => store.signInError, (signInError) => {
+  if (!signInError) return
+  showModal(`There was a problem signing in:\n"${signInError}"`)
+  delete store.signInError
+}, { immediate: true })
 
 const year = computed(() => {
   try {

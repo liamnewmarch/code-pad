@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase/app"
-import { browserLocalPersistence, getAuth, setPersistence } from "firebase/auth"
+import {
+  browserLocalPersistence,
+  browserPopupRedirectResolver,
+  browserSessionPersistence,
+  indexedDBLocalPersistence,
+  initializeAuth,
+} from "firebase/auth"
 import { initializeFirestore, persistentLocalCache } from "firebase/firestore"
 
 const app = initializeApp({
@@ -8,8 +14,10 @@ const app = initializeApp({
   projectId: "code-pad",
 })
 
-export const auth = getAuth(app)
-setPersistence(auth, browserLocalPersistence)
+export const auth = initializeAuth(app, {
+  persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence],
+  popupRedirectResolver: browserPopupRedirectResolver,
+})
 
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache(),
