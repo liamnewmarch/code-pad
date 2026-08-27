@@ -1,4 +1,5 @@
 import { defineStore } from "pinia"
+import { toRaw } from "vue"
 import type { User } from "firebase/auth"
 import { GoogleAuthProvider, onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth"
 import { addDoc, collection, deleteDoc, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore"
@@ -27,6 +28,7 @@ function toMillis(v: unknown): number {
 
 export interface State {
    loading: boolean;
+   loadPromise?: Promise<void>;
    projects: Record<string, Project>;
    user?: User;
 }
@@ -37,16 +39,16 @@ export const useProjectStore = defineStore("projects", {
     projects: {},
   }),
   actions: {
-    init() {
-      onAuthStateChanged(auth, async (user) => {
+    async init() {
+      await this.hydrateLocal()
+      this.loading = false
+      onAuthStateChanged(auth, (user) => {
         if (user) {
           this.user = user
-          await this.hydrateLocal()
-          this.loading = false
-          this.loadProjects()
+          this.loadPromise = this.loadProjects()
         } else {
           delete this.user
-          this.loading = false
+          delete this.loadPromise
         }
       })
     },
@@ -59,7 +61,6 @@ export const useProjectStore = defineStore("projects", {
       if (!this.user) return
       try {
         const result = await getDocs(projectsRef(this.user.uid))
-        const projects: Record<string, Project> = {}
         for (const snapshot of result.docs) {
           const d = snapshot.data()
           const project: Project = {
@@ -70,57 +71,93 @@ export const useProjectStore = defineStore("projects", {
             javascript: toStr(d["javascript"]),
             created: toMillis(d["created"]),
             updated: toMillis(d["updated"]),
+            cloudId: snapshot.id,
+            syncedAt: Date.now(),
           }
-          projects[snapshot.id] = project
+          this.projects[snapshot.id] = project
           await putLocalProject(project)
         }
-        this.projects = projects
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)
       }
     },
     async addProject(data: ProjectData = defaultData) {
-      if (!this.user) return
+      const project: Project = {
+        name: data.name,
+        css: data.css,
+        html: data.html,
+        javascript: data.javascript,
+        created: Date.now(),
+        updated: Date.now(),
+        key: crypto.randomUUID(),
+      }
       try {
-        const snapshot = await addDoc(projectsRef(this.user.uid), {
-          ...data,
-          created: Timestamp.now(),
-          updated: Timestamp.now(),
-        })
-        const project: Project = { ...data, created: Date.now(), updated: Date.now(), key: snapshot.id }
-        this.projects[snapshot.id] = project
+        this.projects[project.key] = project
         await putLocalProject(project)
-        return snapshot.id
+        return project.key
+      } catch (e) {
+        console.log(e instanceof Error ? e.message : e)
+      }
+    },
+    async saveToAccount(key: string) {
+      if (!this.user) {
+        this.signIn()
+        return
+      }
+      await this.loadPromise
+      const project = this.projects[key]
+      if (!project) return
+      try {
+        const data = { name: project.name, css: project.css, html: project.html, javascript: project.javascript }
+        if (project.cloudId) {
+          await updateDoc(projectRef(this.user.uid, project.cloudId), { ...data, updated: Timestamp.now() })
+        } else {
+          const snapshot = await addDoc(projectsRef(this.user.uid), {
+            ...data,
+            created: Timestamp.now(),
+            updated: Timestamp.now(),
+          })
+          this.projects[key].cloudId = snapshot.id
+        }
+        this.projects[key].syncedAt = Date.now()
+        await putLocalProject(toRaw(this.projects[key]))
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)
       }
     },
     async deleteProject({ key }: { key: string }) {
-      if (!this.user) return
       try {
-        await deleteDoc(projectRef(this.user.uid, key))
+        const cloudId = this.projects[key]?.cloudId
         delete this.projects[key]
         await deleteLocalProject(key)
+        if (this.user && cloudId) {
+          deleteDoc(projectRef(this.user.uid, cloudId)).catch((e) => {
+            console.log(e instanceof Error ? e.message : e)
+          })
+        }
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)
       }
     },
     async updateProject({ key, name, value }: { key: string; name: keyof ProjectData; value: string }) {
-      if (!this.user) return
       try {
         this.projects[key][name] = value
         this.projects[key].updated = Date.now()
-        await updateDoc(projectRef(this.user.uid, key), {
-          [name]: value,
-          updated: Timestamp.now(),
-        })
-        await putLocalProject(this.projects[key])
+        await putLocalProject(toRaw(this.projects[key]))
+        const cloudId = this.projects[key].cloudId
+        if (this.user && cloudId) {
+          updateDoc(projectRef(this.user.uid, cloudId), { [name]: value, updated: Timestamp.now() }).catch((e) => {
+            console.log(e instanceof Error ? e.message : e)
+          })
+        }
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)
       }
     },
     signIn() {
-      signInWithRedirect(auth, new GoogleAuthProvider())
+      signInWithRedirect(auth, new GoogleAuthProvider()).catch((e) => {
+        console.log(e instanceof Error ? e.message : e)
+      })
     },
     signOut() {
       signOut(auth)

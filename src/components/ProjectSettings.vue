@@ -9,6 +9,7 @@ const props = defineProps<{ project?: Project }>()
 const store = useProjectStore()
 const modalCopied = ref<InstanceType<typeof ModalDialog>>()
 const modalDelete = ref<InstanceType<typeof ModalDialog>>()
+const saving = ref(false)
 
 const modalCopiedButtons = [{ label: "Dismiss" }]
 const modalDeleteButtons = [{
@@ -32,6 +33,13 @@ async function deleteProject() {
   const value = await modalDelete.value?.show()
   if (!value) return
   await store.deleteProject({ key: props.project.key })
+}
+
+async function saveToAccount() {
+  if (!props.project) return
+  saving.value = true
+  await store.saveToAccount(props.project.key)
+  saving.value = false
 }
 
 async function updateName(event: InputEvent) {
@@ -63,6 +71,18 @@ async function updateName(event: InputEvent) {
           class="settings__input"
           @input="updateName"
         >
+      </div>
+      <div class="settings__item">
+        <span class="settings__label">
+          {{ project.cloudId ? "Saved to your account" : "Not saved to your account" }}
+        </span>
+        <button
+          class="settings__button"
+          :disabled="saving"
+          @click.prevent="saveToAccount"
+        >
+          {{ saving ? "Saving…" : "Save to account" }}
+        </button>
       </div>
       <div class="settings__item">
         <button
@@ -103,6 +123,7 @@ async function updateName(event: InputEvent) {
 .settings__item {
   align-items: center;
   display: flex;
+  gap: 1rem;
   margin: 1rem 0;
 }
 
@@ -112,7 +133,6 @@ async function updateName(event: InputEvent) {
 
 .settings__input {
   background: #333;
-  margin-left: 1rem;
   padding: 1rem;
   width: 100%;
 }
@@ -127,6 +147,5 @@ async function updateName(event: InputEvent) {
 
 .settings__button--delete {
   background: #a22;
-  margin-left: 1rem;
 }
 </style>

@@ -56,6 +56,11 @@ function sort(key: keyof Project, array: Project[], descending = false) {
         :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"
       >
         {{ project.name }}
+        <span
+          v-if="project.cloudId"
+          aria-label="Saved to account"
+          class="list__item-sync"
+        >☁</span>
       </RouterLink>
     </div>
   </section>
@@ -87,6 +92,7 @@ function sort(key: keyof Project, array: Project[], descending = false) {
   hyphens: auto;
   margin: 0 1rem 1rem 0;
   padding: 3rem 1rem;
+  position: relative;
   text-align: center;
   text-decoration: none;
   word-break: break-all;
@@ -94,5 +100,12 @@ function sort(key: keyof Project, array: Project[], descending = false) {
 
 .list__item--add {
   background-color: #333;
+}
+
+.list__item-sync {
+  opacity: .6;
+  position: absolute;
+  right: .5rem;
+  top: .5rem;
 }
 </style>

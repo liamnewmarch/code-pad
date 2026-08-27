@@ -3,7 +3,6 @@ import { useRoute } from "vue-router"
 import { useProjectStore } from "../stores/project.js"
 import AppHeader from "./AppHeader.vue"
 import LoadingState from "./LoadingState.vue"
-import SignIn from "./SignIn.vue"
 
 const route = useRoute()
 const store = useProjectStore()
@@ -16,9 +15,10 @@ store.init()
     :class="`view--${String(route.name)} ${String(route.name)}`"
   >
     <LoadingState v-if="store.loading" />
-    <AppHeader v-if="!store.loading && store.user" />
-    <RouterView v-if="!store.loading && store.user" />
-    <SignIn v-if="!store.loading && !store.user" />
+    <template v-else>
+      <AppHeader />
+      <RouterView />
+    </template>
   </div>
 </template>
 

@@ -36,6 +36,10 @@ async function importJSON() {
   }
 }
 
+function signIn() {
+  store.signIn()
+}
+
 async function signOut() {
   await store.signOut()
 }
@@ -62,13 +66,24 @@ async function showModal(text: string) {
     >
       Import from clipboard
     </button>
-    <h2> Sign out </h2>
-    <button
-      class="global-settings__button"
-      @click="signOut"
-    >
-      Sign out from Code Pad
-    </button>
+    <template v-if="store.user">
+      <h2> Sign out </h2>
+      <button
+        class="global-settings__button"
+        @click="signOut"
+      >
+        Sign out from Code Pad
+      </button>
+    </template>
+    <template v-else>
+      <h2> Sign in </h2>
+      <button
+        class="global-settings__button"
+        @click="signIn"
+      >
+        Sign in with Google
+      </button>
+    </template>
     <h2>About</h2>
     <p>Code Pad version {{ version }}</p>
     <p>© {{ year }} Liam Newmarch</p>
