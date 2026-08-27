@@ -74,7 +74,7 @@ async function updateName(event: InputEvent) {
       </div>
       <div class="settings__item">
         <span class="settings__label">
-          {{ project.cloudId ? "Saved to your account" : "Not saved to your account" }}
+          {{ project.syncedAt ? "Saved to your account" : "Not saved to your account" }}
         </span>
         <button
           class="settings__button"

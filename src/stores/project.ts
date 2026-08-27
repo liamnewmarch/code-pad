@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { toRaw } from "vue"
 import type { User } from "firebase/auth"
 import { GoogleAuthProvider, onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth"
-import { addDoc, collection, deleteDoc, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore"
+import { collection, doc, getDocs, Timestamp, updateDoc, writeBatch } from "firebase/firestore"
 
 import { auth, db } from "../firebase.js"
 import { deleteLocalProject, getAllLocalProjects, putLocalProject } from "../local/db.js"
@@ -15,8 +15,13 @@ const defaultData: ProjectData = {
   name: "Untitled",
 }
 
+type FileType = "css" | "html" | "javascript"
+
 const projectsRef = (uid: string) => collection(db, "users", uid, "projects")
 const projectRef = (uid: string, key: string) => doc(db, "users", uid, "projects", key)
+const filesRef = (uid: string, key: string) => collection(db, "users", uid, "projects", key, "files")
+const fileRef = (uid: string, key: string, type: FileType) => doc(db, "users", uid, "projects", key, "files", type)
+const generateId = () => doc(collection(db, "_ids")).id
 
 function toStr(v: unknown): string {
   return typeof v === "string" ? v : ""
@@ -24,6 +29,19 @@ function toStr(v: unknown): string {
 
 function toMillis(v: unknown): number {
   return v instanceof Timestamp ? v.toMillis() : Date.now()
+}
+
+async function migrateLegacyProject(uid: string, key: string, project: Project) {
+  const batch = writeBatch(db)
+  batch.set(projectRef(uid, key), {
+    name: project.name,
+    created: Timestamp.fromMillis(project.created),
+    updated: Timestamp.fromMillis(project.updated),
+  })
+  batch.set(fileRef(uid, key, "css"), { value: project.css })
+  batch.set(fileRef(uid, key, "html"), { value: project.html })
+  batch.set(fileRef(uid, key, "javascript"), { value: project.javascript })
+  await batch.commit()
 }
 
 export interface State {
@@ -61,22 +79,33 @@ export const useProjectStore = defineStore("projects", {
       if (!this.user) return
       try {
         const result = await getDocs(projectsRef(this.user.uid))
+        const projects: Record<string, Project> = {}
         for (const snapshot of result.docs) {
           const d = snapshot.data()
+          const existing = this.projects[snapshot.id]
+          const hasEmbeddedContent = typeof d["css"] === "string"
           const project: Project = {
             key: snapshot.id,
             name: toStr(d["name"]),
-            css: toStr(d["css"]),
-            html: toStr(d["html"]),
-            javascript: toStr(d["javascript"]),
+            css: hasEmbeddedContent ? toStr(d["css"]) : (existing?.css ?? ""),
+            html: hasEmbeddedContent ? toStr(d["html"]) : (existing?.html ?? ""),
+            javascript: hasEmbeddedContent ? toStr(d["javascript"]) : (existing?.javascript ?? ""),
             created: toMillis(d["created"]),
             updated: toMillis(d["updated"]),
-            cloudId: snapshot.id,
             syncedAt: Date.now(),
+            contentLoaded: hasEmbeddedContent || (existing?.contentLoaded ?? false),
           }
-          this.projects[snapshot.id] = project
+          projects[snapshot.id] = project
           await putLocalProject(project)
+          if (hasEmbeddedContent) {
+            try {
+              await migrateLegacyProject(this.user.uid, snapshot.id, project)
+            } catch (e) {
+              console.log(e instanceof Error ? e.message : e)
+            }
+          }
         }
+        Object.assign(this.projects, projects)
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)
       }
@@ -89,12 +118,35 @@ export const useProjectStore = defineStore("projects", {
         javascript: data.javascript,
         created: Date.now(),
         updated: Date.now(),
-        key: crypto.randomUUID(),
+        key: generateId(),
+        contentLoaded: true,
       }
       try {
         this.projects[project.key] = project
         await putLocalProject(project)
         return project.key
+      } catch (e) {
+        console.log(e instanceof Error ? e.message : e)
+      }
+    },
+    async loadProjectContent(key: string) {
+      const project = this.projects[key]
+      if (!project || project.contentLoaded) return
+      if (!this.user || !project.syncedAt) {
+        this.projects[key].contentLoaded = true
+        await putLocalProject(toRaw(this.projects[key]))
+        return
+      }
+      try {
+        const result = await getDocs(filesRef(this.user.uid, key))
+        for (const snapshot of result.docs) {
+          const type = snapshot.id
+          if (type === "css" || type === "html" || type === "javascript") {
+            this.projects[key][type] = toStr(snapshot.data()["value"])
+          }
+        }
+        this.projects[key].contentLoaded = true
+        await putLocalProject(toRaw(this.projects[key]))
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)
       }
@@ -108,18 +160,17 @@ export const useProjectStore = defineStore("projects", {
       const project = this.projects[key]
       if (!project) return
       try {
-        const data = { name: project.name, css: project.css, html: project.html, javascript: project.javascript }
-        if (project.cloudId) {
-          await updateDoc(projectRef(this.user.uid, project.cloudId), { ...data, updated: Timestamp.now() })
-        } else {
-          const snapshot = await addDoc(projectsRef(this.user.uid), {
-            ...data,
-            created: Timestamp.now(),
-            updated: Timestamp.now(),
-          })
-          this.projects[key].cloudId = snapshot.id
-        }
+        const metaData = project.syncedAt ?
+          { name: project.name, updated: Timestamp.now() } :
+          { name: project.name, created: Timestamp.now(), updated: Timestamp.now() }
+        const batch = writeBatch(db)
+        batch.set(projectRef(this.user.uid, key), metaData, { merge: true })
+        batch.set(fileRef(this.user.uid, key, "css"), { value: project.css })
+        batch.set(fileRef(this.user.uid, key, "html"), { value: project.html })
+        batch.set(fileRef(this.user.uid, key, "javascript"), { value: project.javascript })
+        await batch.commit()
         this.projects[key].syncedAt = Date.now()
+        this.projects[key].contentLoaded = true
         await putLocalProject(toRaw(this.projects[key]))
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)
@@ -127,11 +178,16 @@ export const useProjectStore = defineStore("projects", {
     },
     async deleteProject({ key }: { key: string }) {
       try {
-        const cloudId = this.projects[key]?.cloudId
+        const synced = this.projects[key]?.syncedAt
         delete this.projects[key]
         await deleteLocalProject(key)
-        if (this.user && cloudId) {
-          deleteDoc(projectRef(this.user.uid, cloudId)).catch((e) => {
+        if (this.user && synced) {
+          const batch = writeBatch(db)
+          batch.delete(projectRef(this.user.uid, key))
+          batch.delete(fileRef(this.user.uid, key, "css"))
+          batch.delete(fileRef(this.user.uid, key, "html"))
+          batch.delete(fileRef(this.user.uid, key, "javascript"))
+          batch.commit().catch((e) => {
             console.log(e instanceof Error ? e.message : e)
           })
         }
@@ -144,11 +200,20 @@ export const useProjectStore = defineStore("projects", {
         this.projects[key][name] = value
         this.projects[key].updated = Date.now()
         await putLocalProject(toRaw(this.projects[key]))
-        const cloudId = this.projects[key].cloudId
-        if (this.user && cloudId) {
-          updateDoc(projectRef(this.user.uid, cloudId), { [name]: value, updated: Timestamp.now() }).catch((e) => {
-            console.log(e instanceof Error ? e.message : e)
-          })
+        const synced = this.projects[key].syncedAt
+        if (this.user && synced) {
+          if (name === "name") {
+            updateDoc(projectRef(this.user.uid, key), { name: value, updated: Timestamp.now() }).catch((e) => {
+              console.log(e instanceof Error ? e.message : e)
+            })
+          } else {
+            updateDoc(fileRef(this.user.uid, key, name), { value }).catch((e) => {
+              console.log(e instanceof Error ? e.message : e)
+            })
+            updateDoc(projectRef(this.user.uid, key), { updated: Timestamp.now() }).catch((e) => {
+              console.log(e instanceof Error ? e.message : e)
+            })
+          }
         }
       } catch (e) {
         console.log(e instanceof Error ? e.message : e)

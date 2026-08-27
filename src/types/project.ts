@@ -6,8 +6,8 @@ export interface Project {
   created: number
   updated: number
   key: string
-  cloudId?: string
   syncedAt?: number
+  contentLoaded: boolean
 }
 
 export type ProjectData = Pick<Project, "css" | "html" | "javascript" | "name">

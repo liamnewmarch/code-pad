@@ -57,7 +57,7 @@ function sort(key: keyof Project, array: Project[], descending = false) {
       >
         {{ project.name }}
         <span
-          v-if="project.cloudId"
+          v-if="project.syncedAt"
           aria-label="Saved to account"
           class="list__item-sync"
         >☁</span>
