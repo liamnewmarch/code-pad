@@ -1,7 +1,14 @@
 import { defineStore } from "pinia"
 import { toRaw } from "vue"
 import type { User } from "firebase/auth"
-import { getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signInWithRedirect, signOut } from "firebase/auth"
+import {
+  getRedirectResult,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithPopup,
+  signInWithRedirect,
+  signOut,
+} from "firebase/auth"
 import { collection, doc, getDocs, Timestamp, updateDoc, writeBatch } from "firebase/firestore"
 
 import { auth, db } from "../firebase.js"
@@ -227,8 +234,14 @@ export const useProjectStore = defineStore("projects", {
       }
     },
     async signIn() {
+      const provider = new GoogleAuthProvider()
       try {
-        await signInWithRedirect(auth, new GoogleAuthProvider())
+        // The redirect flow needs the auth handler to be same-origin with the
+        // app, which is only true once deployed. In dev fall back to a popup,
+        // which passes the credential back by postMessage instead.
+        await (import.meta.env.DEV ?
+          signInWithPopup(auth, provider) :
+          signInWithRedirect(auth, provider))
       } catch (e) {
         this.signInError = e instanceof Error ? e.message : String(e)
         console.log(this.signInError)

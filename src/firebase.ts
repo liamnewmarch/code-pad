@@ -10,7 +10,7 @@ import { initializeFirestore, persistentLocalCache } from "firebase/firestore"
 
 const app = initializeApp({
   apiKey: "AIzaSyCXzUiopEMyN3XFUav9LIQ1MLP7X7tpvRw",
-  authDomain: "code-pad.web.app",
+  authDomain: import.meta.env.DEV ? "code-pad.web.app" : location.host,
   projectId: "code-pad",
 })
 
