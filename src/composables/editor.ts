@@ -6,10 +6,11 @@ import { oneDark } from "@codemirror/theme-one-dark"
 import { css } from "@codemirror/lang-css"
 import { html } from "@codemirror/lang-html"
 import { javascript } from "@codemirror/lang-javascript"
+import type { FileType } from "../types/project.js"
 
 const langMap = { css, html, javascript }
 
-export type LangKey = keyof typeof langMap
+export type LangKey = FileType
 
 export function createEditor(
     container: HTMLElement,
