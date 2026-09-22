@@ -1,18 +1,20 @@
 import { defineStore } from "pinia"
 import { toRaw } from "vue"
 import type { User } from "firebase/auth"
-import {
-  getRedirectResult,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithPopup,
-  signInWithRedirect,
-  signOut,
-} from "firebase/auth"
-import { collection, doc, getDocs, Timestamp, updateDoc, writeBatch } from "firebase/firestore"
 
-import { auth, db } from "../firebase.js"
 import { deleteLocalProject, getAllLocalProjects, putLocalProject } from "../local/db.js"
+import {
+  fetchProjectFiles,
+  fetchProjects,
+  generateId,
+  migrateLegacyProject,
+  pushProject,
+  pushProjectFile,
+  pushProjectName,
+  removeProject,
+  type RemoteProjectRow,
+} from "../remote/db.js"
+import { consumeRedirect, signIn as remoteSignIn, signOut as remoteSignOut, watchUser } from "../remote/auth.js"
 import type { Project, ProjectData } from "../types/project.js"
 
 const defaultData: ProjectData = {
@@ -22,33 +24,28 @@ const defaultData: ProjectData = {
   name: "Untitled",
 }
 
-type FileType = "css" | "html" | "javascript"
-
-const projectsRef = (uid: string) => collection(db, "users", uid, "projects")
-const projectRef = (uid: string, key: string) => doc(db, "users", uid, "projects", key)
-const filesRef = (uid: string, key: string) => collection(db, "users", uid, "projects", key, "files")
-const fileRef = (uid: string, key: string, type: FileType) => doc(db, "users", uid, "projects", key, "files", type)
-const generateId = () => doc(collection(db, "_ids")).id
-
-function toStr(v: unknown): string {
-  return typeof v === "string" ? v : ""
+function logError(e: unknown): void {
+  console.log(e instanceof Error ? e.message : e)
 }
 
-function toMillis(v: unknown): number {
-  return v instanceof Timestamp ? v.toMillis() : Date.now()
+function fallbackContent(existing?: Project): Pick<ProjectData, "css" | "html" | "javascript"> {
+  return {
+    css: existing?.css ?? "",
+    html: existing?.html ?? "",
+    javascript: existing?.javascript ?? "",
+  }
 }
 
-async function migrateLegacyProject(uid: string, key: string, project: Project) {
-  const batch = writeBatch(db)
-  batch.set(projectRef(uid, key), {
-    name: project.name,
-    created: Timestamp.fromMillis(project.created),
-    updated: Timestamp.fromMillis(project.updated),
-  })
-  batch.set(fileRef(uid, key, "css"), { value: project.css })
-  batch.set(fileRef(uid, key, "html"), { value: project.html })
-  batch.set(fileRef(uid, key, "javascript"), { value: project.javascript })
-  await batch.commit()
+async function pushUpdate(uid: string, key: string, name: keyof ProjectData, value: string): Promise<void> {
+  try {
+    if (name === "name") {
+      await pushProjectName(uid, key, value)
+    } else {
+      await pushProjectFile(uid, key, name, value)
+    }
+  } catch (e) {
+    logError(e)
+  }
 }
 
 export interface State {
@@ -68,7 +65,7 @@ export const useProjectStore = defineStore("projects", {
     async init() {
       await this.hydrateLocal()
       this.loading = false
-      onAuthStateChanged(auth, (user) => {
+      watchUser((user: User | null) => {
         if (user) {
           this.user = user
           this.loadPromise = this.loadProjects()
@@ -78,10 +75,10 @@ export const useProjectStore = defineStore("projects", {
         }
       })
       try {
-        await getRedirectResult(auth)
+        await consumeRedirect()
       } catch (e) {
         this.signInError = e instanceof Error ? e.message : String(e)
-        console.log(this.signInError)
+        logError(e)
       }
     },
     async hydrateLocal() {
@@ -89,39 +86,36 @@ export const useProjectStore = defineStore("projects", {
         this.projects[project.key] = project
       }
     },
+    mergeRemoteRow(row: RemoteProjectRow): Project {
+      const existing = this.projects[row.key]
+      const content = row.embeddedContent ?? fallbackContent(existing)
+      const contentLoaded = Boolean(row.embeddedContent) || Boolean(existing?.contentLoaded)
+      return {
+        key: row.key,
+        name: row.name,
+        created: row.created,
+        updated: row.updated,
+        syncedAt: Date.now(),
+        contentLoaded,
+        ...content,
+      }
+    },
     async loadProjects() {
       if (!this.user) return
       try {
-        const result = await getDocs(projectsRef(this.user.uid))
+        const rows = await fetchProjects(this.user.uid)
         const projects: Record<string, Project> = {}
-        for (const snapshot of result.docs) {
-          const d = snapshot.data()
-          const existing = this.projects[snapshot.id]
-          const hasEmbeddedContent = typeof d["css"] === "string"
-          const project: Project = {
-            key: snapshot.id,
-            name: toStr(d["name"]),
-            css: hasEmbeddedContent ? toStr(d["css"]) : (existing?.css ?? ""),
-            html: hasEmbeddedContent ? toStr(d["html"]) : (existing?.html ?? ""),
-            javascript: hasEmbeddedContent ? toStr(d["javascript"]) : (existing?.javascript ?? ""),
-            created: toMillis(d["created"]),
-            updated: toMillis(d["updated"]),
-            syncedAt: Date.now(),
-            contentLoaded: hasEmbeddedContent || (existing?.contentLoaded ?? false),
-          }
-          projects[snapshot.id] = project
+        for (const row of rows) {
+          const project = this.mergeRemoteRow(row)
+          projects[row.key] = project
           await putLocalProject(project)
-          if (hasEmbeddedContent) {
-            try {
-              await migrateLegacyProject(this.user.uid, snapshot.id, project)
-            } catch (e) {
-              console.log(e instanceof Error ? e.message : e)
-            }
+          if (row.embeddedContent) {
+            await migrateLegacyProject(this.user.uid, row.key, project).catch(logError)
           }
         }
         Object.assign(this.projects, projects)
       } catch (e) {
-        console.log(e instanceof Error ? e.message : e)
+        logError(e)
       }
     },
     async addProject(data: ProjectData = defaultData) {
@@ -140,7 +134,7 @@ export const useProjectStore = defineStore("projects", {
         this.projects[project.key] = project
         return project.key
       } catch (e) {
-        console.log(e instanceof Error ? e.message : e)
+        logError(e)
       }
     },
     async loadProjectContent(key: string) {
@@ -152,17 +146,11 @@ export const useProjectStore = defineStore("projects", {
         return
       }
       try {
-        const result = await getDocs(filesRef(this.user.uid, key))
-        for (const snapshot of result.docs) {
-          const type = snapshot.id
-          if (type === "css" || type === "html" || type === "javascript") {
-            this.projects[key][type] = toStr(snapshot.data()["value"])
-          }
-        }
+        Object.assign(this.projects[key], await fetchProjectFiles(this.user.uid, key))
         this.projects[key].contentLoaded = true
         await putLocalProject(toRaw(this.projects[key]))
       } catch (e) {
-        console.log(e instanceof Error ? e.message : e)
+        logError(e)
       }
     },
     async saveToAccount(key: string) {
@@ -174,20 +162,12 @@ export const useProjectStore = defineStore("projects", {
       const project = this.projects[key]
       if (!project) return
       try {
-        const metaData = project.syncedAt ?
-          { name: project.name, updated: Timestamp.now() } :
-          { name: project.name, created: Timestamp.now(), updated: Timestamp.now() }
-        const batch = writeBatch(db)
-        batch.set(projectRef(this.user.uid, key), metaData, { merge: true })
-        batch.set(fileRef(this.user.uid, key, "css"), { value: project.css })
-        batch.set(fileRef(this.user.uid, key, "html"), { value: project.html })
-        batch.set(fileRef(this.user.uid, key, "javascript"), { value: project.javascript })
-        await batch.commit()
+        await pushProject(this.user.uid, key, project, { isNew: !project.syncedAt })
         this.projects[key].syncedAt = Date.now()
         this.projects[key].contentLoaded = true
         await putLocalProject(toRaw(this.projects[key]))
       } catch (e) {
-        console.log(e instanceof Error ? e.message : e)
+        logError(e)
       }
     },
     async deleteProject({ key }: { key: string }) {
@@ -196,17 +176,10 @@ export const useProjectStore = defineStore("projects", {
         delete this.projects[key]
         await deleteLocalProject(key)
         if (this.user && synced) {
-          const batch = writeBatch(db)
-          batch.delete(projectRef(this.user.uid, key))
-          batch.delete(fileRef(this.user.uid, key, "css"))
-          batch.delete(fileRef(this.user.uid, key, "html"))
-          batch.delete(fileRef(this.user.uid, key, "javascript"))
-          batch.commit().catch((e) => {
-            console.log(e instanceof Error ? e.message : e)
-          })
+          removeProject(this.user.uid, key).catch(logError)
         }
       } catch (e) {
-        console.log(e instanceof Error ? e.message : e)
+        logError(e)
       }
     },
     async updateProject({ key, name, value }: { key: string; name: keyof ProjectData; value: string }) {
@@ -216,39 +189,22 @@ export const useProjectStore = defineStore("projects", {
         await putLocalProject(toRaw(this.projects[key]))
         const synced = this.projects[key].syncedAt
         if (this.user && synced) {
-          if (name === "name") {
-            updateDoc(projectRef(this.user.uid, key), { name: value, updated: Timestamp.now() }).catch((e) => {
-              console.log(e instanceof Error ? e.message : e)
-            })
-          } else {
-            updateDoc(fileRef(this.user.uid, key, name), { value }).catch((e) => {
-              console.log(e instanceof Error ? e.message : e)
-            })
-            updateDoc(projectRef(this.user.uid, key), { updated: Timestamp.now() }).catch((e) => {
-              console.log(e instanceof Error ? e.message : e)
-            })
-          }
+          void pushUpdate(this.user.uid, key, name, value)
         }
       } catch (e) {
-        console.log(e instanceof Error ? e.message : e)
+        logError(e)
       }
     },
     async signIn() {
-      const provider = new GoogleAuthProvider()
       try {
-        // The redirect flow needs the auth handler to be same-origin with the
-        // app, which is only true once deployed. In dev fall back to a popup,
-        // which passes the credential back by postMessage instead.
-        await (import.meta.env.DEV ?
-          signInWithPopup(auth, provider) :
-          signInWithRedirect(auth, provider))
+        await remoteSignIn()
       } catch (e) {
         this.signInError = e instanceof Error ? e.message : String(e)
-        console.log(this.signInError)
+        logError(e)
       }
     },
     signOut() {
-      signOut(auth)
+      remoteSignOut()
     },
   },
 })
