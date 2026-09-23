@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useProjectStore } from "../stores/project.js"
 import { stringParam } from "../utils.js"
@@ -11,10 +11,9 @@ const router = useRouter()
 
 const key = computed(() => stringParam(route.params.key))
 const project = computed(() => store.projects[key.value])
-const ready = ref(false)
+const ready = computed(() => project.value?.contentLoaded ?? false)
 
 watch(key, async (currentKey) => {
-  ready.value = false
   const current = store.projects[currentKey]
   if (!current) {
     router.push({ name: "list" })
@@ -23,7 +22,6 @@ watch(key, async (currentKey) => {
   if (!current.contentLoaded) {
     await store.loadProjectContent(currentKey)
   }
-  ready.value = true
 }, { immediate: true })
 </script>
 

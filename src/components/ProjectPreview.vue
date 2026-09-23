@@ -8,7 +8,8 @@ const props = defineProps<{ project?: Project }>()
 const logging = ref<unknown[][]>([])
 const srcdoc = ref<string>()
 
-const template = ({ css, html, javascript }: Project) => `<!DOCTYPE html>
+function template({ css, html, javascript }: Project): string {
+  return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -21,6 +22,7 @@ const template = ({ css, html, javascript }: Project) => `<!DOCTYPE html>
   </body>
 </html>
 `
+}
 
 type ConsoleMethod = "error" | "info" | "log" | "warn"
 

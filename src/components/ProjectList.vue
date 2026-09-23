@@ -2,40 +2,32 @@
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useProjectStore } from "../stores/project.js"
-import type { Project } from "../types/project.js"
 
 const store = useProjectStore()
 const router = useRouter()
 const filterText = ref("")
 
-const projects = computed(() => Object.values(store.projects))
+const projectCount = computed(() => Object.keys(store.projects).length)
+
+// Newest first, filtered by name against the filter box.
+const visibleProjects = computed(() => {
+  const lower = filterText.value.trim().toLowerCase()
+  const projects = Object.values(store.projects).filter((project) => {
+    return lower ? project.name.trim().toLowerCase().includes(lower) : true
+  })
+  return projects.sort((a, b) => b.created - a.created)
+})
 
 async function add() {
   const key = await store.addProject()
   if (key) router.push({ name: "editor", params: { key, type: "html" }})
-}
-
-function filter(key: keyof Project, text: string, array: Project[]) {
-  const lower = text.trim().toLowerCase()
-  return array.filter((item) => {
-    return lower ? String(item[key]).trim().toLowerCase().includes(lower) : true
-  })
-}
-
-function sort(key: keyof Project, array: Project[], descending = false) {
-  const fn = (a: Project, b: Project) => {
-    const av = String(a[key])
-    const bv = String(b[key])
-    return av < bv ? -1 : av > bv ? 1 : 0
-  }
-  return descending ? [...array].sort(fn).reverse() : [...array].sort(fn)
 }
 </script>
 
 <template>
   <section class="view list">
     <input
-      v-if="projects.length > 12"
+      v-if="projectCount > 12"
       v-model="filterText"
       aria-label="Filter projects"
       class="list__filter"
@@ -50,8 +42,8 @@ function sort(key: keyof Project, array: Project[], descending = false) {
         New project
       </button>
       <RouterLink
-        v-for="(project, index) of sort('created', filter('name', filterText, projects), true)"
-        :key="index"
+        v-for="project of visibleProjects"
+        :key="project.key"
         class="list__item button"
         :to="{ name: 'editor', params: { key: project.key, type: 'html' }}"
       >

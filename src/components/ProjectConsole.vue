@@ -35,19 +35,21 @@ function isErrorLike(v: unknown): v is ErrorLike {
   return v !== null && typeof v === "object" && "message" in v
 }
 
-function format(line: unknown[]) {
-  // Uses typeof/in checks because instanceof fails across iframe Realms.
-  return line.map((item) => {
-    if (typeof item === "function") return "ƒ " + item.toString()
-    // Iterable objects (Array, Uint8Array, etc.)
-    if (isIterableLike(item)) {
-      const content = [...item].map((v) => JSON.stringify(v)).join(", ")
-      return `${item.constructor.name}(${item.length ?? "?"}) [${content}]`
-    }
-    // Error-like objects
-    if (isErrorLike(item)) return `${item.constructor.name}: ${String(item.message)}`
-    return JSON.stringify(item)
-  }).join(", ")
+// Uses typeof/in checks because instanceof fails across iframe Realms.
+function formatItem(item: unknown): string {
+  if (typeof item === "function") return "ƒ " + item.toString()
+  // Iterable objects (Array, Uint8Array, etc.)
+  if (isIterableLike(item)) {
+    const content = [...item].map((v) => JSON.stringify(v)).join(", ")
+    return `${item.constructor.name}(${item.length ?? "?"}) [${content}]`
+  }
+  // Error-like objects
+  if (isErrorLike(item)) return `${item.constructor.name}: ${String(item.message)}`
+  return JSON.stringify(item)
+}
+
+function format(line: unknown[]): string {
+  return line.map(formatItem).join(", ")
 }
 
 function scrollToBottom() {

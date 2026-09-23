@@ -2,6 +2,19 @@
 import { computed } from "vue"
 import { useRoute } from "vue-router"
 
+interface Tab {
+  aria: string
+  label: string
+  to: { name: string; params?: { type: string } }
+}
+
+const projectTabs: Tab[] = [
+  { aria: "HTML editor", label: "HTML", to: { name: "editor", params: { type: "html" }}},
+  { aria: "CSS editor", label: "CSS", to: { name: "editor", params: { type: "css" }}},
+  { aria: "JavaScript editor", label: "JS", to: { name: "editor", params: { type: "javascript" }}},
+  { aria: "Result", label: "Result", to: { name: "result" }},
+]
+
 const route = useRoute()
 const isListRoute = computed(() => route.name === "list")
 const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
@@ -53,40 +66,15 @@ const isGlobalSettingsRoute = computed(() => route.name === "global-settings")
         ←
       </RouterLink>
       <RouterLink
+        v-for="tab of projectTabs"
+        :key="tab.label"
         active-class="top-nav__item--active"
-        aria-label="HTML editor"
+        :aria-label="tab.aria"
         class="top-nav__item top-nav__item--tab"
         replace
-        :to="{ name: 'editor', params: { type: 'html' }}"
+        :to="tab.to"
       >
-        HTML
-      </RouterLink>
-      <RouterLink
-        active-class="top-nav__item--active"
-        aria-label="CSS editor"
-        class="top-nav__item top-nav__item--tab"
-        replace
-        :to="{ name: 'editor', params: { type: 'css' }}"
-      >
-        CSS
-      </RouterLink>
-      <RouterLink
-        active-class="top-nav__item--active"
-        aria-label="JavaScript editor"
-        class="top-nav__item top-nav__item--tab"
-        replace
-        :to="{ name: 'editor', params: { type: 'javascript' }}"
-      >
-        JS
-      </RouterLink>
-      <RouterLink
-        active-class="top-nav__item--active"
-        aria-label="Result"
-        class="top-nav__item top-nav__item--tab"
-        replace
-        :to="{ name: 'result' }"
-      >
-        Result
+        {{ tab.label }}
       </RouterLink>
       <RouterLink
         active-class="top-nav__item--active"

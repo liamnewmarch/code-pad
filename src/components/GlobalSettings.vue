@@ -49,11 +49,7 @@ async function signIn() {
   signingIn.value = false
 }
 
-async function signOut() {
-  await store.signOut()
-}
-
-async function showModal(text: string) {
+function showModal(text: string) {
   modalText.value = text
   return modal.value?.show()
 }
@@ -79,7 +75,7 @@ async function showModal(text: string) {
       <h2> Sign out </h2>
       <button
         class="global-settings__button"
-        @click="signOut"
+        @click="store.signOut"
       >
         Sign out from Code Pad
       </button>
