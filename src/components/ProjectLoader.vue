@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useProjectStore } from "../stores/project.js"
 import { stringParam } from "../utils.js"
@@ -12,23 +12,50 @@ const router = useRouter()
 const key = computed(() => stringParam(route.params.key))
 const project = computed(() => store.projects[key.value])
 const ready = computed(() => project.value?.contentLoaded ?? false)
+const failed = ref(false)
 
-watch(key, async (currentKey) => {
+async function load(currentKey: string) {
   const current = store.projects[currentKey]
   if (!current) {
     router.push({ name: "list" })
     return
   }
+  failed.value = false
   if (!current.contentLoaded) {
-    await store.loadProjectContent(currentKey)
+    failed.value = !(await store.loadProjectContent(currentKey))
   }
-}, { immediate: true })
+}
+
+function retry() {
+  load(key.value)
+}
+
+watch(key, load, { immediate: true })
 </script>
 
 <template>
-  <LoadingState v-if="!ready" />
+  <LoadingState v-if="!ready && !failed" />
+  <div
+    v-else-if="failed"
+    class="loading"
+  >
+    <p> Couldn't load this project's code. </p>
+    <button
+      class="settings__button"
+      @click="retry"
+    >
+      Retry
+    </button>
+  </div>
   <RouterView
     v-else
     :project="project"
   />
 </template>
+
+<style>
+.loading .settings__button {
+  margin-top: 1rem;
+  max-width: 12rem;
+}
+</style>

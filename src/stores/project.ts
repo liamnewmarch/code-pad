@@ -15,7 +15,7 @@ import {
   type RemoteProjectRow,
 } from "../remote/db.js"
 import { consumeRedirect, signIn as remoteSignIn, signOut as remoteSignOut, watchUser } from "../remote/auth.js"
-import type { Project, ProjectData } from "../types/project.js"
+import { fileTypes, type Project, type ProjectData } from "../types/project.js"
 
 const defaultData: ProjectData = {
   css: "html {\n  background-color: #111;\n  color: #fff;\n}\n",
@@ -36,6 +36,10 @@ function fallbackContent(existing?: Project): Pick<ProjectData, "css" | "html" |
   }
 }
 
+function hasContent(project?: Project): boolean {
+  return Boolean(project?.css || project?.html || project?.javascript)
+}
+
 async function pushUpdate(uid: string, key: string, name: keyof ProjectData, value: string): Promise<void> {
   try {
     if (name === "name") {
@@ -49,6 +53,7 @@ async function pushUpdate(uid: string, key: string, name: keyof ProjectData, val
 }
 
 export interface State {
+   authPromise?: Promise<User | null>;
    loading: boolean;
    loadPromise?: Promise<void>;
    projects: Record<string, Project>;
@@ -65,7 +70,12 @@ export const useProjectStore = defineStore("projects", {
     async init() {
       await this.hydrateLocal()
       this.loading = false
+      let resolveAuth: (user: User | null) => void
+      this.authPromise = new Promise((resolve) => {
+        resolveAuth = resolve
+      })
       watchUser((user: User | null) => {
+        resolveAuth(user)
         if (user) {
           this.user = user
           this.loadPromise = this.loadProjects()
@@ -89,7 +99,9 @@ export const useProjectStore = defineStore("projects", {
     mergeRemoteRow(row: RemoteProjectRow): Project {
       const existing = this.projects[row.key]
       const content = row.embeddedContent ?? fallbackContent(existing)
-      const contentLoaded = Boolean(row.embeddedContent) || Boolean(existing?.contentLoaded)
+      // Fix a bug which caused projects to be synced with empty content
+      const contentLoaded = Boolean(row.embeddedContent) ||
+        (Boolean(existing?.contentLoaded) && hasContent(existing))
       return {
         key: row.key,
         name: row.name,
@@ -102,18 +114,20 @@ export const useProjectStore = defineStore("projects", {
     },
     async loadProjects() {
       if (!this.user) return
+      const uid = this.user.uid
       try {
-        const rows = await fetchProjects(this.user.uid)
-        const projects: Record<string, Project> = {}
+        const rows = await fetchProjects(uid)
+        const legacyRows: RemoteProjectRow[] = []
         for (const row of rows) {
-          const project = this.mergeRemoteRow(row)
-          projects[row.key] = project
-          await putLocalProject(project)
-          if (row.embeddedContent) {
-            await migrateLegacyProject(this.user.uid, row.key, project).catch(logError)
-          }
+          this.projects[row.key] = this.mergeRemoteRow(row)
+          if (row.embeddedContent) legacyRows.push(row)
         }
-        Object.assign(this.projects, projects)
+        for (const row of rows) {
+          await putLocalProject(toRaw(this.projects[row.key]))
+        }
+        for (const row of legacyRows) {
+          await migrateLegacyProject(uid, row.key, toRaw(this.projects[row.key])).catch(logError)
+        }
       } catch (e) {
         logError(e)
       }
@@ -137,20 +151,27 @@ export const useProjectStore = defineStore("projects", {
         logError(e)
       }
     },
-    async loadProjectContent(key: string) {
+    async loadProjectContent(key: string): Promise<boolean> {
       const project = this.projects[key]
-      if (!project || project.contentLoaded) return
-      if (!this.user || !project.syncedAt) {
+      if (!project || project.contentLoaded) return true
+      if (!project.syncedAt) {
         this.projects[key].contentLoaded = true
         await putLocalProject(toRaw(this.projects[key]))
-        return
+        return true
       }
+      await this.authPromise
+      if (!this.user) return false
       try {
-        Object.assign(this.projects[key], await fetchProjectFiles(this.user.uid, key))
+        const { files, fromCache } = await fetchProjectFiles(this.user.uid, key)
+        const complete = fileTypes.every((type) => type in files)
+        if (fromCache && !complete) return false
+        Object.assign(this.projects[key], files)
         this.projects[key].contentLoaded = true
         await putLocalProject(toRaw(this.projects[key]))
+        return true
       } catch (e) {
         logError(e)
+        return false
       }
     },
     async saveToAccount(key: string) {
@@ -188,7 +209,8 @@ export const useProjectStore = defineStore("projects", {
         this.projects[key].updated = Date.now()
         await putLocalProject(toRaw(this.projects[key]))
         const synced = this.projects[key].syncedAt
-        if (this.user && synced) {
+        // Attempt not to push bad (empty) content over good
+        if (this.user && synced && this.projects[key].contentLoaded) {
           void pushUpdate(this.user.uid, key, name, value)
         }
       } catch (e) {

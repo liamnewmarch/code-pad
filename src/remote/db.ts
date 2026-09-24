@@ -58,14 +58,19 @@ export async function fetchProjects(uid: string): Promise<RemoteProjectRow[]> {
   return rows
 }
 
-export async function fetchProjectFiles(uid: string, key: string): Promise<Partial<Record<FileType, string>>> {
+export interface RemoteFiles {
+  files: Partial<Record<FileType, string>>
+  fromCache: boolean
+}
+
+export async function fetchProjectFiles(uid: string, key: string): Promise<RemoteFiles> {
   const result = await getDocs(filesRef(uid, key))
   const files: Partial<Record<FileType, string>> = {}
   for (const snapshot of result.docs) {
     const type = snapshot.id
     if (isFileType(type)) files[type] = toStr(snapshot.data()["value"])
   }
-  return files
+  return { files, fromCache: result.metadata.fromCache }
 }
 
 export async function pushProject(
